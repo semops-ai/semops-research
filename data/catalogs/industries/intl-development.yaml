@@ -1,0 +1,41 @@
+industry:
+  key: intl_development
+  name: International Development
+  bizbok_section: "§8.4"
+  bizbok_pages: "653-655"
+  source: bizbok-v14
+
+entities:
+  - name: Beneficiary
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: BiologicalOrganism
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: GeographicSpace
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: HealthCondition
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: Infrastructure
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: Initiative
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: Campaign
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: TrainingCourse
+    category: core
+    bizbok_source: "§8.4 primary"
+  - name: Research
+    category: operational
+    bizbok_source: "§8.4 secondary"
+  - name: Policy
+    category: regulatory
+    bizbok_source: "§8.4 secondary"
+  - name: Plan
+    category: operational
+    bizbok_source: "§8.4 enrichment"

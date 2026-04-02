@@ -1,0 +1,310 @@
+# Marketplace — Business Model Decomposition
+#
+# Baseline capabilities required to operate a two-sided marketplace.
+# Validated against  (trade shows), with patterns from Airbnb,
+# Etsy, Uber archetypes.
+#
+# Key insight from  validation: marketplace capabilities organize
+# around supply-side and demand-side bounded contexts. The bridge between
+# them (matching, transactions, trust) is where the platform creates value.
+
+business_model:
+  name: Marketplace
+  category: Marketplace/Platform
+  description: >
+    Two-sided platform connecting buyers and sellers (or supply and demand).
+    Revenue from transaction fees, commissions on GMV, or listing fees.
+    Value increases with participants (network effects). The platform's
+    job is liquidity — enough supply to meet demand, enough demand to
+    retain supply.
+
+analytics_reference: "business-model-analytics.md#marketplace--platform-business-model"
+system_mix_baseline:
+  app: 0.35
+  analytics: 0.20
+  work: 0.30
+  record: 0.15
+
+required_capabilities:
+
+  # --- CORE: What makes a marketplace work ---
+
+  - name: Supply Acquisition and Onboarding
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Recruit, vet, and onboard supply-side participants (sellers,
+      exhibitors, hosts, drivers). Includes application review, profile
+      creation, and activation. Supply growth is the foundation —
+      without supply, there is no marketplace.
+    criticality: core
+    example_vendors:
+      - Salesforce Sales Cloud
+      - HubSpot Sales Hub
+
+  - name: Listing and Inventory Management
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Enable supply-side participants to create, publish, price, and
+      manage their offerings. The listing is the marketplace's unit of
+      inventory. Quality and completeness of listings directly impacts
+      conversion. In events: exhibition space types, floor plan slots,
+      sponsorship items.
+    criticality: core
+    example_vendors:
+      - Custom-built (most marketplaces)
+      - Sharetribe
+      - Arcadier
+
+  - name: Demand Acquisition and Registration
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Attract demand-side participants (buyers, attendees, riders)
+      through marketing, referrals, and organic channels. Includes
+      registration, account creation, and activation. Demand is the
+      value proposition to supply — "we bring you customers."
+    criticality: core
+    example_vendors:
+      - HubSpot Marketing Hub
+      - Mailchimp
+
+  - name: Search and Discovery
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Enable demand-side participants to find relevant supply through
+      search, browse, filtering, recommendations, and curation.
+      Discovery quality determines whether available supply converts
+      to transactions. The matching function.
+    criticality: core
+    example_vendors:
+      - Algolia
+      - Elasticsearch
+      - Custom-built
+
+  - name: Transaction Processing and Settlement
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Handle the exchange of value between supply and demand. Includes
+      booking, payment processing, commission extraction (take rate),
+      and settlement to supply-side. In events: exhibitor contracts,
+      attendee ticketing, sponsorship invoicing.
+    criticality: core
+    example_vendors:
+      - Stripe Connect
+      - PayPal Commerce Platform
+      - Adyen for Platforms
+
+  - name: Supply-Side Retention and Rebooking
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Retain supply-side participants across cycles. Includes renewal
+      workflows, loyalty mechanics (priority points, tier status), and
+      churn prevention. Supply retention is the leading indicator —
+       validation showed exhibitor rebooking rate within 30 days
+      is the single most predictive metric.
+    criticality: core
+    example_vendors:
+      - Gainsight
+      - Custom-built (rebooking workflows)
+
+  - name: Marketplace Liquidity Management
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Monitor and optimize the balance between supply and demand.
+      Track liquidity (% of listings that transact), buyer/seller
+      ratio, time-to-transaction, and geographic coverage. The core
+      health metric — a marketplace with supply but no demand (or
+      vice versa) is worthless.
+    criticality: core
+    example_vendors:
+      - Custom-built (marketplace analytics)
+      - Looker
+      - Mode Analytics
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Trust and Verification
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Establish trust between strangers. Includes identity verification,
+      reviews/ratings, dispute resolution, and fraud detection. Trust
+      is what makes transactions possible between parties who don't
+      know each other. In events: exhibitor vetting, attendee badge
+      verification.
+    criticality: supporting
+    example_vendors:
+      - Stripe Identity
+      - Jumio
+      - Sift
+
+  - name: Messaging and Communication
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Enable communication between supply and demand — pre-transaction
+      (inquiries, matchmaking) and post-transaction (coordination,
+      follow-up). Must stay on-platform to prevent disintermediation.
+      In events: exhibitor-attendee matchmaking, lead capture.
+    criticality: supporting
+    example_vendors:
+      - Twilio
+      - SendBird
+      - Intercom
+
+  - name: Sponsorship and Advertising Sales
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Monetize platform attention by selling visibility to supply-side
+      participants or third parties. Includes sponsored listings,
+      display advertising, featured placements, and branded experiences.
+       validation revealed 40+ sponsorship items across 6
+      categories — this can be a rich, high-margin revenue stream.
+    criticality: supporting
+    example_vendors:
+      - Custom-built
+      - Google Ad Manager
+
+  - name: Marketplace Analytics and Reporting
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track GMV, take rate, net revenue, cohort retention (both sides),
+      disintermediation rate, and network growth curves. Provide
+      supply-side participants with performance dashboards (exhibitor
+      ROI reports, seller analytics). See business-model-analytics.md
+      for full metric definitions.
+    criticality: supporting
+    example_vendors:
+      - ChartMogul
+      - Looker
+      - Metabase
+
+  - name: Customer Support and Dispute Resolution
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Handle support requests from both sides of the marketplace.
+      Includes dispute resolution, refund processing, and SLA
+      management. Two-sided support is uniquely complex — the platform
+      must mediate between supply and demand interests.
+    criticality: supporting
+    example_vendors:
+      - Zendesk
+      - Freshdesk
+      - Intercom
+
+  - name: Pricing and Yield Optimization
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Optimize marketplace pricing — take rate, dynamic pricing,
+      surge pricing, tiered commission structures, and early-bird
+      discounts. Balance revenue extraction against growth (too high
+      a take rate kills supply). In events: space pricing by type,
+      sponsorship tier pricing, ticket pricing strategy.
+    criticality: supporting
+    example_vendors:
+      - Custom-built
+      - Pricefx
+
+  - name: Third-Party Integration Management
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Connect marketplace to external systems via APIs and webhooks.
+      Supply-side integrations (inventory sync, shipping providers,
+      POS systems) and demand-side integrations (payment methods,
+      loyalty programs). In events: ticketing platforms, badge
+      scanning systems, logistics providers.
+    criticality: supporting
+    example_vendors:
+      - Merge
+      - Workato
+      - Custom API layer
+
+  # --- TABLE-STAKES: Every business needs these, not marketplace-specific ---
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Authenticate users on both sides, manage roles (buyer, seller,
+      admin), and enforce access controls. Multi-role support is
+      marketplace-specific complexity — users may be both buyers and
+      sellers.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - Clerk
+      - WorkOS
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition, accounts receivable/payable, cash flow
+      management. Marketplace-specific complexity: split payments,
+      escrow, tax reporting for both sides (1099s for sellers).
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - NetSuite
+      - Stripe Tax
+
+  - name: Legal and Compliance Management
+    apqc_context: "11.1"
+    apqc_name: Build and maintain stakeholder relationships
+    description: >
+      Manage terms of service, privacy policies, regulatory compliance,
+      and contracts. Marketplace-specific: platform liability, seller
+      compliance, insurance requirements. In events: exhibition
+      contracts, liability waivers, venue agreements.
+    criticality: generic
+    example_vendors:
+      - DocuSign
+      - PandaDoc
+      - Ironclad
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host, scale, monitor, and maintain the platform. Marketplace-
+      specific: handle traffic spikes (launch events, sales), ensure
+      uptime during peak transaction windows. In events: on-site
+      systems (badge scanning, registration kiosks).
+    criticality: generic
+    example_vendors:
+      - AWS
+      - GCP
+      - Vercel
+
+differentiators:
+  - Liquidity — enough supply to reliably meet demand (and vice versa)
+  - Network effects — each new participant makes the platform more valuable
+  - Trust infrastructure — reviews, verification, dispute resolution reduce friction
+  - Supply-side retention and rebooking rate (the leading indicator)
+  - Take rate optimization — extract value without killing growth
+  - Disintermediation prevention — keep transactions on-platform
+  - Geographic or category density — depth in specific markets before breadth
+
+source:
+  seed: >
+    -reference-model.md + -signal-validation.md +
+    bizbok-ddd-overlay-tradeshow.md + business-model-analytics.md
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Marketplace/Platform metrics)
+    - data-system-classification.md (system mix baseline)
+    - -reference-model.md ( — 8/8 bounded contexts confirmed)
+    - -signal-validation.md (15/19 entities confirmed from public signals)
+    - UFI 5 S revenue model (events industry standard)

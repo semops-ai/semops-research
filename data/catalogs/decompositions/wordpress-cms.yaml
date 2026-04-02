@@ -1,0 +1,234 @@
+# WordPress — Primitive Decomposition
+#
+# Decomposes WordPress (self-hosted, open-source) into neutral functional
+# primitives. WordPress is a monolithic CMS — presentation coupled to
+# content management. Plugin ecosystem extends core significantly.
+#
+# Scope: WordPress core + universally-expected plugin capabilities.
+# Individual plugins (WooCommerce, Yoast, etc.) would be separate
+# decompositions.
+
+vendor:
+  name: WordPress (self-hosted)
+  company: Automattic / WordPress Foundation
+  category: Monolithic CMS
+
+lock_in_signals:
+  - Proprietary database schema (wp_posts, wp_postmeta, wp_options) — EAV pattern
+  - PHP template coupling — themes are presentation + logic combined
+  - Plugin dependency chains — functionality tied to specific plugin ecosystems
+  - Shortcode lock-in — content contains vendor-specific rendering directives
+  - Hook system (actions/filters) is WordPress-specific (not portable PHP)
+  - Block editor (Gutenberg) stores block markup in post_content — not portable
+  - Permalink structure embedded in content and external links
+
+open_alternative:
+  name: Static site generator (Hugo, Eleventy) + headless CMS
+  why: >
+    Content as files (Markdown/YAML), standard templating, no database,
+    full data ownership. Or self-hosted Strapi/Directus for structured
+    content with standard REST/GraphQL APIs.
+
+primitives:
+  - name: Content Entry Management
+    branded_name: Posts & Pages
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Create, edit, draft, schedule, and publish content entries.
+      Two core content types (posts and pages) with full CRUD
+      operations and revision history.
+    protocols:
+      - SQL
+      - HTTP/REST (WP REST API)
+
+  - name: Custom Content Modeling
+    branded_name: Custom Post Types & Custom Fields
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Define application-specific content structures beyond posts
+      and pages. Custom post types, custom fields (post meta),
+      and custom taxonomies extend the data model.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Content Taxonomy
+    branded_name: Categories & Tags (+ Custom Taxonomies)
+    apqc_context: "13.5"
+    apqc_name: Develop and manage enterprise-wide knowledge management capability
+    description: >
+      Hierarchical (categories) and flat (tags) classification
+      systems for organizing content. Custom taxonomies extend
+      beyond the two built-in types.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Rich Text Authoring
+    branded_name: Block Editor (Gutenberg)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Block-based WYSIWYG editor for content creation. Each content
+      element (paragraph, image, embed) is a discrete block with
+      its own settings. Blocks serialize to HTML with comment delimiters.
+    protocols:
+      - HTML
+      - HTTP/REST
+
+  - name: Content Versioning
+    branded_name: Post Revisions
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Track and manage content version history. Every save creates
+      a revision. Compare and restore previous versions.
+    protocols:
+      - SQL
+
+  - name: Publishing State Management
+    branded_name: Post Status (Draft/Pending/Published/Private/Scheduled)
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Content state machine: draft → pending review → published.
+      Scheduled publishing for future dates. Private and
+      password-protected states for access control.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Media Asset Management
+    branded_name: Media Library
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Centralized upload and management of images, video, audio,
+      and documents. Built-in image editing (crop, rotate, resize).
+      Alt text and caption metadata. Gallery creation.
+    protocols:
+      - HTTP/REST
+      - SQL
+
+  - name: Theme-Based Presentation
+    branded_name: Themes
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Template layer controlling visual presentation. Theme
+      directory with thousands of options. One-click switching.
+      Full standards compliance (W3C, accessibility).
+    protocols:
+      - HTML
+      - CSS
+
+  - name: Content Delivery (REST API)
+    branded_name: WP REST API
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      HTTP REST endpoints for programmatic content access. Enables
+      headless usage, mobile apps, and third-party integrations.
+      Covers posts, pages, media, users, taxonomies.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Plugin Extensibility
+    branded_name: Plugins (Plugin Directory)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Hook-based extension architecture. Thousands of action and
+      filter hooks for modifying behavior. Official plugin directory
+      with 60,000+ free plugins.
+    protocols:
+      - PHP (WordPress hooks API)
+      - HTTP/REST
+
+  - name: Role-Based Access Control
+    branded_name: User Roles (Administrator/Editor/Author/Contributor/Subscriber)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Five built-in roles with graduated permissions from subscriber
+      (read-only) to administrator (full control). Capability-based
+      system supports custom roles via plugins.
+    protocols:
+      - RBAC
+
+  - name: Comment Discussion
+    branded_name: Comments
+    apqc_context: "6.1"
+    apqc_name: Develop customer care/customer service strategy
+    description: >
+      Built-in comment system for community engagement on posts.
+      Moderation queue, threaded replies, gravatar integration.
+      Spam protection via plugins (Akismet).
+    protocols:
+      - HTTP/REST
+      - SQL
+
+  - name: Multi-Language Content
+    branded_name: (via plugins — WPML, Polylang)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Multi-language content management. Not in core — requires
+      plugin. Available in 70+ admin translations. Plugin-based
+      localization for content.
+    protocols:
+      - HTTP/REST
+      - IETF BCP 47
+
+  - name: SEO Optimization
+    branded_name: Permalinks + (Yoast/RankMath plugins)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Search engine optimization. Core provides customizable
+      permalink structure and basic metadata. Plugins add
+      sitemaps, schema markup, content analysis.
+    protocols:
+      - HTTP (sitemaps, robots.txt)
+      - JSON-LD (schema.org)
+
+  - name: Content Import and Export
+    branded_name: Import/Export Tools + Data Loader
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Import content from Blogger, LiveJournal, Tumblr, other
+      WordPress sites. Export to WordPress WXR format (XML).
+      Plugin-based CSV/JSON import for custom data.
+    protocols:
+      - XML (WXR)
+      - CSV
+      - HTTP/REST
+
+  - name: Multi-Site Management
+    branded_name: WordPress Multisite
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Run a network of WordPress sites from a single installation.
+      Shared user base, plugins, and themes. Per-site content and
+      settings. Super admin role for network management.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+source:
+  seed:  (brand-to-neutral decomposition methodology)
+  validated_against:
+    - wordpress.org/about/features/ (official feature list)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

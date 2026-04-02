@@ -1,0 +1,67 @@
+# Events / Trade Shows / Conferences — Signal Patterns
+#
+# Event sites organize around attendee and exhibitor journeys,
+# not product features. The supply side (exhibitors, sponsors)
+# and demand side (attendees, tickets) have distinct URL patterns.
+
+vertical: events
+description: URL patterns for event, trade show, and conference websites
+
+patterns:
+  # --- Pricing (B2C: tickets, B2B: sponsorship) ---
+  - paths: ["/attend", "/tickets", "/register", "/passes"]
+    signal_type: pricing_page
+    confidence: 0.8
+    notes: Ticket pricing is the B2C pricing signal
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/sponsor", "/sponsorship", "/become-a-sponsor"]
+    signal_type: pricing_page
+    confidence: 0.7
+    notes: Sponsorship catalog is the B2B pricing signal
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Industry Research (supply side) ---
+  - paths: ["/exhibit", "/exhibitors", "/exhibitor-list"]
+    signal_type: industry_research
+    confidence: 0.7
+    notes: Exhibitor directory = supply side of marketplace
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/floor-plan", "/exhibit-hall", "/listening-rooms"]
+    signal_type: industry_research
+    confidence: 0.5
+    notes: Space layout = capacity signal
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Marketing (show content) ---
+  - paths: ["/schedule", "/agenda", "/program", "/sessions"]
+    signal_type: marketing
+    confidence: 0.6
+    notes: Show content / value proposition
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/speakers", "/presenters", "/seminars"]
+    signal_type: marketing
+    confidence: 0.6
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/venue", "/hotel", "/travel", "/directions"]
+    signal_type: marketing
+    confidence: 0.5
+    notes: Logistics, low signal value
+    learned_from:
+      engagement: 
+      issue: ""

@@ -1,0 +1,265 @@
+# Freemium — Business Model Decomposition
+#
+# Baseline capabilities required to operate a freemium business.
+# Extends beyond analytics (covered in business-model-analytics.md)
+# to the full operational capability set.
+
+business_model:
+  name: Freemium
+  category: Freemium/Hybrid
+  description: >
+    Free base tier with paid upsell. Revenue comes from converting a
+    small percentage of free users to paid plans. The free tier is
+    the acquisition engine — it must deliver enough value to create
+    habit, but leave enough on the table to motivate upgrading.
+
+analytics_reference: "business-model-analytics.md#freemium--hybrid-business-model"
+system_mix_baseline:
+  app: 0.50
+  analytics: 0.35
+  work: 0.10
+  record: 0.05
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Free Tier Product Delivery
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Deliver a fully functional free product experience that creates
+      habit and demonstrates value. Must be good enough to retain users
+      but bounded enough to leave upgrade headroom. The free tier IS
+      the customer acquisition channel.
+    criticality: core
+    example_vendors:
+      - Custom-built product
+      - Vercel
+      - Netlify
+
+  - name: Usage Metering and Limit Enforcement
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track user consumption against tier limits (storage, API calls,
+      seats, features). Enforce limits gracefully — hard walls kill
+      engagement, soft walls drive conversion. The mechanism that
+      creates the upgrade trigger.
+    criticality: core
+    example_vendors:
+      - Segment
+      - LaunchDarkly
+      - Stripe Billing (usage metering)
+
+  - name: Conversion Funnel Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Optimize the path from free to paid through paywall design,
+      upgrade prompts, trial offers, and pricing page optimization.
+      Includes A/B testing of conversion touchpoints. The revenue
+      engine — small conversion rate improvements compound massively
+      at scale.
+    criticality: core
+    example_vendors:
+      - Pendo
+      - Appcues
+      - Stripe Checkout
+
+  - name: Product-Led Growth Instrumentation
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Instrument product to capture feature adoption, engagement
+      patterns, paywall hits, and conversion triggers. Identifies
+      which free-tier behaviors predict paid conversion. The data
+      foundation for all PLG decisions.
+    criticality: core
+    example_vendors:
+      - Amplitude
+      - Mixpanel
+      - Heap
+      - PostHog
+
+  - name: Viral and Referral Growth
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Enable and incentivize users to invite others through sharing,
+      collaboration features, and referral programs. Measure K-factor
+      (viral coefficient). The free tier should be inherently viral —
+      each user brings more users.
+    criticality: core
+    example_vendors:
+      - ReferralCandy
+      - Viral Loops
+      - Custom-built (invite flows)
+
+  - name: Tier and Entitlement Management
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Manage plan tiers, feature entitlements, seat-based or usage-based
+      pricing, upgrades, downgrades, and trials. The billing logic that
+      maps user state to what they can access. Must handle the free-to-paid
+      boundary cleanly.
+    criticality: core
+    example_vendors:
+      - Stripe Billing
+      - Chargebee
+      - Stigg
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: User Onboarding and Activation
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Guide new free users to their "aha moment" — the point where they
+      experience core value. Includes guided tours, checklists, tooltips,
+      and progressive disclosure. Activation rate is the leading indicator
+      of eventual conversion.
+    criticality: supporting
+    example_vendors:
+      - Appcues
+      - UserGuiding
+      - Chameleon
+
+  - name: Customer Retention and Re-engagement
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Prevent churn for both free (engagement churn) and paid (revenue
+      churn) users. Includes health scoring, re-engagement campaigns,
+      win-back workflows, and lifecycle messaging.
+    criticality: supporting
+    example_vendors:
+      - Customer.io
+      - Braze
+      - Intercom
+
+  - name: Self-Service Support and Knowledge Base
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Provide scalable support for a large free user base through help
+      docs, FAQs, community forums, and chatbots. Human support typically
+      reserved for paid tiers. Must scale to millions of users without
+      proportional support cost.
+    criticality: supporting
+    example_vendors:
+      - Zendesk Guide
+      - Intercom
+      - Discourse
+
+  - name: Revenue Analytics and Cohort Tracking
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track free-to-paid conversion rates, time-to-convert, ARPU (free
+      vs paid vs blended), trial conversion, and cohort retention curves.
+      The freemium metrics layer — see business-model-analytics.md for
+      full definitions.
+    criticality: supporting
+    example_vendors:
+      - ChartMogul
+      - Baremetrics
+      - ProfitWell
+
+  - name: Email and Lifecycle Marketing
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Drive engagement and conversion through behavioral email sequences,
+      in-app messaging, and push notifications. Trigger-based campaigns
+      tied to usage milestones, paywall encounters, and trial expiry.
+    criticality: supporting
+    example_vendors:
+      - Customer.io
+      - Braze
+      - Mailchimp
+
+  - name: Experimentation and A/B Testing
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Run experiments on pricing, paywall placement, feature gating,
+      onboarding flows, and conversion touchpoints. Data-driven
+      optimization of the free-to-paid funnel.
+    criticality: supporting
+    example_vendors:
+      - LaunchDarkly
+      - Optimizely
+      - GrowthBook
+
+  # --- TABLE-STAKES: Every business needs these, not freemium-specific ---
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Authenticate users, manage accounts, support social login and
+      SSO (typically premium). Must handle massive user volumes from
+      the free tier efficiently.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - Firebase Auth
+      - Clerk
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition, subscription billing reconciliation,
+      and financial reporting. Freemium-specific: unit economics
+      (cost to serve free users vs conversion revenue).
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - Xero
+      - NetSuite
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host, scale, and monitor the platform. Freemium-specific concern:
+      cost to serve the free tier must stay low enough that unit economics
+      work even at single-digit conversion rates.
+    criticality: generic
+    example_vendors:
+      - AWS
+      - GCP
+      - Vercel
+
+  - name: Security and Compliance Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Data protection, privacy compliance (GDPR, CCPA), and security
+      controls. Large free user bases mean large data footprints with
+      full regulatory exposure regardless of revenue contribution.
+    criticality: generic
+    example_vendors:
+      - Vanta
+      - Drata
+      - OneTrust
+
+differentiators:
+  - Free-to-paid conversion rate above 5% (best-in-class 7-10%)
+  - Viral coefficient (K-factor) above 1.0 enabling organic growth
+  - Low cost to serve free tier enabling sustainable unit economics
+  - Natural upgrade triggers embedded in product usage patterns
+  - Network effects where free users create value for paid users
+  - Time-to-value under 5 minutes for new free signups
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + PLG frameworks (OpenView, Reforge)
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Freemium/Hybrid metrics)
+    - data-system-classification.md (system mix baseline)
+    - system-primitive-decomposition.md (decomposition methodology)

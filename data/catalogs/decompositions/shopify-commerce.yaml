@@ -1,0 +1,309 @@
+# Shopify — Primitive Decomposition
+#
+# Decomposes Shopify (Plus) into neutral functional primitives.
+# Shopify is the dominant D2C commerce platform — storefront, checkout,
+# orders, customers, inventory, and basic CMS in one monolith.
+# Scoped to Shopify core + Plus features; ecosystem apps (Klaviyo,
+# Recharge, etc.) are separate decompositions.
+
+vendor:
+  name: Commerce Platform
+  company: Shopify
+  category: Commerce Platform
+
+lock_in_signals:
+  - Liquid templating language — proprietary, no portability
+  - Checkout extensibility (Plus) locked to Shopify Functions — not portable logic
+  - Shopify Payments (Stripe-powered) — preferential rates create switching friction
+  - Metafield schema — proprietary typed storage, no standard export
+  - Shopify Flow automations — vendor-specific trigger/action model
+  - App ecosystem integrations assume Shopify Admin API — not transferable
+  - Customer accounts tied to shop domain — no federated identity
+  - Shopify Markets (international) — routing rules, duties, translations locked to platform
+  - GraphQL Admin API is Shopify-specific schema — not standard commerce API
+  - Theme architecture (JSON templates + sections) — proprietary structure
+
+open_alternative:
+  name: Medusa / Saleor + PostgreSQL + Stripe + CDN
+  why: >
+    Open-source headless commerce with standard database, REST/GraphQL APIs,
+    pluggable payment providers, self-hosted with full data ownership.
+    Medusa is modular; Saleor is more opinionated. Both avoid platform lock-in.
+
+primitives:
+  # --- Storefront ---
+  - name: Product Display and Browsing
+    branded_name: Online Store / Themes
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Present products to customers through a branded storefront. Includes
+      product pages, collection pages, search, filtering, and navigation.
+      The digital shelf where conversion happens.
+    protocols:
+      - HTTP/HTML
+      - Storefront API (GraphQL)
+
+  - name: Product Search and Discovery
+    branded_name: Shopify Search & Discovery
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      On-site search with typo tolerance, synonyms, and boosting rules.
+      Product recommendations (related, complementary). Collection
+      filtering by attributes.
+    protocols:
+      - HTTP/REST
+      - GraphQL
+
+  - name: Content Page Management
+    branded_name: Pages / Blog / Metaobjects
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Create and manage non-product content: landing pages, blog posts,
+      FAQ pages. Basic CMS functionality — not a full headless CMS.
+      Metaobjects extend this with structured custom content types.
+    protocols:
+      - HTTP/HTML
+      - JSON (metaobjects)
+
+  # --- Cart & Checkout ---
+  - name: Shopping Cart Management
+    branded_name: Cart
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Add/remove/update items in a shopping cart. Cart persists across
+      sessions for logged-in customers. Supports discount codes,
+      gift cards, and shipping estimates.
+    protocols:
+      - HTTP/REST
+      - AJAX Cart API
+
+  - name: Checkout Processing
+    branded_name: Shopify Checkout (Plus: Checkout Extensibility)
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Multi-step purchase flow: customer info → shipping → payment →
+      confirmation. Plus merchants get checkout customization via
+      Shopify Functions and UI extensions. Checkout is the highest-value
+      page — conversion optimization lives here.
+    protocols:
+      - HTTP/HTTPS
+      - Shopify Functions (serverless)
+
+  - name: Discount and Promotion Rules
+    branded_name: Discounts / Shopify Scripts (Plus) / Shopify Functions
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Define pricing rules: percentage off, fixed amount, BOGO, free
+      shipping, tiered pricing. Scripts (Plus) allow custom logic at
+      line-item level. Functions are the next-gen replacement.
+    protocols:
+      - HTTP/REST (Admin API)
+
+  # --- Order Management ---
+  - name: Order Capture and Processing
+    branded_name: Orders
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Capture orders from all channels (online, POS, draft, API).
+      Order lifecycle: payment → fulfillment → delivery. Supports
+      partial fulfillment, split shipments, and order editing.
+    protocols:
+      - HTTP/REST
+      - GraphQL (Admin API)
+      - Webhooks
+
+  - name: Payment Capture and Refund
+    branded_name: Shopify Payments / Payment Gateways
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Authorize and capture payments. Process refunds and voids.
+      Shopify Payments (Stripe-powered) is the default; third-party
+      gateways supported with additional transaction fees.
+    protocols:
+      - PCI DSS
+      - HTTP/REST (gateway APIs)
+
+  - name: Shipping Rate Calculation
+    branded_name: Shipping Profiles / Carrier-Calculated Rates
+    apqc_context: "4.4"
+    apqc_name: Deliver products
+    description: >
+      Calculate shipping costs based on weight, dimensions, destination,
+      and carrier rates. Supports flat rate, free shipping thresholds,
+      and real-time carrier quotes (Plus).
+    protocols:
+      - HTTP/REST (Carrier Service API)
+
+  # --- Customer Management ---
+  - name: Customer Identity Management
+    branded_name: Customer Accounts
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Customer registration, login, and account management. Stores
+      addresses, order history, and basic preferences. Guest checkout
+      supported. New Customer Accounts (passwordless) available.
+    protocols:
+      - HTTP/HTTPS
+      - OAuth 2.0 (Multipass for Plus SSO)
+
+  - name: Customer Segmentation
+    branded_name: Customer Segments
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Filter and group customers by purchase behavior, location,
+      email status, tags, and custom metafields. Used for targeted
+      marketing and reporting. Basic compared to Klaviyo's segmentation.
+    protocols:
+      - GraphQL (Admin API)
+
+  # --- Inventory ---
+  - name: Inventory Level Tracking
+    branded_name: Inventory Management
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Track stock quantities per variant per location. Supports
+      multi-location inventory with incoming, committed, available,
+      and on-hand quantities. Syncs with fulfillment services.
+    protocols:
+      - HTTP/REST (Inventory API)
+      - GraphQL
+
+  - name: Inventory Location Management
+    branded_name: Locations
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Define physical or virtual inventory locations: warehouses,
+      retail stores, 3PL facilities, pop-ups. Each location has
+      independent stock levels and fulfillment priority.
+    protocols:
+      - HTTP/REST
+
+  # --- Product Data ---
+  - name: Product Catalog Management
+    branded_name: Products
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Create and manage products with variants (size, color, material).
+      Supports images, descriptions, tags, collections, and custom
+      metafields for extended attributes. Basic PIM functionality.
+    protocols:
+      - HTTP/REST
+      - GraphQL (Admin API)
+      - CSV (bulk import/export)
+
+  - name: Product Variant Management
+    branded_name: Variants / Options
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Define product options (size, color, material) and their
+      combinations as purchasable variants. Each variant has its own
+      SKU, price, weight, and inventory tracking. Max 100 variants
+      per product (3 option axes).
+    protocols:
+      - HTTP/REST
+      - GraphQL
+
+  - name: Extended Attribute Storage
+    branded_name: Metafields / Metaobjects
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Store typed custom data on products, variants, customers, orders,
+      and other resources. Metafields are key-value; metaobjects are
+      structured custom entities. Used to extend Shopify's fixed schema
+      with domain-specific attributes (tech specs, sustainability certs).
+    protocols:
+      - HTTP/REST
+      - GraphQL
+      - JSON
+
+  # --- Multi-Channel ---
+  - name: Sales Channel Distribution
+    branded_name: Sales Channels
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Publish products to multiple sales surfaces: Online Store, POS,
+      Buy Button, Facebook/Instagram Shop, Google Shopping, wholesale
+      (B2B). Each channel can have different product availability.
+    protocols:
+      - HTTP/REST
+
+  - name: International Commerce
+    branded_name: Shopify Markets
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Manage international selling: market-specific pricing, currency
+      conversion, duties/taxes, domain routing, and translations.
+      Centralizes multi-market management.
+    protocols:
+      - HTTP/REST
+      - GraphQL
+
+  # --- Automation ---
+  - name: Workflow Automation
+    branded_name: Shopify Flow (Plus)
+    apqc_context: "8.1"
+    apqc_name: Manage the business of information technology
+    description: >
+      Event-driven automation: trigger → condition → action workflows.
+      Automate order tagging, inventory alerts, customer segmentation,
+      fraud flagging, and cross-app orchestration. Plus-only.
+    protocols:
+      - Webhooks (trigger)
+      - HTTP/REST (action)
+
+  # --- Analytics ---
+  - name: Commerce Analytics
+    branded_name: Shopify Analytics / Reports
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Built-in reporting: sales, orders, customers, marketing,
+      inventory, and finance. Dashboards with basic segmentation.
+      Custom reports (Plus). Limited compared to dedicated analytics.
+    protocols:
+      - HTTP (dashboard)
+      - CSV (export)
+
+  # --- Notifications ---
+  - name: Transactional Notification
+    branded_name: Notifications (Order confirmation, Shipping, etc.)
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      System-generated emails and SMS for order lifecycle events:
+      confirmation, shipping, delivery, refund. Templated with Liquid.
+      Distinct from marketing emails (Klaviyo).
+    protocols:
+      - SMTP
+      - HTTP (webhooks for SMS)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge
+
+source:
+  seed: Shopify Plus documentation, Admin API reference, D2C ecosystem patterns
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - ecommerce-d2c.yaml (business model capabilities)
+    - Medusa / Saleor open-source equivalents (primitive validation)

@@ -1,0 +1,92 @@
+# Process Catalog Schema
+#
+# Each file in this directory represents a set of processes for a specific
+# bounded context within an engagement. Processes are the universal unit of
+# work — APQC tells you what exists, DDD tells you where they live, patterns
+# define reusable solutions, and capabilities define what gets delivered.
+#
+# Relationship to other catalogs:
+#   - Category catalogs (data/catalogs/categories/) → generic architectural categories
+#   - Vendor decompositions (data/catalogs/decompositions/) → individual products
+#   - Business model catalogs (data/catalogs/business-models/) → what a business needs
+#   - Process catalogs (this directory) → what work happens and who delivers it
+#
+# Conceptual model:
+#   Process (APQC: what work exists)
+#       → placed in DDD (which BC owns it, what boundaries it crosses)
+#       → produces Pattern (reusable, named, registered)
+#       → Pattern defines Capabilities (what it delivers)
+#       → Capability is fulfilled by an Executor (human | agent | rule-engine | hybrid)
+#
+# Provenance:
+#   Processes are identified from three sources during Stage 7 (Process Analysis):
+#
+#   1. TOP-DOWN — APQC operating categories (1-6) mapped to each bounded context.
+#      Which standard processes should exist for this type of business?
+#
+#   2. BOTTOM-UP — Domain events and sagas from DDD architecture (Stage 3).
+#      Each domain event implies a process that emits it.
+#      Each saga IS a cross-boundary process.
+#
+#   3. PATTERN-DERIVED — Each registered pattern implies capabilities that
+#      must be delivered by processes.
+#
+# Domain type assignment:
+#   - CORE — Industry reference model, business model (weight >= 0.5), product domain
+#   - SUPPORTING — BIZBOK Common Reference Model, business model (weight < 0.5)
+#   - GENERIC — APQC process-implied (categories 7-13), no domain pattern needed
+#
+# File naming:
+#   - Engagement-specific: companies/<name>/processes/<context>.yaml
+#   - Generic/reusable: data/catalogs/processes/<category>.yaml
+#
+# Research:
+#   - docs/research/process-as-universal-abstraction.md — unified model
+#   - docs/research/process-model-examples.md — cross-industry examples
+#
+# ---
+# context:
+#   name: string                          # Bounded context name
+#   company: string | null                # Company name (null for generic catalogs)
+#   domain_type: CORE | SUPPORTING | GENERIC
+#
+# processes:
+#   - id: string                          # Unique identifier (company.context.kebab-name)
+#     name: string                        # Human-readable name
+#     apqc_reference: string | null       # APQC PCF code (e.g., "4.2.3")
+#
+#     # DDD placement
+#     bounded_context: string             # Which BC owns this process
+#     scope: aggregate | service | saga | choreography
+#     aggregate_root: string | null       # If scope is aggregate
+#     triggers:                           # What starts this process
+#       - type: command | event | schedule | condition
+#         source: string                  # BC or external system
+#         name: string                    # Command/event name
+#
+#     # Pattern & Capability (the reusable abstraction)
+#     pattern: string | null              # Registered pattern this process instantiates
+#     capabilities:                       # What this process delivers
+#       - name: string                    # Capability name (registered in pattern)
+#         cognitive_load: deterministic | categorical | inferential | reasoning | judgment
+#         description: string
+#
+#     # Steps (what the process does, executor-neutral)
+#     steps:
+#       - name: string
+#         type: observe | think | act | evaluate | delegate
+#         description: string
+#         inputs: [string]                # What data/context this step needs
+#         outputs: [string]               # What this step produces
+#         tool: string | null             # External system/tool used
+#         guardrails: [string]            # Invariants, constraints, validation rules
+#
+#     # Boundary interactions
+#     reads_from: [string]                # BCs this process queries (read models)
+#     writes_to: [string]                 # BCs this process commands (write models)
+#     emits: [string]                     # Domain events produced
+#     compensates: [string] | null        # Compensation actions if process fails
+#
+#     # Execution (deployment decision, not modeling decision)
+#     executor: human | agent | rule-engine | hybrid
+#     scale_projection_level: manual | scripted | batch | parallel | autonomous

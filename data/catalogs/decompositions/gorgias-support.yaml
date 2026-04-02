@@ -1,0 +1,254 @@
+# Gorgias — Primitive Decomposition
+#
+# Decomposes Gorgias into neutral functional primitives.
+# Gorgias is an ecommerce-focused helpdesk — deep Shopify integration
+# with order data in the ticket sidebar, macros with order variables,
+# and revenue tracking on support interactions. Positioned as
+# "customer support that drives revenue."
+
+vendor:
+  name: Ecommerce Helpdesk
+  company: Gorgias
+  category: Customer Support / Helpdesk
+
+lock_in_signals:
+  - Shopify sidebar integration — order actions (refund, cancel) executed from Gorgias, not portable
+  - Macro language with Shopify-specific variables (order status, tracking) — not transferable
+  - Rules engine (trigger/condition/action) locked to Gorgias event model
+  - Revenue attribution on tickets — proprietary tracking model
+  - AI features (auto-responses, intent detection) trained on Gorgias data, not exportable
+  - Satisfaction survey data and CSAT trends locked to platform
+  - Integration marketplace assumes Gorgias webhook/API schema
+  - Ticket tags and views are Gorgias-specific organizational primitives
+
+open_alternative:
+  name: Zammad / FreeScout + PostgreSQL + custom Shopify integration
+  why: >
+    Open-source helpdesk (Zammad is full-featured; FreeScout is lightweight)
+    with standard database. Shopify order data via custom sidebar widget.
+    Trade-off: no native ecommerce integration depth — order actions,
+    revenue attribution, and AI features require custom development.
+
+primitives:
+  # --- Ticket Management ---
+  - name: Support Ticket Management
+    branded_name: Tickets
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Create, assign, prioritize, and resolve customer support requests.
+      Core CRUD: open → assign → respond → resolve → close. Supports
+      snooze, merge, and internal notes. The fundamental helpdesk unit.
+    protocols:
+      - HTTP/REST (API)
+      - JSON
+
+  - name: Multi-Channel Ticket Ingestion
+    branded_name: Channels (Email, Chat, Social, SMS, Phone)
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Aggregate customer inquiries from all channels into a unified
+      ticket stream: email, live chat widget, Facebook Messenger,
+      Instagram DM, Twitter/X, SMS, WhatsApp, and phone (via
+      integration). Each channel becomes a ticket with channel metadata.
+    protocols:
+      - SMTP/IMAP (email)
+      - WebSocket (chat)
+      - HTTP/REST (social APIs)
+      - SMS
+
+  - name: Live Chat Widget
+    branded_name: Chat Widget
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Embeddable chat widget on the storefront for real-time customer
+      conversations. Supports pre-chat forms, proactive messages,
+      chat-to-ticket conversion, and office hours. The synchronous
+      support channel.
+    protocols:
+      - JavaScript (embed)
+      - WebSocket
+
+  # --- Agent Productivity ---
+  - name: Response Template Management
+    branded_name: Macros
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Pre-written response templates with dynamic variables: customer
+      name, order number, tracking URL, shipping status, refund amount.
+      Gorgias macros pull live Shopify data into responses. Agents
+      select and customize, not write from scratch.
+    protocols:
+      - HTTP/REST
+      - Shopify Admin API (variable resolution)
+
+  - name: Ticket Auto-Assignment and Routing
+    branded_name: Rules / Auto-Assignment
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Route tickets to the right agent or team based on channel, topic,
+      customer segment, language, or keywords. Rules engine:
+      trigger (ticket created/updated) → conditions → actions (assign,
+      tag, prioritize, auto-respond). The workflow automation layer.
+    protocols:
+      - HTTP/REST
+
+  - name: Ticket Classification and Tagging
+    branded_name: Tags / Views / Ticket Fields
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Categorize tickets with tags (WISMO, size-fit, defect, return),
+      custom fields, and filtered views. Tags can be auto-applied by
+      rules or AI intent detection. Drives reporting and routing.
+    protocols:
+      - HTTP/REST
+
+  - name: Internal Collaboration
+    branded_name: Internal Notes / Mentions / Shared Views
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Agent-to-agent collaboration on tickets: internal notes (not
+      visible to customer), @mentions to loop in teammates, shared
+      ticket views for team queues. The back-channel for complex issues.
+    protocols:
+      - HTTP/REST
+
+  # --- Ecommerce Integration ---
+  - name: Order Context Sidebar
+    branded_name: Shopify Sidebar / Order Widget
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Display customer's order history, tracking status, and account
+      details alongside the ticket. Agents see the full commerce context
+      without switching to Shopify admin. The signature Gorgias feature
+      for ecommerce support.
+    protocols:
+      - Shopify Admin API
+      - HTTP/REST
+
+  - name: Order Action Execution
+    branded_name: Order Actions (Refund, Cancel, Create)
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Execute Shopify order operations directly from the ticket:
+      issue refund, cancel order, create draft order, add discount.
+      Eliminates context-switching to Shopify admin for common
+      resolution actions.
+    protocols:
+      - Shopify Admin API
+      - HTTP/REST
+
+  - name: Revenue Attribution on Support
+    branded_name: Revenue Statistics
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track revenue generated through support interactions: pre-sale
+      chat conversions, upsell/cross-sell in tickets, retained revenue
+      from save attempts. Frames support as a revenue center, not
+      just a cost center.
+    protocols:
+      - HTTP/REST
+
+  # --- AI & Automation ---
+  - name: AI Intent Detection
+    branded_name: AI / Intent Detection
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Classify incoming tickets by intent: shipping inquiry, return
+      request, product question, billing issue, feedback/complaint.
+      Auto-detected from message content. Drives auto-routing,
+      auto-tagging, and AI response suggestions.
+    protocols:
+      - HTTP/REST (API)
+
+  - name: AI Auto-Response
+    branded_name: AI Agent / Automate
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Automatically respond to common inquiries without agent
+      involvement: WISMO (order tracking lookup), return policy
+      questions, shipping time estimates. Pulls live data from
+      Shopify. Handles the high-volume, low-complexity tier.
+    protocols:
+      - HTTP/REST
+      - Shopify API (data lookup)
+
+  - name: Self-Service Help Center
+    branded_name: Help Center
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Knowledge base of FAQ articles, how-to guides, and policy
+      pages. Searchable from the chat widget and support portal.
+      Deflects tickets by surfacing answers before customers contact
+      an agent.
+    protocols:
+      - HTTP/HTML
+      - HTTP/REST (API)
+
+  # --- Customer Satisfaction ---
+  - name: Customer Satisfaction Measurement
+    branded_name: Satisfaction Surveys (CSAT)
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Post-resolution satisfaction surveys sent automatically.
+      CSAT score tracking per agent, team, channel, and tag.
+      Qualitative feedback (free-text) alongside numeric rating.
+    protocols:
+      - SMTP (survey delivery)
+      - HTTP/REST (results API)
+
+  # --- Reporting ---
+  - name: Support Performance Analytics
+    branded_name: Statistics / Dashboards
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track support metrics: first response time, resolution time,
+      ticket volume by channel/tag/agent, CSAT score, one-touch
+      resolution rate, tickets per order ratio. Dashboards and
+      CSV exports.
+    protocols:
+      - HTTP (dashboard)
+      - CSV (export)
+
+  # --- Integrations ---
+  - name: Customer Data Enrichment
+    branded_name: Integrations (Klaviyo, Yotpo, Recharge, etc.)
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Pull customer context from connected apps into the ticket sidebar:
+      Klaviyo segments and email engagement, Recharge subscription
+      status, Yotpo review history, Loop Returns status. Enriches
+      agent context without switching tools.
+    protocols:
+      - HTTP/REST (partner APIs)
+      - Webhooks
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge
+
+source:
+  seed: Gorgias documentation, ecommerce support patterns, helpdesk industry practices
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - ecommerce-d2c.yaml (business model — Customer Support capability)
+    - Zendesk / Freshdesk as cross-vendor primitive validation
+    - Zammad / FreeScout as open-source primitive validation

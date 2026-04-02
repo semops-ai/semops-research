@@ -1,0 +1,29 @@
+industry:
+  key: manufacturing
+  name: Manufacturing
+  bizbok_section: "§8.2"
+  bizbok_pages: "631-633"
+  source: bizbok-v14
+
+entities:
+  - name: Material
+    category: core
+    bizbok_source: "§8.2 primary"
+  - name: Conveyor
+    category: core
+    bizbok_source: "§8.2 primary"
+  - name: Operation
+    category: core
+    bizbok_source: "§8.2 primary"
+  - name: Network
+    category: operational
+    bizbok_source: "§8.2 secondary"
+  - name: Route
+    category: logistics
+    bizbok_source: "§8.2 secondary"
+  - name: Shipment
+    category: logistics
+    bizbok_source: "§8.2 secondary"
+  - name: Incident
+    category: operational
+    bizbok_source: "§8.2 secondary"

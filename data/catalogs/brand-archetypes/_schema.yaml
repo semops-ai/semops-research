@@ -1,0 +1,77 @@
+# Brand Archetype Catalog Schema
+#
+# Each file in this directory represents a brand archetype — the combination
+# of a business model and (optionally) a vertical that produces distinctive
+# voice, messaging, and proof patterns.
+#
+# Archetypes capture HOW companies in a specific model+vertical combination
+# talk about themselves, their products, and their customers. This is not
+# brand strategy — it's empirical observation of messaging norms that the
+# agent can use to set expectations before analyzing a new company's website.
+#
+# Examples:
+#   - d2c-outdoor: Technical but approachable, performance-first,
+#     sustainability as structural commitment, activity-defined segments
+#   - saas-b2b: ROI-focused, integration ecosystem emphasis,
+#     enterprise trust signals (SOC 2, uptime SLAs)
+#   - marketplace-audiophile: Community credibility, editorial authority,
+#     curation as value proposition
+#
+# Relationship to other catalogs:
+#   - Business model catalogs define the economic logic — archetypes add the
+#     messaging layer on top
+#   - Vertical catalogs define domain vocabulary — archetypes define how that
+#     vocabulary is deployed in brand communications
+#   - Messaging analysis produces archetype observations as a reflexion output;
+#     archetype catalogs accumulate validated patterns across engagements
+#
+# Naming convention:
+#   <business-model>-<vertical>.yaml  (e.g., d2c-outdoor.yaml)
+#   <business-model>.yaml             (when vertical-agnostic, e.g., saas-b2b.yaml)
+#
+# Provenance:
+#   Brand archetypes are seeded from messaging analyses, same promotion rules
+#   as vertical catalogs: 2+ engagements with overlapping patterns, or a single
+#   high-confidence engagement with clearly generalizable norms.
+#
+# How archetypes affect the outside-in pipeline:
+#   Stage 1b (Messaging): Archetype sets expectations for what the agent
+#     should find — predicted messaging hierarchy, voice norms, proof patterns.
+#     Deviations from the archetype are reflexion-worthy observations.
+#   Stage 2 (Synthesize): Archetype-predicted messaging hierarchy validates
+#     or challenges business model competitive position analysis.
+#
+# Graph model (Neo4j):
+#   (:BrandArchetype)-[:FOR_MODEL]->(:BusinessModel)
+#   (:BrandArchetype)-[:FOR_VERTICAL]->(:Vertical)      # optional
+#   (:BrandArchetype)-[:PREDICTS]->(:MessagingNorm)
+#   (:Company)-[:MATCHES_ARCHETYPE]->(:BrandArchetype)
+#   (:MessagingAnalysis)-[:VALIDATES]->(:BrandArchetype)
+#
+# ---
+# archetype:
+#   name: string                          # Identifier (matches filename, e.g., "d2c-outdoor")
+#   business_model: string                # Business model catalog reference (e.g., "ecommerce-d2c")
+#   vertical: string | null               # Vertical catalog reference (null = model-only archetype)
+#   description: string                   # What characterizes this archetype's messaging
+#
+# voice:
+#   tone: string                          # Primary tone descriptor (e.g., "technical but approachable")
+#   never: [string]                       # Anti-patterns — what this archetype avoids
+#   always: [string]                      # Patterns — what this archetype consistently does
+#
+# messaging_hierarchy: [string]           # Value proposition themes in order of emphasis
+#                                         # (e.g., [performance, durability, sustainability, community])
+#
+# proof_patterns: [string]                # How credibility is established
+#                                         # (e.g., [field_tested, ambassador_validated, spec_transparency])
+#
+# vertical_identity_strength: HIGH | MEDIUM | LOW  # Expected vertical strength for this archetype
+#
+# typical_segments: [string]              # Common customer segmentation approach
+#                                         # (e.g., [activity_defined, values_driven, crossover_lifestyle])
+#
+# provenance:
+#   seed_engagement: string               # Company/engagement that first produced this archetype
+#   validated_engagements: [string]       # Additional engagements that confirmed/extended patterns
+#   last_updated: YYYY-MM-DD             # When archetype was last modified

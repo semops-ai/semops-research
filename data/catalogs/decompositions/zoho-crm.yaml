@@ -1,0 +1,186 @@
+# Zoho CRM — Primitive Decomposition
+#
+# Decomposes Zoho CRM into neutral functional primitives. Zoho is a
+# feature-rich CRM comparable to Salesforce in breadth, with additional
+# capabilities (CPQ, journey orchestration) that push beyond core CRM.
+# Useful as a "second maximal" data point alongside Salesforce.
+
+vendor:
+  name: Zoho CRM
+  company: Zoho
+  category: CRM
+
+lock_in_signals:
+  - Proprietary data model (modules, not portable SQL)
+  - Deluge scripting language for automation (vendor-specific)
+  - Blueprint process definitions not exportable
+  - Zoho ecosystem lock-in (40+ Zoho apps with deep integration)
+  - Canvas UI customizations not portable
+  - Vendor-controlled namespace (*.zoho.com)
+
+open_alternative:
+  name: PostgreSQL + custom schema
+  why: Standard SQL, full data ownership, portable process definitions
+
+primitives:
+  - name: Contact Management
+    branded_name: Contacts, Accounts, Vendors
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Store people, organizations, and vendor records with custom fields
+      and inter-record relationships. Includes portals for external
+      collaboration with customers and partners.
+    protocols:
+      - SQL
+      - vCard
+
+  - name: Sales Pipeline Tracking
+    branded_name: Deals & Pipeline Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Track deals through customizable stages with value, probability,
+      and close date. Visual pipeline view with stage-based analytics.
+    protocols:
+      - SQL
+
+  - name: Activity Logging
+    branded_name: Activities (Tasks, Events, Calls)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Schedule and log calls, meetings, and tasks linked to contacts
+      and deals. Chronological activity timeline per record.
+    protocols:
+      - SQL
+      - iCalendar
+
+  - name: Lead Management
+    branded_name: Leads (Capture, Enrichment, Nurturing)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Capture leads from multiple channels, enrich with external data,
+      nurture via automated sequences, score readiness, and convert to
+      contact + deal. More sophisticated than Pipedrive; comparable to
+      Salesforce.
+    protocols:
+      - SQL
+      - webhooks
+
+  - name: Sales Forecasting
+    branded_name: Forecasting
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Project revenue by period, team, and category using pipeline
+      data and historical trends. AI-enhanced predictions.
+    protocols:
+      - SQL
+
+  - name: Territory Management
+    branded_name: Territory Management
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Assign accounts and deals to territories by rules (geography,
+      industry, deal size). Hierarchical territory model.
+    protocols:
+      - SQL
+
+  - name: Reporting and Analytics
+    branded_name: Dashboards & Reports
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Dynamic dashboards, custom reports, and anomaly detection.
+      Real-time analytics with AI-powered trend identification.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Workflow Automation
+    branded_name: Workflows, Blueprint, Cadences
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Three automation layers — trigger-action workflows, Blueprint
+      (structured process templates with compliance enforcement), and
+      Cadences (multi-step follow-up sequences that branch on response).
+      More structured than Salesforce Flow.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Role-Based Access Control
+    branded_name: Roles, Profiles, Data Sharing Rules
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Control record visibility by role hierarchy, field-level access
+      by profile, and sharing rules for cross-team collaboration.
+    protocols:
+      - SQL (row-level security)
+      - RBAC
+
+  - name: Email Communication
+    branded_name: Email Integration & SalesInbox
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Two-way email sync, send from CRM, track opens/clicks.
+      SalesInbox organizes email by CRM context (deals, contacts).
+    protocols:
+      - SMTP
+      - IMAP
+
+  - name: Third-Party Integration
+    branded_name: Marketplace & Zoho Ecosystem
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      REST API, marketplace integrations, plus deep integration with
+      40+ Zoho apps (Books, Desk, Campaigns, etc.). The Zoho ecosystem
+      itself is a significant integration layer.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+  - name: Quote Generation
+    branded_name: CPQ (Configure, Price, Quote)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Configure product bundles, apply pricing rules, and generate
+      quotes directly from deal records. Links products to pipeline.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Journey Orchestration
+    branded_name: CommandCenter
+    apqc_context: "6.1"
+    apqc_name: Develop customer care/customer service strategy
+    description: >
+      Design and automate end-to-end customer journeys across
+      touchpoints (marketing, sales, service). Cross-functional
+      process that spans beyond CRM into customer experience.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+source:
+  seed: semops-orchestrator/docs/domain-patterns/retired/open-primitive-pattern.md
+  validated_against:
+    - salesforce-crm.yaml (comparative baseline)
+    - pipedrive-crm.yaml (minimal baseline)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

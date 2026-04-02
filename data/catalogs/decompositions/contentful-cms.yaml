@@ -1,0 +1,334 @@
+# Contentful — Primitive Decomposition
+#
+# Decomposes Contentful (headless CMS) into neutral functional primitives.
+# Contentful is API-first — its headless architecture means primitives
+# map more directly to product surface than monolithic CMS products.
+# Scoped to the core platform; personalization suite included as it's
+# tightly integrated.
+
+vendor:
+  name: Content Platform
+  company: Contentful
+  category: Headless CMS
+
+lock_in_signals:
+  - Proprietary content model schema — no standard export (JSON Schema partial)
+  - Vendor-controlled delivery CDN (cdn.contentful.com) — URLs break on exit
+  - Rich text stored as proprietary AST — not portable HTML or Markdown
+  - Environment branching semantics are platform-specific
+  - Personalization/experimentation data locked to platform
+  - App Framework extensions only run inside Contentful
+  - GraphQL schema auto-generated from content model — not portable
+  - Space/environment hierarchy is vendor-specific organizational model
+
+open_alternative:
+  name: Strapi / Directus + PostgreSQL + CDN
+  why: >
+    Open-source headless CMS with standard database, REST/GraphQL APIs,
+    content model as code, self-hosted with full data ownership
+
+primitives:
+  - name: Content Type Definition
+    branded_name: Content Types
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Define structured content schemas with typed fields (text, rich text,
+      number, date, reference, media). Schema-first content modeling —
+      structure defined once, content authored against it.
+    protocols:
+      - JSON Schema (partial)
+      - HTTP/REST
+
+  - name: Content Entry Management
+    branded_name: Content (entries)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Create, store, and manage individual content entries conforming
+      to a content type schema. The core CRUD unit.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Content Relationship Linking
+    branded_name: Reference fields / Cross-Space References
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Typed links between content entries — one-to-one, one-to-many,
+      cross-type references. Enables content graphs without coupling
+      to presentation hierarchy.
+    protocols:
+      - HTTP/REST
+
+  - name: Rich Text Authoring
+    branded_name: Rich Text field type
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Structured rich text storage as a document tree (not raw HTML).
+      Supports embedded entries, inline assets, and custom node types.
+      Renderer-agnostic — consumers decide presentation.
+    protocols:
+      - JSON (proprietary AST)
+
+  - name: Content Delivery (Read API)
+    branded_name: Content Delivery API (CDA)
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Read-only REST API serving published content. Optimized for
+      high-throughput, low-latency retrieval. CDN-backed with
+      cache invalidation on publish.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Content Query (GraphQL)
+    branded_name: GraphQL Content API
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      GraphQL query interface over the content model. Clients request
+      exactly the fields and relationships needed in a single request.
+    protocols:
+      - GraphQL
+      - HTTP
+
+  - name: Content Management (Write API)
+    branded_name: Content Management API (CMA)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Read-write API for programmatic content operations — create,
+      update, delete, publish, unpublish entries and content types.
+      Management plane vs. delivery's data plane.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Draft Content Preview
+    branded_name: Content Preview API (CPA)
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      API serving draft/unpublished content for editorial preview.
+      Same shape as delivery API but includes in-progress changes.
+      Live preview for real-time editing feedback.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Multi-Locale Content Storage
+    branded_name: Localization
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Multi-locale content values per field. Supports fallback chains
+      (e.g., en-GB → en → default). Content structure is locale-agnostic;
+      values are locale-specific.
+    protocols:
+      - HTTP/REST
+      - IETF BCP 47 (locale codes)
+
+  - name: Publishing State Management
+    branded_name: Timeline / Publishing
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Content state machine: draft → changed → published → archived.
+      Scheduled publishing with timeline view. Controls what appears
+      in delivery API vs. preview API.
+    protocols:
+      - HTTP/REST
+      - webhooks
+
+  - name: Content Environment Branching
+    branded_name: Environments / Environment Aliases
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Git-like branching for content and schema. Isolated environments
+      for testing content model changes before promoting to production.
+      Aliases for zero-downtime swaps.
+    protocols:
+      - HTTP/REST
+
+  - name: Visual Experience Assembly
+    branded_name: Studio
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Drag-and-drop page/experience composition for non-technical users.
+      Composes content entries into visual layouts without code.
+      Generates structured data, not HTML.
+    protocols:
+      - HTTP/REST
+
+  - name: Audience Segmentation
+    branded_name: Personalization — Segmentation
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Define audience segments by attributes and behavior. Target
+      content variants to segments. Rules-based and data-driven
+      segmentation.
+    protocols:
+      - HTTP/REST
+
+  - name: Content Experimentation
+    branded_name: Personalization — Experimentation
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      A/B and multivariate testing of content variants. Statistical
+      confidence scoring. Connects segment + variant + outcome.
+    protocols:
+      - HTTP/REST
+
+  - name: Content Performance Analytics
+    branded_name: Analytics / Insights
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track content engagement, conversion, and performance metrics.
+      Per-entry and per-variant measurement. Feeds back into
+      personalization and editorial decisions.
+    protocols:
+      - HTTP/REST
+
+  - name: AI Content Generation
+    branded_name: AI Actions
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      LLM-powered content generation tuned to brand guidelines.
+      Generates drafts, summaries, translations, alt-text within
+      content model field constraints.
+    protocols:
+      - HTTP/REST
+
+  - name: AI Variant Suggestion
+    branded_name: AI Suggestions (Personalization)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      AI-generated content variant recommendations for personalization.
+      Suggests alternative headlines, copy, CTAs optimized for
+      audience segments.
+    protocols:
+      - HTTP/REST
+
+  - name: Event Webhook Delivery
+    branded_name: Webhooks (content-events, action-events)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Event-driven webhooks fired on content lifecycle events
+      (create, update, publish, unpublish, delete). Enables
+      reactive integrations without polling.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Platform Extensibility
+    branded_name: App Framework / UI Extensions
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      SDK for building custom apps within the CMS — field editors,
+      sidebar widgets, page-level apps. Plugin architecture with
+      defined extension points.
+    protocols:
+      - HTTP/REST
+      - OAuth 2.0
+
+  - name: Serverless Function Execution
+    branded_name: Functions
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Server-side functions executing in response to content events.
+      Custom business logic (validation, transformation, enrichment)
+      without external infrastructure.
+    protocols:
+      - HTTP/REST
+      - webhooks
+
+  - name: Third-Party Integration
+    branded_name: Marketplace / Ecosystem
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Pre-built integrations with CRMs, analytics, DAMs, commerce
+      platforms. 100+ plug-and-play connectors.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+
+  - name: Role-Based Access Control
+    branded_name: Roles, Permissions, Governance
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Custom roles with content-level and space-level permission
+      scoping. Governance guardrails for content quality.
+    protocols:
+      - RBAC
+      - OAuth 2.0
+
+  - name: Identity Provisioning
+    branded_name: SSO / SCIM
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Enterprise SSO integration and SCIM-based user provisioning.
+      Centralizes identity management with corporate directory.
+    protocols:
+      - SAML 2.0
+      - SCIM
+      - OAuth 2.0
+
+  - name: Audit Logging
+    branded_name: Audit Logs
+    apqc_context: "11.2"
+    apqc_name: Manage compliance
+    description: >
+      Immutable log of all content and configuration changes —
+      who changed what, when. SOC 2 Type 2 and ISO 27001 compliance.
+    protocols:
+      - HTTP/REST
+
+  - name: Data Residency Compliance
+    branded_name: Regional Data Residency (EU/US)
+    apqc_context: "11.2"
+    apqc_name: Manage compliance
+    description: >
+      Regional data storage guarantees — content stored in specified
+      geography. Regulatory compliance for data sovereignty.
+    protocols:
+      - (infrastructure-level)
+
+  - name: Frontend Hosting
+    branded_name: Front-end Hosting
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Managed hosting for frontend applications consuming CMS content.
+      Build, deploy, and serve static or server-rendered sites.
+    protocols:
+      - HTTP/HTTPS
+      - CDN
+
+source:
+  seed:  (brand-to-neutral decomposition methodology)
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

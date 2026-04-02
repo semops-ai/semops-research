@@ -1,0 +1,35 @@
+industry:
+  key: insurance
+  name: Insurance
+  bizbok_section: "§8.5"
+  bizbok_pages: "667-670"
+  source: bizbok-v14
+
+entities:
+  - name: Policy
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Claim
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Evidence
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: HealthCondition
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Incident
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Accreditation
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Decision
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Coverage
+    category: core
+    bizbok_source: "§8.5 primary"
+  - name: Settlement
+    category: financial
+    bizbok_source: "§8.5 secondary"

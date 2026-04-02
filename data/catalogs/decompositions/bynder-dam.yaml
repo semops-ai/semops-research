@@ -1,0 +1,211 @@
+# Bynder DAM — Primitive Decomposition
+#
+# Decomposes Bynder Digital Asset Management into neutral functional
+# primitives. Bynder is a SaaS DAM platform for brand asset management,
+# creative workflows, and omnichannel content delivery.
+
+vendor:
+  name: Digital Asset Management
+  company: Bynder
+  category: DAM
+
+lock_in_signals:
+  - Proprietary asset metadata schema — not exportable as standard Dublin Core
+  - Vendor-controlled CDN URLs (*.bynder.com) — links break on exit
+  - Proprietary workflow engine — approval logic not portable
+  - Closed taxonomy system — no standard export format (SKOS, etc.)
+  - Template engine locked to platform — designs not reusable externally
+  - AI features (auto-tagging, agents) trained on vendor-hosted data only
+  - Integration marketplace (500+ apps) creates ecosystem dependency
+
+open_alternative:
+  name: MinIO + metadata DB + open DAM (ResourceSpace, Razuna)
+  why: Standard object storage, open metadata standards (Dublin Core, IPTC), self-hosted
+
+primitives:
+  - name: Asset Cataloging
+    branded_name: Digital Asset Management (core library)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Centralized registry of digital assets (images, video, documents)
+      with unique identifiers, lifecycle state, and metadata. Single
+      source of truth for brand assets.
+    protocols:
+      - HTTP/REST
+      - Dublin Core (metadata)
+
+  - name: Asset Storage
+    branded_name: (underlying storage)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Binary storage for asset files. Upload, retrieve, and version
+      original files with content-addressable access.
+    protocols:
+      - S3-compatible
+      - HTTP/REST
+
+  - name: Taxonomy Management
+    branded_name: Taxonomy & Filters
+    apqc_context: "13.5"
+    apqc_name: Develop and manage enterprise-wide knowledge management capability
+    description: >
+      Hierarchical classification system for organizing assets.
+      Controlled vocabularies, tag hierarchies, and faceted attributes
+      for discovery.
+    protocols:
+      - SKOS (potential)
+
+  - name: Asset Search
+    branded_name: Search (+ Bynder AI enhanced search)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Full-text and faceted search over asset metadata and content.
+      Filters, sorting, relevance ranking. AI-enhanced accuracy.
+    protocols:
+      - HTTP/REST
+
+  - name: Rendition Generation
+    branded_name: DAM + Studio
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Generate derivative formats from a source asset — thumbnails,
+      web-optimized, print-ready. One logical asset, multiple physical
+      renditions.
+    protocols:
+      - HTTP/REST
+
+  - name: Format Conversion
+    branded_name: Studio (image/video/GIF creation)
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Transcode between file formats (image resize, video transcode,
+      document export). Stateless processing.
+    protocols:
+      - HTTP/REST
+
+  - name: Creative Review and Approval
+    branded_name: Asset Workflow
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Multi-stage review and approval pipeline with configurable
+      stages, role-based gates, and brand compliance checks.
+      Annotations and versioning for feedback cycles.
+    protocols:
+      - webhooks
+
+  - name: Editorial Content Management
+    branded_name: Content Workflow
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Centralized creation, review, and approval hub for editorial
+      content at scale. Team collaboration tools for content
+      production.
+    protocols:
+      - HTTP/REST
+
+  - name: Omnichannel Content Delivery
+    branded_name: Content Experiences - Omnichannel (CX Omnichannel)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Automatic content transformation and delivery across digital
+      touchpoints. Format/size optimization per channel with
+      performance tracking.
+    protocols:
+      - HTTP/REST
+      - CDN
+
+  - name: Brand Portal Distribution
+    branded_name: Content Experiences - User Community (CX UC)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Self-service branded content hub for internal teams. Curated
+      asset collections with access controls for organizational
+      content distribution.
+    protocols:
+      - HTTP/REST
+
+  - name: Template-Based Content Creation
+    branded_name: Studio
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Parameterized design templates with locked brand elements and
+      editable zones. Scale content creation without designers.
+    protocols:
+      - HTTP/REST
+
+  - name: Content Performance Analytics
+    branded_name: Analytics
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track asset downloads, views, shares, and usage across channels.
+      Measure content effectiveness, engagement, and ROI.
+    protocols:
+      - HTTP/REST
+
+  - name: Automated Tagging
+    branded_name: Bynder AI
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      AI-driven automatic metadata extraction and tag suggestion
+      from asset content (image recognition, text extraction).
+    protocols:
+      - HTTP/REST
+
+  - name: AI Task Automation
+    branded_name: AI Agents
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Configurable AI agents that operate within the platform
+      context to automate content tasks (tagging, resizing,
+      routing, workflow acceleration).
+    protocols:
+      - HTTP/REST
+
+  - name: Role-Based Access Control
+    branded_name: (permissions system)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Role-based permissions controlling who can view, edit, approve,
+      and distribute assets. Folder and collection-level scoping.
+    protocols:
+      - RBAC
+      - OAuth 2.0
+
+  - name: Third-Party Integration
+    branded_name: Integrations & Ecosystem (500+ marketplace)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Pre-built connectors to third-party tools (CMS, CRM, social,
+      design tools). Developer toolkit and API for custom integrations.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+source:
+  seed:  (brand-to-neutral decomposition methodology)
+  validated_against:
+    - docs/domain-patterns/dam.md (existing DAM neutral pattern)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

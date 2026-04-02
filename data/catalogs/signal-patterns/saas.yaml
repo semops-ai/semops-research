@@ -1,0 +1,19 @@
+# SaaS / Platform — Signal Patterns
+#
+# SaaS sites emphasize developer docs, integrations, changelogs,
+# and API transparency. These overlap with defaults but with
+# higher confidence for SaaS-specific paths.
+
+vertical: saas
+description: URL patterns specific to SaaS and platform businesses
+
+patterns:
+  # --- Developer / Technical ---
+  - paths: ["/sdks", "/libraries"]
+    signal_type: api_docs
+    confidence: 0.6
+
+  - paths: ["/status", "/uptime"]
+    signal_type: certifications
+    confidence: 0.5
+    notes: Operational transparency

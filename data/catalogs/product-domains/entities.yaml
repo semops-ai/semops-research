@@ -1,0 +1,92 @@
+# Product Domain Entities
+#
+# Entities implied by the company's product domain — what the product
+# actually does. These are always CORE domain type since product domains
+# define what the company builds.
+
+product_domains:
+  search:
+    - name: SearchQuery
+      category: product
+    - name: SearchResult
+      category: product
+    - name: SearchIndex
+      category: product
+
+  discovery:
+    - name: Recommendation
+      category: product
+    - name: ContentItem
+      category: product
+
+  personalization:
+    - name: UserProfile
+      category: product
+    - name: Experiment
+      category: product
+    - name: Variant
+      category: product
+
+  analytics_bi:
+    - name: Report
+      category: product
+    - name: Dashboard
+      category: product
+    - name: Metric
+      category: product
+
+  ml_ai:
+    - name: Model
+      category: product
+    - name: TrainingRun
+      category: product
+    - name: Prediction
+      category: product
+
+  data_platform:
+    - name: Dataset
+      category: product
+    - name: Pipeline
+      category: product
+    - name: Connector
+      category: product
+
+  payments_commerce:
+    - name: PaymentMethod
+      category: product
+    - name: Checkout
+      category: product
+    - name: Refund
+      category: product
+
+  identity_auth:
+    - name: Session
+      category: product
+    - name: Permission
+      category: product
+    - name: Role
+      category: product
+
+  video_streaming:
+    - name: ContentAsset
+      category: product
+    - name: PlaybackSession
+      category: product
+    - name: Watchlist
+      category: product
+
+  publishing:
+    - name: Article
+      category: product
+    - name: Author
+      category: product
+    - name: Category
+      category: product
+
+  voice_conversational:
+    - name: Utterance
+      category: product
+    - name: Intent
+      category: product
+    - name: Conversation
+      category: product

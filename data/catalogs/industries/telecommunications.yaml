@@ -1,0 +1,38 @@
+industry:
+  key: telecommunications
+  name: Telecommunications
+  bizbok_section: "§8.9"
+  bizbok_pages: "769-771"
+  source: bizbok-v14
+
+entities:
+  - name: Subscriber
+    category: core
+    bizbok_source: "§8.9 primary"
+  - name: ServicePlan
+    category: core
+    bizbok_source: "§8.9 primary"
+  - name: Network
+    category: infrastructure
+    bizbok_source: "§8.9 primary"
+  - name: Infrastructure
+    category: infrastructure
+    bizbok_source: "§8.9 primary"
+  - name: GeographicSpace
+    category: infrastructure
+    bizbok_source: "§8.9 primary"
+  - name: License
+    category: regulatory
+    bizbok_source: "§8.9 secondary"
+  - name: Operation
+    category: operational
+    bizbok_source: "§8.9 secondary"
+  - name: Incident
+    category: operational
+    bizbok_source: "§8.9 secondary"
+  - name: UsageRecord
+    category: operational
+  - name: Inquiry
+    category: operational
+  - name: BillingAccount
+    category: financial

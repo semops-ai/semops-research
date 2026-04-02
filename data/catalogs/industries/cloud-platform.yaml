@@ -1,0 +1,20 @@
+industry:
+  key: cloud_platform
+  name: Cloud Platform
+  bizbok_section: null
+  bizbok_pages: null
+  source: domain-extension
+
+entities:
+  - name: Tenant
+    category: core
+  - name: Resource
+    category: core
+  - name: Usage
+    category: product
+  - name: Quota
+    category: product
+  - name: BillingAccount
+    category: financial
+  - name: Region
+    category: infrastructure

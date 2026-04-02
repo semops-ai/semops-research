@@ -1,0 +1,427 @@
+# E-Commerce (D2C) — Analytics Catalog
+#
+# High-level customer and sales metrics for D2C ecommerce.
+# Focused on business health metrics that matter at the executive/investor
+# level — not web analytics (sessions, bounce rate, page speed) or
+# channel-specific platform metrics.
+#
+# Complements ecommerce-d2c.yaml (capabilities) and
+# business-model-analytics.md (cross-model analytics patterns).
+#
+# Organized by bounded context from the DDD architecture.
+
+analytics_reference: "business-model-analytics.md#transaction--commerce-business-model"
+
+# ============================================================
+# SALES METRICS — Order Context
+# ============================================================
+sales_metrics:
+  bounded_context: Order
+  system_type: application
+  gold_layer: true
+
+  metrics:
+    - name: Gross Merchandise Value (GMV)
+      formula: sum(order_total) before returns and discounts
+      grain: daily
+      dimensions: [channel, product_category, customer_segment]
+      why: >
+        Total transaction value — the topline number investors and
+        leadership track. Not the same as revenue (excludes returns,
+        discounts, taxes).
+
+    - name: Net Revenue
+      formula: GMV - returns - discounts - taxes
+      grain: daily
+      dimensions: [channel, product_category, customer_segment]
+      why: >
+        Actual recognized revenue. The number that hits the P&L.
+        Gap between GMV and net revenue reveals discount dependency
+        and return exposure.
+
+    - name: Average Order Value (AOV)
+      formula: net_revenue / order_count
+      grain: daily
+      dimensions: [channel, customer_segment, new_vs_returning]
+      why: >
+        Revenue per transaction. D2C brands optimize AOV through
+        bundling, upsell, free shipping thresholds, and tiered
+        discounts. AOV × order frequency = LTV.
+      benchmarks:
+        outdoor_gear: "$100-150"
+        apparel: "$80-120"
+        consumables: "$40-60"
+
+    - name: Units Per Transaction (UPT)
+      formula: total_units_sold / order_count
+      grain: daily
+      dimensions: [channel, product_category]
+      why: >
+        Basket size indicator. Low UPT with high AOV = buying one
+        expensive item. High UPT with lower AOV = buying multiple
+        accessories. Different merchandising strategies per pattern.
+
+    - name: Order Count
+      formula: count(orders)
+      grain: daily
+      dimensions: [channel, order_type, customer_segment]
+      why: >
+        Raw transaction volume. Combined with AOV gives revenue.
+        Spikes indicate successful campaigns or seasonal demand.
+
+    - name: Discount Rate
+      formula: total_discount_value / GMV
+      grain: monthly
+      dimensions: [discount_type, channel, campaign]
+      why: >
+        How much revenue is given away. D2C brands walk a tightrope —
+        discounts drive volume but train customers to wait for sales
+        and erode brand premium. Target: under 15%.
+
+# ============================================================
+# CUSTOMER METRICS — Customer Context
+# ============================================================
+customer_metrics:
+  bounded_context: Customer
+  system_type: record
+  gold_layer: true
+
+  metrics:
+    - name: Customer Lifetime Value (LTV)
+      formula: predicted total net revenue per customer over relationship
+      grain: cohort (monthly acquisition cohort)
+      dimensions: [acquisition_channel, customer_segment, first_product_category]
+      why: >
+        The most important D2C metric. Determines how much you can
+        spend to acquire a customer (CAC) and still be profitable.
+        Typically modeled as historical (backward-looking) and
+        predictive (forward-looking, via Klaviyo or custom model).
+      benchmarks:
+        healthy_d2c: "3x+ CAC"
+
+    - name: Customer Acquisition Cost (CAC)
+      formula: total_acquisition_spend / new_customers_acquired
+      grain: monthly
+      dimensions: [channel, campaign]
+      why: >
+        Cost to win a new customer. The existential D2C metric —
+        CAC inflation on Meta/Google is what kills D2C brands.
+        Must be measured blended (all channels) and per-channel.
+      benchmarks:
+        healthy_d2c: "$20-50 blended"
+        paid_social: "$30-80"
+        organic: "$5-15"
+
+    - name: LTV:CAC Ratio
+      formula: LTV / CAC
+      grain: cohort
+      dimensions: [acquisition_channel]
+      why: >
+        Unit economics health check. Below 3:1 = unsustainable
+        (spending too much to acquire). Above 5:1 = potentially
+        underinvesting in growth. The ratio investors care about most.
+      benchmarks:
+        target: "3:1 to 5:1"
+        danger: "below 2:1"
+
+    - name: Repeat Purchase Rate
+      formula: customers_with_2plus_orders / total_customers (in period)
+      grain: monthly / cohort
+      dimensions: [acquisition_channel, first_product_category]
+      why: >
+        Percentage of customers who come back. First orders often
+        lose money after CAC — profitability comes from repeat.
+        The bridge between acquisition and retention economics.
+      benchmarks:
+        good_d2c: "30-40%"
+        great_d2c: "40%+"
+
+    - name: Purchase Frequency
+      formula: total_orders / unique_customers (in period)
+      grain: monthly / annual
+      dimensions: [customer_segment]
+      why: >
+        How often customers buy. Combined with AOV and customer
+        count, gives total revenue. Low frequency with high AOV
+        (gear) vs. high frequency with low AOV (consumables)
+        require different retention strategies.
+
+    - name: Time Between Purchases
+      formula: median days between consecutive orders per customer
+      grain: cohort
+      dimensions: [product_category, customer_segment]
+      why: >
+        Natural purchase cadence. Drives subscription frequency
+        defaults, winback flow timing, and replenishment predictions.
+        Outdoor gear: 90-180 days. Consumables: 30-60 days.
+
+    - name: Customer Count (Active)
+      formula: customers with at least 1 order in trailing 12 months
+      grain: monthly
+      dimensions: [segment, acquisition_channel]
+      why: >
+        Size of the active customer base. Growth comes from
+        acquiring faster than churning. Segmented view shows
+        health by cohort.
+
+    - name: Churn Rate (Non-Subscription)
+      formula: customers who were active 12mo ago with no purchase in trailing 12mo / active 12mo ago
+      grain: monthly (rolling)
+      dimensions: [acquisition_channel, customer_segment]
+      why: >
+        Customer attrition. Different from subscription churn —
+        D2C churn is behavioral (stopped buying) not contractual
+        (cancelled). Harder to measure precisely, but critical
+        for LTV modeling.
+
+    - name: New vs. Returning Revenue Split
+      formula: revenue from first-time buyers / total revenue
+      grain: monthly
+      dimensions: [channel]
+      why: >
+        Healthy D2C brands derive 40-60% of revenue from returning
+        customers. Too much from new = acquisition-dependent (fragile).
+        Too much from returning = growth stalling (not enough new).
+
+# ============================================================
+# PRODUCT METRICS — Product Catalog + Inventory Context
+# ============================================================
+product_metrics:
+  bounded_context: Product Catalog + Inventory
+  system_type: record
+  gold_layer: true
+
+  metrics:
+    - name: Gross Margin
+      formula: (net_revenue - COGS) / net_revenue
+      grain: monthly
+      dimensions: [product_category, channel, product]
+      why: >
+        Product profitability after direct costs. The margin that
+        funds everything else (marketing, operations, salaries).
+        D2C apparel targets 60%+. Wholesale channel drags it down.
+      benchmarks:
+        d2c_apparel: "55-65%"
+        d2c_hardgoods: "45-55%"
+        wholesale: "30-40%"
+
+    - name: Inventory Turnover
+      formula: COGS / average_inventory_value
+      grain: monthly
+      dimensions: [product_category]
+      why: >
+        How many times inventory is sold and replaced. Low turnover =
+        cash tied up in slow-moving stock. High turnover = lean but
+        stockout risk. Balance depends on product category.
+      benchmarks:
+        apparel: "4-6x annually"
+        consumables: "8-12x annually"
+
+    - name: Stockout Rate
+      formula: variant-days with zero available / total variant-days
+      grain: weekly
+      dimensions: [product_category, variant]
+      why: >
+        Lost revenue from unavailable products. Every stockout day
+        on a popular variant is direct revenue loss plus customer
+        frustration. Target: under 5%.
+
+    - name: Sell-Through Rate
+      formula: units_sold / units_received (per buy cycle)
+      grain: per buy / seasonal
+      dimensions: [product_category, product]
+      why: >
+        Percentage of inventory that sells at full price before
+        markdown. Below 70% means buying too much or wrong product.
+        Above 90% means buying too little (missed sales).
+      benchmarks:
+        target: "70-85%"
+
+    - name: Return Rate
+      formula: returned_orders / total_orders
+      grain: monthly
+      dimensions: [product_category, return_reason, channel]
+      why: >
+        Direct margin impact — every return costs shipping, inspection,
+        potential write-off, and refund processing. Root cause analysis
+        (fit, quality, expectations) drives product improvement.
+      benchmarks:
+        outdoor_gear: "8-12%"
+        apparel_with_sizing: "15-25%"
+
+    - name: Dead Stock Percentage
+      formula: inventory_value_with_no_sales_90days / total_inventory_value
+      grain: monthly
+      dimensions: [product_category]
+      why: >
+        Cash trapped in unsellable inventory. Eventually requires
+        markdown, donation, or write-off. Target: under 10%.
+
+# ============================================================
+# MARKETING METRICS — Marketing Context
+# ============================================================
+marketing_metrics:
+  bounded_context: Marketing
+  system_type: application
+  gold_layer: true
+
+  metrics:
+    - name: Return on Ad Spend (ROAS)
+      formula: revenue_attributed_to_ads / ad_spend
+      grain: daily / campaign
+      dimensions: [channel, campaign, ad_set]
+      why: >
+        Revenue generated per dollar of ad spend. The primary
+        efficiency metric for paid acquisition. Post-iOS 14.5,
+        attribution is increasingly unreliable — blended ROAS
+        (total revenue / total ad spend) is more trustworthy
+        than per-channel.
+      benchmarks:
+        target_blended: "3-5x"
+        meta: "2-4x"
+        google_brand: "8-15x"
+        google_non_brand: "2-4x"
+
+    - name: Blended CAC
+      formula: total_marketing_spend / total_new_customers
+      grain: monthly
+      dimensions: []
+      why: >
+        Aggregate acquisition cost across all channels. More
+        reliable than per-channel CAC in a post-iOS world where
+        attribution is broken. The honest number.
+
+    - name: Owned Channel Revenue Share
+      formula: revenue_from_email_sms / total_revenue
+      grain: monthly
+      dimensions: [email_vs_sms, flow_vs_campaign]
+      why: >
+        Revenue from channels you control (email, SMS) vs. rented
+        (paid ads). Higher owned share = more resilient, lower
+        marginal CAC. Healthy D2C targets 30%+ from owned channels.
+      benchmarks:
+        target: "25-35%"
+        great: "35%+"
+
+    - name: Email Revenue per Recipient
+      formula: email_attributed_revenue / total_email_recipients
+      grain: monthly
+      dimensions: [flow_vs_campaign]
+      why: >
+        Monetization efficiency of the email list. More useful
+        than open rates or click rates because it ties directly
+        to revenue. Flows typically generate 3-5x more per
+        recipient than campaigns.
+
+    - name: List Growth Rate
+      formula: (new_subscribers - unsubscribes) / total_subscribers
+      grain: monthly
+      dimensions: [source]
+      why: >
+        Net growth of the owned audience. List is an asset —
+        growth rate indicates future owned channel revenue potential.
+
+# ============================================================
+# SUBSCRIPTION METRICS — Subscription Context
+# ============================================================
+subscription_metrics:
+  bounded_context: Subscription
+  system_type: application
+  gold_layer: true
+
+  metrics:
+    - name: Monthly Recurring Revenue (MRR)
+      formula: active_subscriptions × average_subscription_value
+      grain: monthly
+      dimensions: [product, frequency]
+      why: >
+        Predictable revenue base from subscriptions. Small for
+        most D2C (5-10% of total) but growing. Valued higher
+        by investors because of predictability.
+
+    - name: Subscription Churn Rate
+      formula: cancellations / active_subscriptions (in period)
+      grain: monthly
+      dimensions: [product, cancel_reason, tenure]
+      why: >
+        Rate of subscription loss. Unlike non-subscription churn,
+        this is explicit (customer actively cancels). Cancel reason
+        analysis drives retention interventions.
+      benchmarks:
+        target: "under 10% monthly"
+
+    - name: Subscription Conversion Rate
+      formula: new_subscriptions / eligible_product_purchases
+      grain: monthly
+      dimensions: [product]
+      why: >
+        How effectively one-time buyers of subscription-eligible
+        products convert to subscribers. Measures the subscription
+        offer's appeal.
+
+# ============================================================
+# FACT TABLE SCHEMAS — Gold Layer
+# ============================================================
+fact_tables:
+
+  - name: fact_orders
+    grain: one row per order line item
+    description: Core sales fact — every product sold in every order
+    columns:
+      - order_id
+      - order_date
+      - customer_id
+      - product_id
+      - variant_id
+      - channel  # shopify, amazon, wholesale
+      - quantity
+      - unit_price
+      - discount_amount
+      - net_revenue
+      - cogs
+      - gross_margin
+      - is_first_order  # for new vs returning splits
+      - is_subscription  # subscription order flag
+
+  - name: fact_customers
+    grain: one row per customer (slowly changing)
+    description: Customer dimension with computed lifetime metrics
+    columns:
+      - customer_id
+      - first_order_date
+      - last_order_date
+      - acquisition_channel
+      - total_orders
+      - total_revenue
+      - total_units
+      - average_order_value
+      - days_since_last_order
+      - predicted_ltv  # from Klaviyo or custom model
+      - segment  # VIP, active, at-risk, lapsed, churned
+      - subscription_status  # none, active, cancelled
+
+  - name: fact_inventory
+    grain: one row per variant per location per day
+    description: Daily inventory snapshot for availability and turnover
+    columns:
+      - date
+      - variant_id
+      - location_id
+      - quantity_on_hand
+      - quantity_reserved
+      - quantity_available
+      - is_stockout  # boolean
+      - days_of_supply  # at current velocity
+
+  - name: fact_marketing
+    grain: one row per campaign/flow per day
+    description: Marketing spend and attributed revenue
+    columns:
+      - date
+      - channel  # meta, google, klaviyo_email, klaviyo_sms
+      - campaign_id
+      - campaign_type  # flow, broadcast, paid_ad
+      - spend
+      - attributed_revenue
+      - new_customers_attributed
+      - roas

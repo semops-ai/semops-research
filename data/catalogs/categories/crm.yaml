@@ -1,0 +1,91 @@
+# CRM — Generic Category Catalog
+#
+# What CRM IS as an architectural category, independent of vendor.
+# Derived from cross-product analysis of 4 vendor decompositions.
+
+category:
+  name: CRM
+  description: Customer relationship management — contact records, sales pipeline, interaction tracking
+  semops_pattern: crm
+  apqc_primary: "3.0 Market and Sell"
+
+provenance:
+  type: derived
+  sources:
+    - salesforce-crm.yaml
+    - pipedrive-crm.yaml
+    - zoho-crm.yaml
+    - attio-crm.yaml
+  research: docs/research/decompositions/crm-primitive-analysis.md
+  vendor_count: 4
+
+primitives:
+
+  tier_1:
+    description: Present in all 4 products analyzed. A product without these is not recognizable as CRM.
+    items:
+      - name: Contact Management
+        apqc_context: "3.1"
+        description: Store and link people/org records
+      - name: Sales Pipeline Tracking
+        apqc_context: "3.5"
+        description: Move deals through stages to close
+      - name: Activity Logging
+        apqc_context: "3.5"
+        description: Record interactions against records
+      - name: Reporting and Analytics
+        apqc_context: "13.6"
+        description: Measure pipeline, activity, revenue
+      - name: Workflow Automation
+        apqc_context: "13.1"
+        description: Trigger-action rules on data changes
+      - name: Email Communication
+        apqc_context: "3.4"
+        description: Send/receive/track email in CRM context
+      - name: Third-Party Integration
+        apqc_context: "8.5"
+        description: Connect to external systems via API
+
+  tier_2:
+    description: Present in 2-3 of 4 products. Presence correlates with target market size or sales motion complexity.
+    items:
+      - name: Lead Management
+        apqc_context: "3.3"
+        description: Separate lead object with conversion workflow
+        condition: Traditional sales motion with distinct lead-to-opportunity conversion. Flexible-model CRMs (Attio) absorb this into general record types.
+      - name: Sales Forecasting
+        apqc_context: "3.5"
+        description: Management reporting on pipeline confidence and projected revenue
+        condition: Needed when managing sales teams, not when tracking own deals.
+      - name: Role-Based Access Control
+        apqc_context: "7.4"
+        description: Hierarchical visibility rules and permission sets
+        condition: Governance need at scale. Single-team orgs don't need it.
+      - name: Territory Management
+        apqc_context: "3.5"
+        description: Geographic or account-based sales territory assignment
+        condition: Field sales operations for large orgs. Irrelevant for inside sales or startups.
+      - name: Data Import and Export
+        apqc_context: "8.5"
+        description: Bulk data migration and integration tooling
+        condition: Competitive positioning (easy switching) or enterprise integration need.
+
+  tier_3:
+    description: Present in 1 of 4 products. Reflects vendor philosophy, not universal CRM needs.
+    items:
+      - name: Data Enrichment
+        apqc_context: "3.1"
+        description: Auto-populate contact records from external data sources
+        signal: Relationship-intelligence philosophy — CRM should know things you didn't type in
+      - name: Relationship Intelligence
+        apqc_context: "3.1"
+        description: Graph-derived insight from communication patterns
+        signal: Passive data capture vs. manual logging — next-gen CRM positioning
+      - name: Quote Generation (CPQ)
+        apqc_context: "3.5"
+        description: Configure-price-quote from within CRM
+        signal: Feature-completeness play — extending CRM into sales operations/commerce
+      - name: Journey Orchestration
+        apqc_context: "3.4"
+        description: Cross-functional customer experience workflows beyond sales
+        signal: Pushing CRM beyond sales into service and marketing — platform ambition

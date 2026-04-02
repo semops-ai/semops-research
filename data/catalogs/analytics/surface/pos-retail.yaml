@@ -1,0 +1,102 @@
+# POS / Retail — Surface Analytics Patterns
+#
+# Point-of-sale terminals and retail stores. Physical world constraints
+# (store hours, geography). POS-specific metrics (basket analysis,
+# tender mix, shrinkage). Absorbed into BI/Reporting rather than
+# emerging as its own distinct category.
+
+surface:
+  name: POS / Retail
+  category: pos-retail
+  description: >
+    Point-of-sale terminals and physical retail environments. Physical
+    world constraints (store hours, geography, staffing). Transaction
+    data is ~80% identical to e-commerce but with POS-specific additions
+    (tender mix, cashier performance, physical shrinkage). Analytics
+    typically absorbed into BI/Reporting rather than forming a distinct
+    analytics discipline.
+  system_types:
+    - Application  # transaction processing, inventory lookups
+    - Record       # inventory sync, general ledger
+
+unique_characteristics:
+  - "Physical world constraints (store hours, geography)"
+  - "Basket analysis (what's purchased together)"
+  - "Tender mix analysis (cash vs. card vs. mobile)"
+  - "Store/associate-level performance analytics"
+  - "80% transaction schema overlap with e-commerce; 20% POS-specific"
+
+surface_metrics:
+  - name: Transactions per Hour
+    definition: Throughput — operational capacity per register/associate
+    formula: "COUNT(transactions) / operating_hours"
+    benchmarks:
+      healthy: "Meeting staffing model targets"
+      warning: "Declining (process friction or low traffic)"
+      source: "NRF retail benchmarks"
+
+  - name: Average Basket Size
+    definition: Items per transaction
+    formula: "SUM(items) / COUNT(transactions)"
+    benchmarks:
+      healthy: "Increasing with cross-sell initiatives"
+      warning: "Declining"
+      source: "Retail analytics"
+
+  - name: Tender Type Distribution
+    definition: Payment method mix (cash, card, contactless, mobile)
+    formula: "COUNT(*) GROUP BY tender_type / COUNT(*)"
+    benchmarks:
+      healthy: "Trending toward lower-cost payment methods"
+      warning: "High cash percentage (handling cost, shrinkage risk)"
+      source: "Payment industry reports"
+
+  - name: Shrinkage Rate
+    definition: Inventory loss (theft, breakage, administrative error)
+    formula: "(book_inventory - physical_inventory) / book_inventory"
+    benchmarks:
+      healthy: "<1.5%"
+      warning: ">3%"
+      source: "NRF National Retail Security Survey"
+
+  - name: Cashier Scan Rate
+    definition: Items scanned per minute per associate
+    formula: "SUM(items_scanned) / SUM(scan_minutes) per associate"
+    benchmarks:
+      healthy: ">15 items/min (grocery), >10 items/min (general)"
+      warning: "<8 items/min"
+      source: "Retail operations benchmarks"
+
+key_dimensions:
+  - "Store — location, region, format, square footage"
+  - "Register/Lane — terminal, associate"
+  - "Product — SKU, category, brand"
+  - "Tender Type — cash, chip card, contactless, mobile"
+  - "Time — hour of day, day of week (staffing optimization)"
+
+instrumentation:
+  - "POS system (Square, Shopify POS, NCR, Oracle Retail)"
+  - "Inventory management system"
+  - "Loss prevention systems (cameras, EAS tags)"
+  - "Foot traffic counters"
+
+business_models_where_dominant:
+  - "Brick-and-mortar retail"
+  - "Grocery"
+  - "Omnichannel retail (POS + e-commerce convergence)"
+  - "Quick-service restaurant"
+
+tools:
+  - "POS systems (Square, Shopify POS, NCR)"
+  - "Retail analytics platforms"
+  - "BI tools (Tableau, Power BI) for store rollups"
+
+convergence_test:
+  multi_function_convergence: false  # primarily Commerce, some Customer
+  unified_instrumentation: true      # POS systems with built-in analytics
+  dedicated_tooling_and_teams: false  # retail analysts, but absorbed into BI
+  verdict: "Absorbed into BI/Reporting — 80% transaction overlap with e-commerce explains why POS doesn't emerge as its own analytics discipline"
+
+source:
+  seed: "docs/research/surface-system-analytics.md"
+  validated_against: []

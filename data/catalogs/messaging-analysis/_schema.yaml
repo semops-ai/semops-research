@@ -1,0 +1,194 @@
+# Messaging Analysis Schema
+#
+# Defines the structured output of Stage 1b (Website & Messaging Analysis)
+# in the outside-in engagement pipeline. The messaging analysis captures how
+# a company presents itself publicly — its information architecture, brand
+# voice, vertical identity, audience signals, and domain vocabulary.
+#
+# Instances live in companies/<name>/mirror/domain/outside-in/messaging-analysis.md
+# (engagement-specific artifacts), not in this catalog directory. This schema
+# defines the contract that each instance should conform to.
+#
+# Relationship to other artifacts:
+#   - Stage 1 classification provides the business model archetype and vertical
+#     that frame what the agent looks for during website analysis
+#   - Messaging analysis feeds Stage 2 (business model synthesis) with:
+#     - Audience segments → customer context definitions
+#     - Value prop hierarchy → competitive moat signals
+#     - Vertical identity strength → domain typing (CORE/SUPPORTING/GENERIC)
+#   - UL seeds from messaging analysis become the first entries in
+#     UBIQUITOUS_LANGUAGE.md (Stage 3 output)
+#   - Reflexion outputs feed shared catalogs:
+#     - Vertical vocabulary → data/catalogs/verticals/<vertical>.yaml
+#     - Brand voice norms → data/catalogs/brand-archetypes/<archetype>.yaml
+#
+# Relationship to other catalogs:
+#   - Business model catalogs predict what capabilities a company needs;
+#     the messaging analysis validates whether the website confirms or
+#     contradicts those predictions
+#   - Vertical catalogs (data/catalogs/verticals/) accumulate vocabulary
+#     extracted from messaging analyses across engagements
+#   - Brand archetype catalogs (data/catalogs/brand-archetypes/) accumulate
+#     voice and messaging patterns across engagements
+#
+# Inputs:
+#   - Company website (crawled or manually reviewed)
+#   - Stage 1 classification (business model archetype, vertical, industry)
+#   - Business model catalog for the matching archetype
+#   - Vertical catalog for the matching vertical (if one exists — bootstraps
+#     vocabulary expectations; absent on first engagement in a new vertical)
+#
+# Outputs:
+#   - Engagement artifact: companies/<name>/mirror/domain/outside-in/messaging-analysis.md
+#   - Reflexion log: structured prediction-vs-actual record (embedded in artifact)
+#   - Proposed catalog updates: vertical vocabulary and brand archetype
+#     observations flagged for promotion to shared catalogs
+#
+# Provenance:
+#   Each messaging analysis is produced by reviewing the company's public
+#   website. The agent (or human analyst) crawls key pages, maps the
+#   information architecture, extracts messaging patterns, and identifies
+#   domain vocabulary. The analysis is always engagement-specific but may
+#   produce reusable learnings via the reflexion loop.
+#
+# Graph model (Neo4j):
+#   (:Company)-[:HAS_ANALYSIS]->(:MessagingAnalysis)
+#   (:MessagingAnalysis)-[:SEEDS]->(:ULCandidate)-[:IN_CONTEXT]->(:BoundedContext)
+#   (:MessagingAnalysis)-[:IDENTIFIES]->(:AudienceSegment)
+#   (:MessagingAnalysis)-[:OBSERVES]->(:IAPattern)-[:SIGNALS]->(:BoundedContext)
+#   (:MessagingAnalysis)-[:SCORES]->(:VerticalIdentity)
+#   (:MessagingAnalysis)-[:PRODUCES]->(:ReflexionEntry)
+#   (:ReflexionEntry)-[:UPDATES]->(:VerticalCatalog)
+#   (:ReflexionEntry)-[:UPDATES]->(:BrandArchetype)
+#
+# Evidence:
+#   - Ridgeline : ridgeline-demo/mirror/domain/outside-in/messaging-analysis.md
+#
+# ---
+# company: string                        # Company name
+# date: YYYY-MM-DD                       # Analysis date
+# stage: string                          # "1b" — position in outside-in pipeline
+# status: string                         # synthetic | draft | validated
+# source_url: string                     # Primary website URL analyzed
+# classification_ref: string             # Path to Stage 1 classification artifact
+#
+# information_architecture:
+#   navigation:                          # Top-level site structure
+#     - section: string                  # Nav section name (e.g., "Shop", "About")
+#       children:                        # Subsections (recursive)
+#         - name: string
+#           children: [...] | null
+#   signals:                             # IA patterns with DDD implications
+#     - pattern: string                  # What was observed (e.g., "Activity-based collections")
+#       interpretation: string           # What it means about the company
+#       ddd_implication: string           # How it maps to DDD architecture
+#
+# brand_messaging:
+#   tagline: string | null               # Primary tagline or slogan
+#   value_proposition_hierarchy:         # Ordered by emphasis (most prominent first)
+#     - rank: int                        # 1 = primary, 2 = secondary, etc.
+#       theme: string                    # One-word theme (e.g., "Performance", "Sustainability")
+#       description: string              # How this value prop manifests in messaging
+#   self_description: [string]           # How the company describes itself (direct quotes or paraphrases)
+#   product_language:                    # How they talk about products
+#     - observation: string              # What they do (e.g., "Technical specs prominently displayed")
+#       implication: string              # What it signals about the domain
+#   customer_language:                   # How they talk about customers
+#     - observation: string
+#       implication: string
+#
+# vertical_identity:
+#   strength: HIGH | MEDIUM | LOW        # Overall vertical identity strength
+#   vertical: string                     # Vertical name (e.g., "outdoor", "audiophile")
+#   dimensions:                          # Scored dimensions (see rubric below)
+#     - name: string                     # Dimension name
+#       score: HIGH | MEDIUM | LOW       # Score for this dimension
+#       evidence: string                 # What was observed
+#   ddd_implications:                    # How vertical strength affects architecture
+#     - bounded_context: string          # Which BC is affected
+#       impact: string                   # How the vertical drives domain typing or language
+#
+#   # Vertical Identity Scoring Rubric
+#   #
+#   # Four universal dimensions (apply to any company):
+#   #
+#   # 1. Product Language Specificity
+#   #    HIGH: Insider vocabulary dominates ("shell", "puffy", "approach shoe")
+#   #          — customers and company share specialized terms
+#   #    MEDIUM: Mix of generic and specialized terms — vertical language present
+#   #            but not dominant
+#   #    LOW: Generic product descriptions — could be any industry
+#   #
+#   # 2. Category Structure Alignment
+#   #    HIGH: Navigation organized by vertical use cases, not just product types
+#   #          (e.g., "Trail Running" collection alongside "Jackets" category)
+#   #    MEDIUM: Some vertical-specific groupings but primarily generic taxonomy
+#   #    LOW: Standard e-commerce/industry taxonomy with no vertical flavor
+#   #
+#   # 3. Content Differentiation
+#   #    HIGH: Content types are vertical-specific (trail reports, gear guides,
+#   #          field tests) — a generic CMS wouldn't model them
+#   #    MEDIUM: Some vertical content but mostly standard blog/news
+#   #    LOW: Generic content (press releases, company news, FAQs)
+#   #
+#   # 4. Brand Voice Distinctiveness
+#   #    HIGH: Tone, proof patterns, and credibility markers are vertical-specific
+#   #          (field-tested, ambassador-validated, spec transparency)
+#   #    MEDIUM: Some vertical voice but blends with generic brand patterns
+#   #    LOW: Could be any brand in any industry — no vertical voice
+#   #
+#   # Overall strength:
+#   #   HIGH = 3+ dimensions score HIGH
+#   #   MEDIUM = 2+ dimensions score HIGH, or 3+ score MEDIUM
+#   #   LOW = fewer than 2 dimensions score HIGH and fewer than 3 score MEDIUM
+#   #
+#   # DDD implication: HIGH vertical identity → more CORE bounded contexts
+#   # driven by vertical-specific language and behaviors. LOW vertical identity
+#   # → CORE contexts driven by business model, not vertical vocabulary.
+#
+# audience_segments:
+#   - segment: string                    # Segment name (e.g., "Trail Runners")
+#     signals: [string]                  # How this segment shows up on the website
+#     bounded_context_impact:            # Which BCs this segment affects and how
+#       - context: string               # Bounded context name
+#         impact: string                # What the segment implies for this context
+#
+# ul_seeds:                              # Ubiquitous Language candidates from website
+#   - website_term: string               # Term as used on the website
+#     ul_candidate: string               # Proposed UL formalization (e.g., "OuterwearType: Shell")
+#     bounded_context: string            # Which BC owns this term
+#
+# reflexion:
+#   # The reflexion block captures what was learned and what should feed back
+#   # into shared catalogs. Every analysis produces a reflexion block.
+#   #
+#   # Two-tier update model:
+#   #   Log tier (always): Record predictions vs. actuals in this artifact.
+#   #     Cheap, always happens, creates the evidence base.
+#   #   Catalog update tier (gated): Propose updates to shared catalogs when:
+#   #     (a) the same correction appears across 2+ engagements, OR
+#   #     (b) a single high-confidence correction is clearly generalizable.
+#   #     The agent proposes; a human approves (for now).
+#   #
+#   engagement_specific:                 # What stays in this company's artifact
+#     - string                           # e.g., "Ridgeline's specific IA and nav choices"
+#   reusable_vertical:                   # Vocabulary to propose for vertical catalog
+#     - term: string                     # Domain term
+#       meaning: string                  # What it means in this vertical
+#       attributes: [string] | null      # Associated product/domain attributes
+#       catalog_target: string           # Target catalog (e.g., "verticals/outdoor.yaml")
+#   reusable_ia_patterns:                # IA patterns that generalize beyond this company
+#     - pattern: string                  # What was observed
+#       signal: string                   # What it means for any company with this pattern
+#       ddd_implication: string          # Architectural consequence
+#   reusable_brand_archetype:            # Voice/messaging norms for the archetype
+#     - attribute: string                # What's being described (e.g., "tone", "proof_patterns")
+#       value: string | [string]         # The observed norm
+#       catalog_target: string           # Target catalog (e.g., "brand-archetypes/d2c-outdoor.yaml")
+#   prediction_log:                      # What was predicted vs. what was found
+#     - predicted: string                # What business model catalog said to expect
+#       source: string                   # Which catalog/heuristic made the prediction
+#       found: string                    # What was actually observed on the website
+#       match: full | partial | miss     # How well the prediction held
+#       heuristic_update: string | null  # Proposed change to the source heuristic
+#       update_scope: catalog | engagement | null  # Where the correction should apply

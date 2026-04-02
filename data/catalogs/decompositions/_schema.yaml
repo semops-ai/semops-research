@@ -1,0 +1,79 @@
+# Decomposition Catalog Schema
+#
+# Each file in this directory represents one vendor product decomposed
+# into neutral functional primitives.
+#
+# Vocabulary:
+#   - Primitives use BIZBOK capability naming (business object + action)
+#   - Process context uses APQC PCF categories (Level 1-2)
+#   - Domain type (CORE/SUPPORTING/GENERIC) is NOT assigned here —
+#     it depends on the consuming company's business model and is
+#     determined per-engagement by the diligence engine.
+#
+# Conceptual model (TOGAF):
+#   - Vendor product = Solution Building Block (SBB)
+#   - Neutral primitive = Architecture Building Block (ABB)
+#
+# Graph model (Neo4j):
+#   (:VendorProduct)-[:DECOMPOSES_TO]->(:Primitive)
+#   (:Primitive)-[:APQC_CONTEXT]->(:ProcessGroup)
+#   (:VendorProduct)-[:ALTERNATIVE_TO]->(:OpenPrimitiveTool)
+#
+# ---
+# vendor:
+#   name: string                    # Product name
+#   company: string                 # Parent company
+#   category: string                # Product category (e.g., "CRM", "Email")
+#
+# lock_in_signals:                  # From open-primitive analysis
+#   - string                        # Each signal is a specific lock-in vector
+#
+# open_alternative:
+#   name: string                    # Neutral alternative (from open-primitive doc)
+#   why: string                     # Why it qualifies as open primitive
+#
+# primitives:                       # The decomposition — neutral functional capabilities
+#   - name: string                  # BIZBOK-style capability name (object + action)
+#     branded_name: string          # What the vendor calls this feature
+#     apqc_context: string          # APQC PCF reference (e.g., "3.5")
+#     apqc_name: string             # APQC process group name
+#     description: string           # What this primitive actually does
+#     protocols: [string]           # Open protocols that could serve this (if any)
+#     explicit_alternative:          # Transparent, agent-friendly implementation
+#       what: string                 # What standard/open component serves this
+#       standard: string             # The protocol, spec, or pattern it's based on (RFC, open source, commodity service)
+#       agent_friendly: string       # Why this is better for agents than the vendor version
+#       build_effort: string         # trivial | low | medium | high
+#
+# data_access:                      # How data gets OUT of the vendor system
+#   api:
+#     type: string                   # REST, GraphQL, SOAP, etc.
+#     plans: [string]                # Which pricing tiers include API access
+#     authentication: string         # OAuth, API key, etc.
+#     entities_accessible: [string]  # What can be read/written
+#     entities_limited: [string]     # What has restricted access
+#     webhooks:
+#       available: bool
+#       events: string               # What events trigger webhooks
+#   bulk_export:
+#     csv_export:
+#       available: bool
+#       entities: [string]
+#   direct_database:
+#     available: bool
+#   migration_assessment:
+#     extractable_easily: [string]
+#     extractable_with_effort: [string]
+#     difficult_to_extract: [string]
+#     not_extractable: [string]
+#
+# source:
+#   seed: string                    # Where the initial decomposition came from
+#   validated_against: [string]     # Patterns or references used for validation
+#
+# catalog_meta:                      # Version and refresh tracking (ADR-0003 D4)
+#   version: string                  # SemVer — PATCH: corrections, MINOR: new primitives, MAJOR: restructure
+#   created: date-string             # When this catalog entry was first created
+#   last_refreshed: date-string      # When last validated/updated
+#   refresh_source: string           # model-knowledge | doc-crawl | api-validated | engagement-validated
+#   refresh_notes: string?           # Optional — what changed in last refresh

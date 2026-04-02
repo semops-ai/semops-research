@@ -1,0 +1,59 @@
+# Universal Entities — BIZBOK v14 §8.6 Common Reference Model
+#
+# Present in any business. These are the most universal primary information
+# concepts from the BIZBOK Common Reference Model Information Map (p.696-701).
+#
+# Domain type: Always SUPPORTING when used in reference generation —
+# every business has these, they don't differentiate.
+#
+# Accreditation (6/8 industry maps) and Operation (5/8 industry maps)
+# were promoted from industry-specific to universal based on frequency
+# analysis across all BIZBOK Part 8 industry maps.
+
+industry:
+  key: _common
+  name: Universal (Common Reference Model)
+  bizbok_section: "§8.6"
+  bizbok_pages: "696-701"
+  source: bizbok-v14
+
+entities:
+  - name: Customer
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Product
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Order
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Partner
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Agreement
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Asset
+    category: core
+    bizbok_source: "§8.6 primary"
+  - name: Employee
+    category: hr
+    bizbok_source: "§8.6 primary"
+  - name: Account
+    category: financial
+    bizbok_source: "§8.6 primary"
+  - name: Location
+    category: operational
+    bizbok_source: "§8.6 primary"
+  - name: Facility
+    category: operational
+    bizbok_source: "§8.6 primary"
+  - name: Channel
+    category: operational
+    bizbok_source: "§8.6 primary"
+  - name: Accreditation
+    category: regulatory
+    bizbok_source: "§8.6, 6/8 industry maps"
+  - name: Operation
+    category: operational
+    bizbok_source: "§8.6, 5/8 industry maps"

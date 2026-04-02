@@ -1,0 +1,42 @@
+# Signal Pattern Catalog Schema
+#
+# Each file in this directory maps URL path patterns to signal types
+# for a specific vertical or universal context. Used by /recon to
+# classify sitemap URLs during source reconnaissance.
+#
+# How it works:
+#   - /recon loads _default.yaml (always) + the vertical catalog
+#     matching classification.industry
+#   - Each pattern entry maps a list of URL path fragments to a
+#     signal_type with a confidence score
+#   - Patterns are matched with substring containment (not exact match)
+#   - Vertical patterns override default patterns for the same path
+#
+# Relationship to other catalogs:
+#   - Industry catalogs define domain entities; signal patterns define
+#     where to find those entities on the web
+#   - Business model catalogs predict which signal types matter;
+#     signal patterns map URLs to those signal types
+#
+# How signal pattern catalogs affect the pipeline:
+#   - /recon: Loads default + vertical catalog, classifies sitemap URLs
+#   - /discover: Reads recon report gaps to focus active discovery
+#   - Crawl agent: Consumes classified candidates from recon report
+#
+# Provenance tracking:
+#   Each pattern records which engagement taught it — this is how the
+#   catalog grows. New engagements may discover patterns not yet
+#   captured; those get added with provenance.
+#
+# Schema per file:
+#
+#   vertical: <string>           # matches classification.industry or "default"
+#   description: <string>
+#   patterns:
+#     - paths: [<string>]        # URL path fragments (substring match)
+#       signal_type: <string>    # from SignalSource enum
+#       confidence: <float>      # 0.0 - 1.0
+#       notes: <string>          # optional explanation
+#       learned_from:            # provenance
+#         engagement: <string>   # company name
+#         issue: <string>        # GitHub issue reference

@@ -1,0 +1,111 @@
+# Call Center — Surface Analytics Patterns
+#
+# Phone, chat, video support interactions. Human interaction analytics
+# (sentiment, resolution). Agent performance. Quality assurance sampling.
+# Absorbed into Customer Analytics rather than emerging as its own
+# distinct category.
+
+surface:
+  name: Call Center
+  category: call-center
+  description: >
+    Phone, chat, and video support interactions. Human interaction
+    analytics — sentiment analysis, resolution tracking, agent
+    performance measurement. Quality assurance through sampling.
+    Unlike web analytics, call center metrics typically roll into
+    broader Customer Analytics because the surface covers a narrower
+    business function (support only).
+  system_types:
+    - Application  # ticket management, call routing
+    - Work         # conversation recordings, notes, follow-up
+
+unique_characteristics:
+  - "Human interaction analytics (sentiment, resolution quality)"
+  - "Contact reason categorization (why are customers calling?)"
+  - "Agent performance metrics (handle time, resolution rate)"
+  - "Quality assurance sampling (call scoring, coaching)"
+  - "Narrower than web — primarily Support function, not multi-domain"
+
+surface_metrics:
+  - name: Average Handle Time (AHT)
+    definition: Average duration of customer interactions
+    formula: "AVG(talk_time + hold_time + after_call_work)"
+    benchmarks:
+      healthy: "<6 min (simple support), <15 min (technical)"
+      warning: "Trending upward without quality improvement"
+      source: "Contact center industry benchmarks"
+
+  - name: First Call Resolution (FCR)
+    definition: Issues resolved on first contact without callback
+    formula: "COUNT(resolved_first_contact) / COUNT(total_contacts)"
+    benchmarks:
+      healthy: ">70%"
+      warning: "<50%"
+      source: "SQM Group / ICMI benchmarks"
+
+  - name: CSAT (per interaction)
+    definition: Customer satisfaction score per interaction
+    formula: "AVG(post_interaction_survey_score)"
+    benchmarks:
+      healthy: ">4.2/5 or >85%"
+      warning: "<3.5/5 or <70%"
+      source: "ICMI / Forrester"
+
+  - name: Queue Wait Time
+    definition: Time customers wait before reaching an agent
+    formula: "AVG(agent_connect_time - queue_enter_time)"
+    benchmarks:
+      healthy: "<60 seconds"
+      warning: ">5 minutes"
+      source: "Contact center industry"
+
+  - name: Abandonment Rate
+    definition: Callers who hang up before reaching an agent
+    formula: "COUNT(abandoned) / COUNT(total_calls)"
+    benchmarks:
+      healthy: "<5%"
+      warning: ">12%"
+      source: "Contact center industry"
+
+  - name: Agent Utilization
+    definition: Time agents spend on customer interactions vs. available time
+    formula: "SUM(handle_time) / SUM(available_time)"
+    benchmarks:
+      healthy: "70-85%"
+      warning: ">90% (burnout risk) or <60% (overstaffed)"
+      source: "Workforce management benchmarks"
+
+key_dimensions:
+  - "Channel — phone, chat, email, video"
+  - "Contact Reason — category, subcategory"
+  - "Agent — team, skill level, tenure"
+  - "Priority — standard, escalated, VIP"
+  - "Resolution — resolved, escalated, pending"
+
+instrumentation:
+  - "ACD (Automatic Call Distribution) systems"
+  - "CTI (Computer Telephony Integration)"
+  - "Conversation analytics (speech-to-text, sentiment analysis)"
+  - "Workforce management (scheduling, forecasting)"
+
+business_models_where_dominant:
+  - "Insurance (claims processing)"
+  - "Telecom (service support)"
+  - "Financial services (account management)"
+  - "Any business with high-touch support requirements"
+
+tools:
+  - "Genesys, Five9, NICE (contact center platforms)"
+  - "Zendesk, Salesforce Service Cloud (ticketing)"
+  - "Observe.AI, CallMiner (conversation analytics)"
+  - "NICE WFM, Verint (workforce management)"
+
+convergence_test:
+  multi_function_convergence: false   # primarily Support function
+  unified_instrumentation: true       # contact center platforms cover it
+  dedicated_tooling_and_teams: true   # but narrower than web analytics
+  verdict: "Absorbed into Customer Analytics — narrower business function (support only) means metrics roll into broader customer experience reporting"
+
+source:
+  seed: "docs/research/surface-system-analytics.md"
+  validated_against: []

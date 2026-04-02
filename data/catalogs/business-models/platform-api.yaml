@@ -1,0 +1,272 @@
+# Platform/API — Business Model Decomposition
+#
+# Baseline capabilities required to operate an infrastructure/API
+# platform business. Extends beyond analytics (covered in
+# business-model-analytics.md) to the full operational capability set.
+
+business_model:
+  name: Platform/API
+  category: Subscription/SaaS
+  description: >
+    Infrastructure sold as developer tooling — APIs, SDKs, and
+    managed services consumed programmatically. Revenue is typically
+    usage-based (pay per API call, transaction, message) with a
+    subscription floor. Developers are the primary buyer persona.
+    Switching costs compound as integration depth increases.
+
+analytics_reference: "business-model-analytics.md#subscription--saas-business-model"
+system_mix_baseline:
+  app: 0.55
+  analytics: 0.30
+  work: 0.05
+  record: 0.10
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: API Design and Delivery
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Design, build, version, and serve the core API product. Includes
+      RESTful/GraphQL endpoints, SDK generation, authentication, rate
+      limiting, and backward compatibility management. The API IS the
+      product — its ergonomics determine adoption.
+    criticality: core
+    example_vendors:
+      - Custom-built (the product itself)
+      - Kong
+      - Apigee
+
+  - name: Usage Metering and Billing
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Track API consumption (calls, compute, storage, bandwidth),
+      apply pricing tiers, and generate invoices. Usage-based billing
+      is the revenue model — accuracy and transparency are generic
+      for developer trust.
+    criticality: core
+    example_vendors:
+      - Stripe Billing
+      - Metronome
+      - Orb
+      - Amberflo
+
+  - name: Developer Experience and Documentation
+    apqc_context: "9.2"
+    apqc_name: Develop and manage knowledge management strategy
+    description: >
+      Provide comprehensive API documentation, quickstart guides,
+      code samples, interactive playgrounds, and SDKs in major
+      languages. Developer experience IS the go-to-market — developers
+      evaluate by reading docs and running code, not watching demos.
+    criticality: core
+    example_vendors:
+      - ReadMe
+      - Mintlify
+      - Stoplight
+      - GitBook
+
+  - name: Platform Reliability and SLA Management
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Maintain uptime (99.99%+), low latency, and predictable
+      performance. Includes redundancy, failover, incident response,
+      and public status pages. Customers build critical infrastructure
+      on the platform — downtime cascades to their customers.
+    criticality: core
+    example_vendors:
+      - PagerDuty
+      - Datadog
+      - Statuspage
+      - Better Uptime
+
+  - name: Self-Service Onboarding and Activation
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Enable developers to sign up, get API keys, make first API call,
+      and reach production integration without human assistance. The
+      "time to first 200 OK" is the activation metric. Friction in
+      onboarding kills adoption.
+    criticality: core
+    example_vendors:
+      - Custom-built (developer dashboard)
+      - WorkOS
+      - Stripe (reference model)
+
+  - name: Developer Community and Ecosystem
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Build and nurture a developer community through forums, Discord,
+      open-source contributions, hackathons, and partner programs.
+      Community creates a moat — developers advocate for tools they
+      know, creating organic adoption.
+    criticality: core
+    example_vendors:
+      - Discord
+      - Discourse
+      - GitHub (OSS presence)
+      - Dev.to
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Enterprise Sales and Account Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Convert self-service developers into enterprise contracts.
+      Includes sales-assisted onboarding, custom pricing negotiations,
+      dedicated support tiers, and volume commitments. The bottom-up
+      adoption creates enterprise pipeline.
+    criticality: supporting
+    example_vendors:
+      - Salesforce Sales Cloud
+      - HubSpot Sales Hub
+      - Pipedrive
+
+  - name: Security and Compliance Certification
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Achieve and maintain SOC 2 Type II, ISO 27001, PCI DSS (for
+      payment platforms), HIPAA (for health), and regional compliance.
+      Enterprise procurement requires compliance certifications before
+      approving a vendor dependency.
+    criticality: supporting
+    example_vendors:
+      - Vanta
+      - Drata
+      - Lacework
+
+  - name: Technical Support and Escalation
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Provide developer support through documentation, community,
+      and tiered support (email, chat, dedicated engineer). Debugging
+      integration issues requires technical depth — support staff
+      must understand the API and customer's implementation.
+    criticality: supporting
+    example_vendors:
+      - Zendesk
+      - Intercom
+      - Linear (for tracking)
+
+  - name: Webhook and Event Delivery
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Deliver real-time event notifications to customer endpoints.
+      Includes retry logic, delivery guarantees, event filtering,
+      and dead letter queues. Webhooks are how the platform pushes
+      state changes to customer applications.
+    criticality: supporting
+    example_vendors:
+      - Svix
+      - Hookdeck
+      - Custom-built
+
+  - name: Partner and Integration Ecosystem
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Build and manage a partner network of complementary platforms,
+      system integrators, and marketplace listings. Integrations
+      with adjacent tools expand addressable market and increase
+      switching costs.
+    criticality: supporting
+    example_vendors:
+      - Crossbeam
+      - PartnerStack
+      - Custom partner portal
+
+  - name: Platform Analytics and Usage Insights
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track API call volumes, error rates, latency percentiles,
+      customer growth, revenue per customer, and expansion signals.
+      Provide customers with usage dashboards. The platform metrics
+      layer — usage patterns predict expansion and churn.
+    criticality: supporting
+    example_vendors:
+      - Datadog
+      - Amplitude
+      - Custom analytics dashboard
+
+  # --- TABLE-STAKES: Every business needs these, not platform-specific ---
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Authenticate API consumers (API keys, OAuth, JWTs), manage
+      organization accounts, enforce RBAC for team members, and
+      support SSO for enterprise customers.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - WorkOS
+      - Clerk
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition for usage-based billing, accounts receivable,
+      cash flow forecasting. Platform-specific: usage accruals and
+      committed-spend accounting.
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - NetSuite
+      - Stripe Revenue Recognition
+
+  - name: People Management and Talent Operations
+    apqc_context: "7.1"
+    apqc_name: Develop and manage human resources planning
+    description: >
+      Recruit and retain engineering talent. Platform/API businesses
+      are engineering-heavy — the team IS the product. Talent
+      competition with big tech is the primary constraint.
+    criticality: generic
+    example_vendors:
+      - Rippling
+      - Gusto
+      - Lever
+
+  - name: Infrastructure and Cloud Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Manage the cloud infrastructure that runs the platform. Multi-region
+      deployment, auto-scaling, observability, and cost optimization.
+      The platform runs on infrastructure — infra cost is often the
+      largest line item after headcount.
+    criticality: generic
+    example_vendors:
+      - AWS
+      - GCP
+      - Azure
+
+differentiators:
+  - Developer experience quality (time-to-first-200-OK under 15 minutes)
+  - API reliability (99.99%+ uptime with sub-100ms p99 latency)
+  - Bottom-up adoption creating enterprise pipeline without outbound sales
+  - Integration depth creating compounding switching costs
+  - Open-source strategy building trust and community moat
+  - Usage-based pricing alignment (customer pays proportional to value received)
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + developer platform patterns (Stripe, Twilio)
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Subscription/SaaS metrics — usage variant)
+    - data-system-classification.md (system mix baseline)
+    - system-primitive-decomposition.md (decomposition methodology)

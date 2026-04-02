@@ -1,0 +1,40 @@
+industry:
+  key: healthcare
+  name: Healthcare
+  bizbok_section: "§8.3"
+  bizbok_pages: "634-637"
+  source: bizbok-v14
+
+entities:
+  - name: Patient
+    category: core
+    bizbok_source: "§8.3 capability-derived"
+    description: Full info map not published; entities derived from capability definitions
+  - name: HealthcareCase
+    category: core
+    bizbok_source: "§8.3 capability-derived"
+  - name: HealthCondition
+    category: clinical
+    bizbok_source: "§8.3 capability-derived"
+  - name: HealthcareService
+    category: core
+    bizbok_source: "§8.3 capability-derived"
+  - name: MedicalDevice
+    category: clinical
+    bizbok_source: "§8.3 capability-derived"
+  - name: Medication
+    category: clinical
+    bizbok_source: "§8.3 capability-derived"
+  - name: Provider
+    category: core
+    bizbok_source: "§8.3 capability-derived"
+  - name: Encounter
+    category: core
+    bizbok_source: "§8.3 capability-derived"
+  - name: Procedure
+    category: clinical
+    bizbok_source: "§8.3 capability-derived"
+  - name: Claim
+    category: financial
+  - name: Network
+    category: operational

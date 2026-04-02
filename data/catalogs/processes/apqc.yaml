@@ -1,0 +1,145 @@
+# APQC Process Classification Framework
+#
+# Source: docs/research/apqc-process-framework.md
+# The 13 APQC PCF Level 1 categories with implied entities.
+# Categories 1-6 are operating, 7-13 are support.
+#
+# Used by reference.py _predict_processes — selects operating categories
+# for all companies, support categories based on revenue scale.
+#
+# Replaces: APQC_CATEGORIES, PROCESS_SCALE_EXPECTATIONS in lookups.py
+
+categories:
+  - id: "1.0"
+    name: Develop Vision and Strategy
+    type: operating
+    implied_entities:
+      - Strategy
+      - Initiative
+      - KPI
+
+  - id: "2.0"
+    name: Develop and Manage Products and Services
+    type: operating
+    implied_entities:
+      - Product
+      - Service
+      - Portfolio
+      - Requirement
+
+  - id: "3.0"
+    name: Market and Sell Products and Services
+    type: operating
+    implied_entities:
+      - Campaign
+      - Lead
+      - Opportunity
+      - Quote
+
+  - id: "4.0"
+    name: Manage Supply Chain for Physical Products
+    type: operating
+    implied_entities:
+      - Supplier
+      - PurchaseOrder
+      - Inventory
+      - Shipment
+      - Warehouse
+
+  - id: "5.0"
+    name: Deliver Services
+    type: operating
+    implied_entities:
+      - ServiceRequest
+      - SLA
+      - Deliverable
+
+  - id: "6.0"
+    name: Manage Customer Service
+    type: operating
+    implied_entities:
+      - Case
+      - Resolution
+      - SatisfactionScore
+
+  - id: "7.0"
+    name: Develop and Manage Human Capital
+    type: support
+    implied_entities:
+      - Employee
+      - Position
+      - Compensation
+      - Benefits
+      - TrainingRecord
+
+  - id: "8.0"
+    name: Manage Information Technology
+    type: support
+    implied_entities:
+      - System
+      - Application
+      - SecurityPolicy
+
+  - id: "9.0"
+    name: Manage Financial Resources
+    type: support
+    implied_entities:
+      - Account
+      - Transaction
+      - Budget
+      - Invoice
+      - Payment
+      - TaxRecord
+
+  - id: "10.0"
+    name: Acquire, Construct, and Manage Assets
+    type: support
+    implied_entities:
+      - Asset
+      - Equipment
+      - MaintenanceRecord
+
+  - id: "11.0"
+    name: Manage Enterprise Risk, Compliance, Remediation, and Resiliency
+    type: support
+    implied_entities:
+      - RiskAssessment
+      - ComplianceRecord
+      - Audit
+
+  - id: "12.0"
+    name: Manage External Relationships
+    type: support
+    implied_entities:
+      - Partner
+      - Stakeholder
+      - LegalDocument
+
+  - id: "13.0"
+    name: Develop and Manage Business Capabilities
+    type: support
+    implied_entities:
+      - Process
+      - QualityRecord
+      - KnowledgeArticle
+
+scale_expectations:
+  "<$5M":
+    operating_formality: informal
+    support_categories: [7, 9]
+  "$5M-$20M":
+    operating_formality: emerging
+    support_categories: [7, 8, 9]
+  "$20M-$100M":
+    operating_formality: formalized
+    support_categories: [7, 8, 9, 10, 11]
+  "$100M+":
+    operating_formality: full_taxonomy
+    support_categories: [7, 8, 9, 10, 11, 12, 13]
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

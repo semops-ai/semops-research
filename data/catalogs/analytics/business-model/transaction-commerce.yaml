@@ -1,0 +1,129 @@
+# Transaction / Commerce — Business Model Analytics
+#
+# Revenue pattern: Per-unit sales, revenue recognized at purchase.
+# Revenue tied to transaction volume and frequency. Inventory and
+# margin management critical. Seasonality highly impactful.
+
+business_model:
+  name: Transaction / Commerce
+  category: Transaction/Commerce
+  description: >
+    Per-unit sales of physical or digital goods. Revenue recognized
+    at point of sale. Margin management, inventory efficiency, and
+    conversion optimization are the core analytical challenges.
+  revenue_pattern: Per-unit sales, revenue recognized at purchase
+
+core_metrics:
+  - name: GMV
+    definition: Gross Merchandise Value — total transaction value
+    formula: "SUM(order_total)"
+    why_it_matters: Top-line activity measure
+
+  - name: AOV
+    definition: Average Order Value
+    formula: "SUM(revenue) / COUNT(orders)"
+    why_it_matters: Basket size indicator — higher AOV = more efficient fulfillment
+    benchmarks:
+      healthy: "Increasing with product mix optimization"
+      warning: "Declining (discounting or mix shift)"
+      source: "Shopify e-commerce benchmarks"
+
+  - name: Conversion Rate
+    definition: Purchases divided by visits
+    formula: "COUNT(purchases) / COUNT(sessions)"
+    why_it_matters: Funnel efficiency — the ultimate acquisition metric
+    benchmarks:
+      healthy: "2-5% (e-commerce), 20-40% (retail)"
+      warning: "<1% (significant friction)"
+      source: "NRF / Shopify benchmarks"
+
+  - name: Cart Abandonment Rate
+    definition: Carts started but not completed
+    formula: "1 - (completed_orders / carts_created)"
+    why_it_matters: Checkout friction indicator
+    benchmarks:
+      healthy: "<60%"
+      warning: ">80%"
+      source: "Baymard Institute"
+
+  - name: Return Rate
+    definition: Returns as percentage of orders
+    formula: "COUNT(returns) / COUNT(orders)"
+    why_it_matters: Product-market fit signal, sizing issues
+    benchmarks:
+      healthy: "<10% (non-apparel), <20% (apparel)"
+      warning: ">30%"
+      source: "NRF retail benchmarks"
+
+  - name: Gross Margin
+    definition: Revenue minus COGS as percentage of revenue
+    formula: "(revenue - cogs) / revenue"
+    why_it_matters: Product profitability
+    benchmarks:
+      healthy: ">50% (digital/software), >30% (physical goods)"
+      warning: "<20% (margin pressure)"
+      source: "Industry-specific"
+
+  - name: Inventory Turnover
+    definition: How quickly inventory sells through
+    formula: "cogs / avg_inventory_value"
+    why_it_matters: Stock efficiency — cash tied up in inventory
+    benchmarks:
+      healthy: ">6x annually (retail), varies by category"
+      warning: "<2x (dead stock risk)"
+      source: "NRF / IHL Group"
+
+  - name: Sell-Through Rate
+    definition: Units sold divided by units received
+    formula: "units_sold / units_received"
+    why_it_matters: Inventory velocity
+    benchmarks:
+      healthy: ">80% within season"
+      warning: "<50% (overstock)"
+      source: "Retail analytics (NRF)"
+
+key_dimensions:
+  - "Product — SKU, Category, Brand, Vendor"
+  - "Channel — Online, Store, Marketplace, Wholesale"
+  - "Geography — Region, Store location"
+  - "Customer Segment — New vs. Returning, Loyalty tier"
+  - "Promotion — Discount type, Campaign"
+
+time_patterns:
+  - "Daily sales — primary operational cadence"
+  - "Seasonality — holiday peaks, back-to-school, etc."
+  - "Inventory cycles — reorder points, lead times"
+  - "Promotional calendars — sales events, clearance"
+
+fact_table:
+  grain: "One row per order line item"
+  name: sales_fact
+  columns:
+    - order_id
+    - order_date
+    - customer_id
+    - product_id
+    - quantity
+    - unit_price
+    - discount_amount
+    - gross_revenue
+    - cogs
+    - margin
+
+standard_frameworks:
+  - name: "NRF (National Retail Federation)"
+    focus: "Retail industry benchmarks"
+  - name: "Shopify"
+    focus: "E-commerce metrics guides"
+  - name: "IHL Group"
+    focus: "Retail technology metrics"
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against: []

@@ -1,0 +1,115 @@
+# Financial Services — Business Model Analytics
+#
+# Revenue pattern: Interest spread, fees, premiums, AUM-based.
+# Revenue tied to risk management. Regulatory compliance is
+# non-negotiable. Long time horizons and portfolio-level analysis.
+
+business_model:
+  name: Financial Services
+  category: Financial Services
+  description: >
+    Revenue from managing financial risk — interest spreads, fees,
+    insurance premiums, or AUM-based management fees. Regulatory
+    compliance shapes every analytical decision. Portfolio-level
+    analysis and long time horizons are defining characteristics.
+  revenue_pattern: Interest spread, fees, premiums, AUM-based
+
+core_metrics:
+  # Banking
+  - name: Net Interest Margin (NIM)
+    definition: Interest earned minus interest paid
+    formula: "(interest_income - interest_expense) / avg_earning_assets"
+    why_it_matters: Primary profitability measure for lending
+    benchmarks:
+      healthy: ">3%"
+      warning: "<2% (margin compression)"
+      source: "FDIC bank performance ratios"
+
+  - name: Non-Performing Loans (NPL)
+    definition: Percentage of loans in default
+    formula: "COUNT(loans WHERE days_past_due > 90) / COUNT(all_loans)"
+    why_it_matters: Credit risk health — the canary for lending portfolios
+    benchmarks:
+      healthy: "<2%"
+      warning: ">5%"
+      source: "Basel III / FDIC"
+
+  # Insurance
+  - name: Combined Ratio
+    definition: Claims plus expenses divided by premiums
+    formula: "(claims_paid + operating_expenses) / premiums_earned"
+    why_it_matters: Underwriting profitability — below 100% = profitable
+    benchmarks:
+      healthy: "<95%"
+      warning: ">100% (underwriting loss)"
+      source: "AM Best / Solvency II"
+
+  - name: Loss Ratio
+    definition: Claims paid divided by premiums earned
+    formula: "claims_paid / premiums_earned"
+    why_it_matters: Pure claims cost without operating expenses
+    benchmarks:
+      healthy: "<60% (property), <70% (casualty)"
+      warning: "Trending upward over multiple quarters"
+      source: "EIOPA / AM Best"
+
+  # Investment / Asset Management
+  - name: AUM
+    definition: Assets Under Management
+    formula: "SUM(portfolio_market_value)"
+    why_it_matters: Revenue base — management fees scale with AUM
+    benchmarks:
+      healthy: "Growing through net inflows + market appreciation"
+      warning: "Net outflows exceeding market gains"
+      source: "CFA Institute / GIPS"
+
+  - name: Net Flows
+    definition: Inflows minus outflows
+    formula: "SUM(inflows) - SUM(outflows)"
+    why_it_matters: Organic growth indicator — are clients adding or withdrawing?
+    benchmarks:
+      healthy: "Positive net flows"
+      warning: "Sustained negative flows"
+      source: "CFA Institute / GIPS"
+
+key_dimensions:
+  - "Product — Loan type, Policy type, Fund"
+  - "Risk Tier — Credit score, risk category"
+  - "Channel — Branch, Digital, Broker"
+  - "Customer Segment — Retail, Commercial, Institutional"
+  - "Regulatory Entity — Jurisdiction, reporting entity"
+
+time_patterns:
+  - "Loan/Policy lifecycle — origination to maturity (years)"
+  - "Regulatory reporting — quarterly, annual filings"
+  - "Mark-to-market — daily/monthly valuations"
+  - "Actuarial periods — long-tail claims development"
+
+fact_table:
+  grain: "One row per loan/policy per month (snapshot)"
+  name: loan_performance_fact
+  columns:
+    - loan_id
+    - snapshot_date
+    - original_balance
+    - current_balance
+    - payment_status
+    - days_past_due
+    - interest_rate
+    - risk_grade
+
+standard_frameworks:
+  - name: "Basel III/IV"
+    focus: "Banking capital and risk metrics"
+  - name: "Solvency II"
+    focus: "Insurance capital requirements"
+  - name: "CFA Institute / GIPS"
+    focus: "Investment performance standards"
+  - name: "FDIC"
+    focus: "Bank performance ratios"
+  - name: "AM Best"
+    focus: "Insurance financial strength"
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against: []

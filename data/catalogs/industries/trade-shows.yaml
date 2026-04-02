@@ -1,0 +1,180 @@
+industry:
+  key: trade_shows
+  name: Trade Shows / Exhibitions
+  bizbok_section: null
+  bizbok_pages: null
+  source: domain-extension
+  description: Two-sided marketplace with spatial inventory
+
+entities:
+  - name: Event
+    category: core
+  - name: Exhibitor
+    category: core
+  - name: Attendee
+    category: core
+  - name: Booth
+    category: core
+  - name: Registration
+    category: core
+  - name: FloorPlan
+    category: core
+  - name: Session
+    category: core
+  - name: Sponsor
+    category: financial
+  - name: Venue
+    category: operational
+  - name: Badge
+    category: operational
+  - name: Speaker
+    category: core
+  - name: LeadRecord
+    category: core
+    description: Badge scan → exhibitor lead
+  - name: ServiceOrder
+    category: operational
+    description: Exhibitor services (electrical, drayage, etc.)
+  - name: Pavilion
+    category: operational
+    description: Grouped exhibit area (country/association pavilions)
+  - name: RebookingRecord
+    category: financial
+    description: Onsite commitment for next year
+  - name: PriorityPoints
+    category: operational
+    description: Seniority-based booth selection order
+  - name: SponsorshipItem
+    category: financial
+    description: Specific inventory unit (lanyard, signage slot, etc.)
+  - name: ProductListing
+    category: core
+    description: Exhibitor product catalog for attendee matching
+  - name: MatchmakingAppointment
+    category: core
+    description: Buyer-seller scheduled meeting
+
+# Bounded context overlay — derived via BIZBOK → DDD mechanical method.
+# Source: docs/research-output/bizbok-ddd-overlay-tradeshow.md
+domain_contexts:
+  # Core Domain (build custom — competitive advantage)
+  - name: Exhibitor
+    domain_type: core
+    aggregate_root: Exhibitor
+    rationale: "Marketplace supply side — partners = 70-80% of revenue"
+    entities:
+      - name: Exhibitor
+        category: core
+      - name: ExhibitorProfile
+        category: core
+      - name: RebookingRecord
+        category: financial
+      - name: PriorityPoints
+        category: operational
+      - name: ProductListing
+        category: core
+      - name: ServiceOrder
+        category: operational
+      - name: LeadRetrievalLicense
+        category: operational
+      - name: ExhibitorPackage
+        category: core
+
+  - name: Sponsorship
+    domain_type: core
+    aggregate_root: Sponsorship
+    rationale: "Advertising/media lens — high-margin, relationship-driven"
+    entities:
+      - name: Sponsorship
+        category: core
+      - name: SponsorshipDeliverable
+        category: core
+      - name: SponsorshipPackage
+        category: core
+
+  - name: Exhibition Space
+    domain_type: core
+    aggregate_root: ExhibitionSpace
+    rationale: "Spatial inventory = primary revenue asset (UFI Space = 63%)"
+    entities:
+      - name: ExhibitionSpace
+        category: core
+      - name: SpaceAssignment
+        category: core
+      - name: SpaceDimensions
+        category: core
+
+  - name: Event
+    domain_type: core
+    aggregate_root: Event
+    rationale: "Edition lifecycle — each show is a project with its own P&L"
+    entities:
+      - name: Event
+        category: core
+      - name: EventEdition
+        category: core
+      - name: Session
+        category: core
+      - name: Speaker
+        category: core
+      - name: FloorPlan
+        category: core
+
+  # Supporting Subdomain (good enough — solved problems)
+  - name: Attendee
+    domain_type: supporting
+    aggregate_root: Attendee
+    rationale: "Marketplace demand side — secondary revenue, primary value prop to exhibitors"
+    entities:
+      - name: Attendee
+        category: core
+      - name: Registration
+        category: core
+      - name: Badge
+        category: operational
+      - name: Ticket
+        category: core
+
+  - name: Interaction
+    domain_type: supporting
+    aggregate_root: Interaction
+    rationale: "Lead capture and matchmaking — value delivery mechanism, not differentiator"
+    entities:
+      - name: Interaction
+        category: core
+      - name: LeadRecord
+        category: core
+      - name: MatchmakingAppointment
+        category: core
+
+  # Generic Subdomain (buy off the shelf)
+  - name: Agreement
+    domain_type: generic
+    aggregate_root: Agreement
+    rationale: "Standard contract management — DocuSign/PandaDoc"
+    entities:
+      - name: Agreement
+        category: core
+      - name: AgreementTerm
+        category: core
+
+  - name: Finance
+    domain_type: generic
+    aggregate_root: FinancialAccount
+    rationale: "Standard payment and accounting — Stripe + QuickBooks"
+    entities:
+      - name: FinancialAccount
+        category: financial
+      - name: FinancialTransaction
+        category: financial
+      - name: Payment
+        category: financial
+      - name: MonetaryAmount
+        category: financial
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

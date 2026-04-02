@@ -1,0 +1,61 @@
+# DAMA-DMBOK — Data Management Body of Knowledge
+#
+# Source: docs/research/dama-dmbok-overview.md
+# 11 knowledge areas and which are expected at each revenue scale.
+#
+# Used by reference.py _predict_capabilities — selects expected
+# knowledge areas based on revenue range.
+#
+# Replaces: DAMA_KNOWLEDGE_AREAS, DAMA_SCALE_EXPECTATIONS in lookups.py
+
+knowledge_areas:
+  - Data Governance
+  - Data Architecture
+  - Data Modeling & Design
+  - Data Storage & Operations
+  - Data Security
+  - Data Integration & Interoperability
+  - Document & Content Management
+  - Master & Reference Data Management
+  - Data Warehousing & Business Intelligence
+  - Metadata Management
+  - Data Quality Management
+
+scale_expectations:
+  "<$5M":
+    - Data Storage & Operations
+    - Data Security
+  "$5M-$20M":
+    - Data Storage & Operations
+    - Data Security
+    - Data Architecture
+    - Data Quality Management
+    - Data Warehousing & Business Intelligence
+  "$20M-$100M":
+    - Data Storage & Operations
+    - Data Security
+    - Data Architecture
+    - Data Quality Management
+    - Data Warehousing & Business Intelligence
+    - Data Governance
+    - Data Integration & Interoperability
+    - Metadata Management
+  "$100M+":
+    - Data Governance
+    - Data Architecture
+    - Data Modeling & Design
+    - Data Storage & Operations
+    - Data Security
+    - Data Integration & Interoperability
+    - Document & Content Management
+    - Master & Reference Data Management
+    - Data Warehousing & Business Intelligence
+    - Metadata Management
+    - Data Quality Management
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

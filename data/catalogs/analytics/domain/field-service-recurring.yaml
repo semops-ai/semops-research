@@ -1,0 +1,226 @@
+# Field Service (Recurring) — Domain Analytics Patterns
+#
+# Archetype: Recurring field service — cleaning, lawn care, pest control,
+# HVAC maintenance. Revenue from recurring service schedules. Route
+# density is THE margin lever. Operator-dependent service delivery.
+
+domain:
+  name: Field Service (Recurring)
+  archetype: field-service-recurring
+  description: >
+    Businesses dispatching workers to customer locations on recurring
+    schedules. Revenue from repeat service agreements. Route efficiency
+    determines profitability; service quality determines retention.
+    Operator-dependent delivery with franchise-pattern scaling.
+  bizbok_industry: transportation  # operational DNA is logistics/dispatch, not professional services
+
+analytics_patterns:
+
+  - name: route-efficiency
+    context: Scheduling
+    domain_type: CORE
+    definition: >
+      Route density and dispatch optimization — the margin lever for
+      field service. Measures whether the business is profitable by
+      tracking jobs per drive hour, drive time ratio, and geographic
+      clustering.
+    core_metrics:
+      - name: Jobs per drive hour
+        formula: "COUNT(jobs_completed) / SUM(drive_hours)"
+        benchmarks:
+          healthy: ">3 jobs/drive hour (residential cleaning)"
+          warning: "<1.5 jobs/drive hour"
+          source: "EDGE Cleaning engagement"
+      - name: Drive time ratio
+        formula: "SUM(drive_time) / SUM(total_working_time)"
+        benchmarks:
+          healthy: "<30% of working time spent driving"
+          warning: ">50%"
+          source: "Logistics/fleet efficiency benchmarks"
+      - name: Route density (jobs per zone)
+        formula: "COUNT(jobs) / COUNT(DISTINCT service_zones)"
+        benchmarks:
+          healthy: "Increasing density in established zones"
+          warning: "Sparse coverage across many zones"
+          source: "EDGE Cleaning engagement"
+    cross_domain_source: "logistics/dispatch — vehicle routing metrics adapted for residential service"
+    maturity:
+      implementable: partial
+      gap: "Need drive time calculation (Google Maps API or manual). Jobber has job timestamps and route sheets."
+
+  - name: quote-accuracy
+    context: Quoting
+    domain_type: CORE
+    definition: >
+      Predicted vs. actual job cost/duration — the revenue optimization
+      metric AND the QuoteModel training signal. The feedback loop that
+      makes quoting deterministic over time.
+    core_metrics:
+      - name: Quote accuracy rate
+        formula: "1 - ABS(quoted_price - actual_price) / quoted_price"
+        benchmarks:
+          healthy: ">90% within 10% of actual"
+          warning: "<70% (systematic over/under-quoting)"
+          source: "EDGE Cleaning engagement"
+      - name: Quote-to-actual hours variance
+        formula: "AVG(actual_hours - quoted_hours)"
+        benchmarks:
+          healthy: "Variance trending toward zero"
+          warning: "Consistent positive variance (underquoting)"
+          source: "Insurance/construction estimation patterns"
+    cross_domain_source: "pricing-and-quoting + property-pre-population — accuracy-over-time learning loop from actuarial/estimating domains"
+    maturity:
+      implementable: partial
+      gap: "Need actual hours tracking (Jobber may have check-in/out). PropertyProfile to build."
+
+  - name: booking-conversion
+    context: Booking
+    domain_type: CORE
+    definition: >
+      Full funnel from lead to recurring customer. Critically includes
+      conversion by operator — measures whether agentic booking
+      (non-owner staff) can convert at owner rates.
+    core_metrics:
+      - name: Lead-to-recurring conversion rate
+        formula: "COUNT(recurring_customers) / COUNT(leads)"
+        benchmarks:
+          healthy: ">15% lead-to-recurring"
+          warning: "<5%"
+          source: "EDGE Cleaning engagement"
+      - name: Conversion by operator
+        formula: "conversion_rate GROUP BY operator_id"
+        benchmarks:
+          healthy: "Non-owner operators within 80% of owner rate"
+          warning: "Only owner converts (scaling bottleneck)"
+          source: "EDGE Cleaning engagement"
+    cross_domain_source: "sales funnel — standard lead conversion adapted for operator attribution"
+    maturity:
+      implementable: partial
+      gap: "Need operator attribution (who handled the booking). Jobber has leads, quotes, schedules."
+
+  - name: job-quality-score
+    context: Service Delivery
+    domain_type: CORE
+    definition: >
+      Cross-provider quality variance — the franchise consistency metric.
+      Measures whether different cleaners deliver the same quality standard.
+    core_metrics:
+      - name: Quality score (composite)
+        formula: "weighted_avg(customer_feedback, checklist_completion, callback_rate)"
+        benchmarks:
+          healthy: "σ < 0.3 across providers (franchise-grade consistency)"
+          warning: "σ > 0.5 (inconsistent quality)"
+          source: "Franchise operations benchmarks"
+      - name: Callback rate
+        formula: "COUNT(callbacks_within_48h) / COUNT(completed_jobs)"
+        benchmarks:
+          healthy: "<5%"
+          warning: ">15%"
+          source: "Field service industry"
+    cross_domain_source: "franchise quality — cross-provider variance is the brand transfer metric"
+    maturity:
+      implementable: "no"
+      gap: "Need customer feedback mechanism, structured checklist, intelligence capture — all to build."
+
+  - name: intelligence-capture-rate
+    context: Service Delivery
+    domain_type: CORE
+    definition: >
+      Rate at which field workers observe and report property/customer
+      intelligence during service delivery. The engagement cycle depth
+      metric — are cleaners acting as sensors?
+    core_metrics:
+      - name: Capture rate
+        formula: "COUNT(intelligence_reports) / COUNT(completed_jobs)"
+        benchmarks:
+          healthy: ">30% of jobs generate an observation"
+          warning: "<5% (workers not engaged as sensors)"
+          source: "EDGE Cleaning engagement (novel metric)"
+      - name: Actionable intelligence rate
+        formula: "COUNT(observations_leading_to_upsell_or_action) / COUNT(observations)"
+        benchmarks:
+          healthy: ">20% of observations lead to action"
+          warning: "<5%"
+          source: "EDGE Cleaning engagement"
+    cross_domain_source: "Novel — no direct cross-domain analog. Closest: field inspection reporting."
+    maturity:
+      implementable: "no"
+      gap: "Entirely new capability — no existing system supports it. Biggest build and most differentiating."
+
+  - name: customer-retention
+    context: Customer
+    domain_type: SUPPORTING
+    definition: >
+      Recurring customer retention rate. Lagging indicator of CORE
+      context health — if scheduling, quality, and booking are working,
+      retention is high.
+    core_metrics:
+      - name: Monthly retention rate
+        formula: "COUNT(active_recurring_end_of_month) / COUNT(active_recurring_start_of_month)"
+        benchmarks:
+          healthy: ">95% monthly (>55% annual)"
+          warning: "<90% monthly"
+          source: "Field service industry benchmarks"
+      - name: Churn reason distribution
+        formula: "COUNT(*) GROUP BY churn_reason"
+        benchmarks:
+          healthy: "Seasonal/relocation dominant (uncontrollable)"
+          warning: "Quality/price dominant (controllable)"
+          source: "EDGE Cleaning engagement"
+    cross_domain_source: "SaaS retention — adapted for recurring service with seasonal patterns"
+    maturity:
+      implementable: "yes"
+      gap: "Straightforward from Jobber active/cancelled recurring schedules."
+
+  - name: provider-utilization
+    context: Workforce
+    domain_type: SUPPORTING
+    definition: >
+      Bridge between labor cost and revenue. Measures how efficiently
+      worker time converts to billable service hours.
+    core_metrics:
+      - name: Utilization rate
+        formula: "SUM(service_hours) / SUM(available_hours)"
+        benchmarks:
+          healthy: ">75%"
+          warning: "<60%"
+          source: "Field service industry benchmarks"
+    cross_domain_source: "Professional services utilization — adapted for hourly field workers"
+    maturity:
+      implementable: partial
+      gap: "Need time tracking integration (Jobber or Homebase)."
+
+  - name: review-velocity
+    context: Marketing
+    domain_type: SUPPORTING
+    definition: >
+      Rate of new online reviews — the organic lead generation health
+      metric. Reviews are the moat for local service businesses.
+    core_metrics:
+      - name: Reviews per month
+        formula: "COUNT(new_reviews) per month"
+        benchmarks:
+          healthy: ">4 reviews/month (growing local business)"
+          warning: "<1 review/month"
+          source: "Local SEO benchmarks"
+      - name: Average rating
+        formula: "AVG(review_rating)"
+        benchmarks:
+          healthy: ">4.5 stars"
+          warning: "<4.0 stars"
+          source: "Google Business / Angi benchmarks"
+    cross_domain_source: "Local business reputation — standard for service businesses"
+    maturity:
+      implementable: "yes"
+      gap: "External data (Google Business API, Angi) — readily available."
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: "docs/engagement-logs//derive-analytics.md"
+  validated_against:
+    - "EDGE Cleaning engagement — 8 patterns across 7 contexts"

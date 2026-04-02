@@ -1,0 +1,62 @@
+industry:
+  key: government
+  name: Government
+  bizbok_section: "§8.8"
+  bizbok_pages: "746-750"
+  source: bizbok-v14
+
+entities:
+  - name: Constituent
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: GovernmentService
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Legislation
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: License
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Case
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Claim
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Dispute
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Vote
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: PublicSectorEntity
+    category: core
+    bizbok_source: "§8.8 primary"
+  - name: Standard
+    category: regulatory
+    bizbok_source: "§8.8 secondary"
+  - name: Evidence
+    category: regulatory
+    bizbok_source: "§8.8 secondary"
+  - name: GeographicSpace
+    category: operational
+    bizbok_source: "§8.8 secondary"
+  - name: Infrastructure
+    category: operational
+    bizbok_source: "§8.8 secondary"
+  - name: NaturalResource
+    category: operational
+    bizbok_source: "§8.8 secondary"
+  - name: Energy
+    category: operational
+    bizbok_source: "§8.8 secondary"
+  - name: BiologicalOrganism
+    category: core
+    bizbok_source: "§8.8 enrichment"
+  - name: Decision
+    category: core
+    bizbok_source: "§8.8 enrichment"
+  - name: TrainingCourse
+    category: operational
+    bizbok_source: "§8.8 enrichment"

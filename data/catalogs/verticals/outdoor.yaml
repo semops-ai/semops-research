@@ -1,0 +1,74 @@
+# Outdoor Vertical Catalog
+#
+# Cross-cutting domain identity for companies serving the outdoor recreation
+# market. Defines the vocabulary, content types, customer segments, and brand
+# signals that distinguish outdoor companies from generic retailers or other
+# verticals using the same business model.
+
+vertical:
+  name: outdoor
+  display_name: Outdoor Recreation
+  industries: [outdoor recreation, sporting goods, adventure travel]
+  description: >
+    Companies whose products, content, and community are defined by outdoor
+    activities — hiking, trail running, climbing, camping, skiing, mountain
+    biking, etc. The vertical drives insider vocabulary, activity-based
+    segmentation, and sustainability as structural commitment (not just
+    marketing). Competitive differentiation comes from technical credibility
+    and community authenticity, not fashion or lifestyle aspiration.
+
+vocabulary:
+  product_types:
+    - term: shell
+      meaning: Waterproof outer layer (hard shell or soft shell)
+      attributes: [waterproof_rating_mm, breathability_mvtr, seam_sealing]
+    - term: puffy
+      meaning: Insulated jacket (down or synthetic)
+      attributes: [fill_power, fill_weight_oz, insulation_type]
+    - term: approach shoe
+      meaning: Technical hiking shoe for rocky terrain approach to climbing
+      attributes: [rubber_type, sole_stiffness, toe_protection]
+    - term: baselayer
+      meaning: Next-to-skin moisture management layer
+      attributes: [fabric_weight_gsm, material_blend, odor_resistance]
+    - term: layering system
+      meaning: Coordinated base/mid/outer layers designed to work together
+      attributes: [system_compatibility, season_range]
+
+  content_types:
+    - name: trail_report
+      description: First-person trip report with gear callouts and conditions
+    - name: gear_guide
+      description: Comparative buying guide organized by activity or category
+    - name: field_test
+      description: In-context product performance review under real conditions
+
+  customer_types:
+    - name: trail_runner
+      description: Activity-defined segment — lightweight, speed-focused, high consumable repeat
+    - name: alpinist
+      description: Activity-defined segment — technical, weather protection, system buyers
+    - name: everyday_explorer
+      description: Crossover segment — outdoor gear for daily use, lower price sensitivity
+    - name: ambassador
+      description: Brand-affiliated outdoor athlete or trail advocate
+
+  brand_signals:
+    - category: sustainability
+      markers: [repair_program, material_transparency, b_corp, 1pct_for_planet, recycled_content]
+    - category: community
+      markers: [ambassador_program, trail_cleanups, group_hikes, local_events]
+    - category: authenticity
+      markers: [field_tested, staff_use, regional_heritage, not_fashion, spec_transparency]
+
+provenance:
+  seed_engagement: Ridgeline Outdoor Co. 
+  validated_engagements: []
+  last_updated: 2026-03-22
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge

@@ -1,0 +1,127 @@
+# Digital Signage — Surface Analytics Patterns
+#
+# Passive consumption displays in physical venues. No direct user
+# interaction — content plays to a captive audience. Behavioral
+# signals are indirect (play counts, skip rates, completion rates,
+# not clicks or taps). Brand safety is a hard constraint.
+# Distinct from web/mobile (no interaction), IoT (content not
+# telemetry), and POS (no transactions).
+
+surface:
+  name: Digital Signage
+  category: digital-signage
+  description: >
+    Screens in physical venues playing curated content to captive
+    audiences. Fundamentally passive — no user interaction, no clicks,
+    no sessions. Behavioral signals are indirect: play counts, skip
+    rates (venue operator, not viewer), completion rates, and dwell
+    time estimates. The surface exists at the intersection of content
+    delivery and advertising, where brand safety compliance is
+    zero-tolerance and content relevance is measured by venue retention,
+    not viewer engagement.
+  system_types:
+    - Application  # content delivery, playlist rendering, device management
+    - Analytics    # play events, audience estimation, ad impression tracking
+
+unique_characteristics:
+  - "Passive consumption — no viewer interaction, no click/tap events"
+  - "Captive audience — viewers don't choose to watch; they're present"
+  - "Venue operator as proxy user — skip/override signals come from staff, not viewers"
+  - "Brand safety as hard constraint — content must match venue context (gym vs. airport vs. bar)"
+  - "Dual monetization surface — content serves venue SaaS value AND ad network impressions"
+  - "Device health as analytics concern — offline displays = lost impressions and venue complaints"
+  - "Audience estimation, not measurement — viewer counts are modeled from foot traffic, not tracked"
+
+surface_metrics:
+  - name: Play Completion Rate
+    definition: Percentage of content items played to completion (not skipped or interrupted)
+    formula: "COUNT(completed_plays) / COUNT(total_plays)"
+    benchmarks:
+      healthy: ">70%"
+      warning: "<50% (content not matching venue mood, frequent operator skips)"
+      source: " engagement"
+
+  - name: Content Skip Rate
+    definition: Operator-initiated skips as percentage of total plays
+    formula: "COUNT(operator_skips) / COUNT(total_plays)"
+    benchmarks:
+      healthy: "<10%"
+      warning: ">25% (playlist relevance problem)"
+      source: " engagement"
+
+  - name: Device Uptime
+    definition: Percentage of scheduled hours a display is actively playing content
+    formula: "SUM(active_play_hours) / SUM(scheduled_hours)"
+    benchmarks:
+      healthy: ">98%"
+      warning: "<90% (hardware/network issues = lost impressions)"
+      source: "Digital signage industry"
+
+  - name: Audience Impressions (estimated)
+    definition: Modeled viewer impressions based on venue foot traffic and dwell time
+    formula: "venue_visitors * avg_dwell_factor * screens_visible"
+    benchmarks:
+      healthy: "Growing with venue network expansion"
+      warning: "Declining per-venue (foot traffic drop or display placement issues)"
+      source: " engagement (1.8B annual across 44K venues)"
+
+  - name: Ad Fill Rate
+    definition: Ad slots filled vs. available across the display network
+    formula: "COUNT(filled_ad_slots) / COUNT(available_ad_slots)"
+    benchmarks:
+      healthy: ">80%"
+      warning: "<50% (undersold inventory)"
+      source: "Digital out-of-home advertising benchmarks"
+
+  - name: Content Freshness
+    definition: Average age of content in active rotation
+    formula: "AVG(current_date - content_publish_date) for content in active playlists"
+    benchmarks:
+      healthy: "Mix of evergreen and fresh content appropriate to venue type"
+      warning: "Stale rotation (viewer/staff fatigue, especially in daily-visit venues)"
+      source: "Digital signage operations"
+
+  - name: Venue Churn Signal (engagement proxy)
+    definition: Weekly active venue rate — venues actively playing content
+    formula: "COUNT(venues_with_plays_this_week) / COUNT(subscribed_venues)"
+    benchmarks:
+      healthy: ">90% weekly active"
+      warning: "<80% (silent venues at churn risk)"
+      source: " engagement"
+
+key_dimensions:
+  - "Venue Type — gym, restaurant, bar, airport, retail, office"
+  - "Screen Placement — entrance, dining area, workout floor, waiting room"
+  - "Content Type — music video, ambient, branded content, ad spot"
+  - "Daypart — morning, lunch, afternoon, evening, late night"
+  - "Venue Tier — enterprise (brand rules), SMB (standard playlists)"
+
+instrumentation:
+  - "Device heartbeat / telemetry (online status, firmware version)"
+  - "Play event stream (content_id, timestamp, duration, completed, skipped)"
+  - "Ad impression logging (campaign_id, slot_id, timestamp, estimated_viewers)"
+  - "Venue foot traffic integration (POS transaction count as proxy, or sensor data)"
+
+business_models_where_dominant:
+  - "Venue entertainment SaaS (, Mood Media, Soundtrack Your Brand)"
+  - "Digital out-of-home (DOOH) advertising networks"
+  - "Quick-service restaurant menu boards"
+  - "Corporate communications / internal signage"
+
+tools:
+  - "Content management systems (BrightSign, Scala, Signagelive)"
+  - "Ad serving platforms (Vistar Media, Place Exchange for DOOH)"
+  - "Device management (fleet monitoring, remote updates)"
+  - "Custom analytics dashboards (no dominant 3P analytics tool for this surface)"
+
+convergence_test:
+  multi_function_convergence: true   # content delivery + advertising + venue engagement
+  unified_instrumentation: false     # fragmented; no GA equivalent for signage
+  dedicated_tooling_and_teams: true  # DOOH is a recognized discipline with specialized roles
+  verdict: "Emerging distinct category — DOOH advertising has established this as a recognized surface, but analytics tooling is still fragmented. No single platform equivalent to GA for digital signage. The passive consumption model makes it fundamentally different from web/mobile (no interaction) and IoT (content, not telemetry)."
+
+source:
+  seed: " engagement — venue entertainment platform with 44K displays"
+  validated_against:
+    - " strategic DDD — Delivery context (SUPPORTING) generates play event stream"
+    - " business model synthesis — dual revenue (SaaS + ad network) both depend on display surface"

@@ -1,0 +1,129 @@
+# Pipedrive CRM — Primitive Decomposition
+#
+# Decomposes Pipedrive into neutral functional primitives. Pipedrive is a
+# pipeline-first CRM — deliberately focused on sales execution rather than
+# platform ambitions. Useful as a "minimal CRM" baseline to compare against
+# Salesforce's 12 primitives.
+
+vendor:
+  name: Pipedrive
+  company: Pipedrive
+  category: CRM
+
+lock_in_signals:
+  - Proprietary data model — deals, persons, organizations (not portable SQL)
+  - Proprietary API with custom field IDs (not standard schema)
+  - Workflow automation logic stored in vendor platform (not exportable)
+  - Marketplace integrations tied to Pipedrive OAuth (switching cost)
+  - No self-hosted option — SaaS only
+  - Pipeline stage definitions not portable (vendor-specific config)
+
+open_alternative:
+  name: PostgreSQL + custom schema
+  why: Standard SQL, full data ownership, portable pipeline stages as table rows
+
+primitives:
+  - name: Contact Management
+    branded_name: Persons & Organizations
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Store people and organization records with custom fields and
+      relationship links. Contacts are linked to deals and activities.
+    protocols:
+      - SQL
+      - vCard
+
+  - name: Sales Pipeline Tracking
+    branded_name: Deals & Pipelines
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Visual drag-and-drop pipeline with customizable stages. Deals
+      move through stages with value, probability, and expected close date.
+      Multiple pipelines supported for different sales processes.
+    protocols:
+      - SQL
+
+  - name: Activity Logging
+    branded_name: Activities
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Schedule and log calls, emails, meetings, and tasks linked to
+      deals and contacts. Activity history provides interaction timeline.
+    protocols:
+      - SQL
+      - iCalendar
+
+  - name: Lead Capture
+    branded_name: Leads Inbox / LeadBooster
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Collect inbound leads via web forms, chatbot, and live chat.
+      Pre-qualify before converting to deal. LeadBooster adds outbound
+      prospecting. Simpler than Salesforce's lead-to-opportunity conversion.
+    protocols:
+      - HTTP/REST
+      - webhooks
+
+  - name: Reporting and Analytics
+    branded_name: Insights (Reports & Dashboards)
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Visual dashboards and reports on pipeline velocity, deal
+      conversion, activity completion, and revenue. Goal tracking
+      for individuals and teams.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Workflow Automation
+    branded_name: Automations
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Trigger-based rules for repetitive tasks — auto-create activities,
+      move deals, send emails when conditions are met. Simpler than
+      Salesforce Flow; no code-level extensibility.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Email Communication
+    branded_name: Email Sync & Tracking
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Two-way email sync with Gmail/Outlook. Send from CRM, track
+      opens and clicks. Emails auto-linked to deal and contact records.
+    protocols:
+      - SMTP
+      - IMAP
+
+  - name: Third-Party Integration
+    branded_name: Marketplace
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      350+ app integrations via marketplace. REST API for custom
+      integrations. Less extensive than Salesforce AppExchange.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+source:
+  seed: semops-orchestrator/docs/domain-patterns/retired/open-primitive-pattern.md
+  validated_against:
+    - salesforce-crm.yaml (comparative baseline)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

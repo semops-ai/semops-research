@@ -1,0 +1,133 @@
+# Analytics Expectations by Scale
+#
+# Functional analytics maturity expectations keyed by revenue range.
+# Answers: "What level of analytics capability should exist at this scale?"
+#
+# This is orthogonal to business-model analytics catalogs (which metrics
+# matter) — scale expectations say what MATURITY to expect, not which
+# specific metrics. A $5M SaaS company needs cohort retention tracking;
+# a $100M SaaS company needs enterprise-grade across all functions.
+#
+# Functions: bi, product, marketing, customer
+# Tiers: table_stakes (must have), mature (best-in-class), red_flag (missing = problem)
+#
+# Source: docs/research/business-analytics-patterns.md
+# Consumer: src/research_toolkit/diligence/reference.py (_predict_analytics)
+# Pipeline: /predict Step 7 (Layer 2 — scale-based functional analytics)
+
+scale_expectations:
+  "<$5M":
+    bi:
+      table_stakes:
+        - Basic revenue reporting
+      mature:
+        - Funnel metrics
+        - Basic retention
+      red_flag:
+        - Revenue tracking
+    product:
+      table_stakes:
+        - Product usage counts
+      mature:
+        - Basic retention
+      red_flag: []
+    marketing:
+      table_stakes: []
+      mature: []
+      red_flag: []
+    customer:
+      table_stakes: []
+      mature: []
+      red_flag: []
+
+  "$5M-$20M":
+    bi:
+      table_stakes:
+        - Cohort retention
+        - Budget reporting
+      mature:
+        - Attribution
+      red_flag:
+        - Cohort tracking
+    product:
+      table_stakes:
+        - Feature adoption
+        - Retention tracking
+      mature:
+        - A/B testing
+      red_flag:
+        - Cohort tracking
+    marketing:
+      table_stakes:
+        - CAC calculation
+      mature:
+        - Health scoring
+        - A/B testing
+      red_flag: []
+    customer:
+      table_stakes: []
+      mature: []
+      red_flag: []
+
+  "$20M-$100M":
+    bi:
+      table_stakes:
+        - Full product analytics
+        - Marketing attribution
+        - Customer segmentation
+      mature:
+        - Predictive CLV
+        - Automated health scoring
+      red_flag:
+        - Marketing attribution
+    product:
+      table_stakes:
+        - Full product analytics
+      mature:
+        - Predictive CLV
+      red_flag: []
+    marketing:
+      table_stakes:
+        - Marketing attribution
+      mature:
+        - Marketing mix modeling
+      red_flag:
+        - Marketing attribution
+    customer:
+      table_stakes:
+        - Customer segmentation
+      mature:
+        - Automated health scoring
+      red_flag:
+        - Customer health scoring
+
+  "$100M+":
+    bi:
+      table_stakes:
+        - Enterprise-grade across all functions
+      mature:
+        - Embedded analytics
+        - Data products
+      red_flag:
+        - Any major function gap
+    product:
+      table_stakes:
+        - Enterprise-grade product analytics
+      mature:
+        - Embedded analytics
+      red_flag:
+        - Any gap
+    marketing:
+      table_stakes:
+        - Full attribution
+      mature:
+        - Data products
+      red_flag:
+        - Any gap
+    customer:
+      table_stakes:
+        - Full health scoring
+      mature:
+        - ML-driven insights
+      red_flag:
+        - Any gap

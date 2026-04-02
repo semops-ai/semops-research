@@ -1,0 +1,177 @@
+# Notion — Primitive Decomposition
+#
+# Decomposes Notion into neutral functional primitives. Notion is a
+# workspace platform that combines wikis, databases, documents, and
+# project management. It's an Enterprise Work System in our
+# data-system-classification taxonomy.
+
+vendor:
+  name: Notion
+  company: Notion Labs
+  category: Workspace / Knowledge Management
+
+lock_in_signals:
+  - Proprietary block format — content stored as Notion-specific block tree (not Markdown or HTML)
+  - Database schema is platform-specific — not exportable as SQL DDL
+  - Relations and rollups are Notion-specific (not SQL joins)
+  - Formulas use Notion expression language (not standard)
+  - Automations are platform-specific trigger-action rules
+  - Templates are Notion-specific (not portable)
+  - Page hierarchy and permissions model is proprietary
+  - Export is lossy — Markdown export loses database views, relations, rollups, formulas
+
+open_alternative:
+  name: Outline (wiki) + Baserow/NocoDB (database) + Obsidian (notes)
+  why: >
+    Outline is open-source wiki with Markdown, Baserow/NocoDB are
+    open-source Airtable alternatives on PostgreSQL, Obsidian stores
+    notes as plain Markdown files. Data ownership across all three.
+
+primitives:
+  - name: Document Authoring
+    branded_name: Pages / Blocks
+    apqc_context: "13.5"
+    apqc_name: Develop and manage enterprise-wide knowledge management capability
+    description: >
+      Create documents from composable blocks (text, headings,
+      lists, toggles, callouts, embeds, etc.). Everything is a
+      block — rearrange, nest, transform. Nested page hierarchy.
+    protocols:
+      - Markdown (partial export)
+      - HTTP/REST (Notion API)
+
+  - name: Wiki Knowledge Base
+    branded_name: Wikis / Teamspaces
+    apqc_context: "13.5"
+    apqc_name: Develop and manage enterprise-wide knowledge management capability
+    description: >
+      Centralized knowledge base with verified pages, ownership,
+      and organizational structure. Teamspaces for department-level
+      content governance.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Structured Database
+    branded_name: Databases (30+ field types)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Spreadsheet-like databases with 30+ field types (text, number,
+      date, select, multi-select, person, relation, rollup, formula,
+      files, etc.). Each row is also a page with nested content.
+    protocols:
+      - HTTP/REST (Notion API)
+      - CSV (import/export)
+
+  - name: Database View Management
+    branded_name: Views (Table, Board, Timeline, Calendar, Gallery, List)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Multiple visual representations of the same data: table (grid),
+      board (kanban), timeline (gantt), calendar, gallery, and list.
+      Filters, sorts, and groupings per view.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Data Relationship Linking
+    branded_name: Relations / Rollups
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Link records across databases with relation fields. Aggregate
+      linked data with rollup fields (count, sum, average, etc.).
+      Enables relational data modeling without SQL.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Project Task Management
+    branded_name: Projects / Tasks / Sprints
+    apqc_context: "13.2"
+    apqc_name: Manage portfolio, program, and project
+    description: >
+      Track projects and tasks with status, assignee, priority,
+      dates, and dependencies. Kanban boards for workflow. Sprint
+      views for agile teams. Sub-tasks via nested pages.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Template Instantiation
+    branded_name: Templates (database + page)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Predefined layouts for common content types — meeting notes,
+      project briefs, bug reports, etc. Database templates ensure
+      new records start with consistent structure.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Workflow Automation
+    branded_name: Automations (database triggers)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Event-driven automations on database changes: when status
+      changes, when date arrives, when record created. Actions
+      include notify, update property, add page, send to Slack.
+    protocols:
+      - HTTP/REST (Notion API)
+      - webhooks
+
+  - name: Full-Text Search
+    branded_name: Search
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Search across all pages, databases, and comments. Filter by
+      date, creator, teamspace. Recently visited and quick-find
+      navigation.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: AI Content Assistance
+    branded_name: Notion AI
+    apqc_context: "13.5"
+    apqc_name: Develop and manage enterprise-wide knowledge management capability
+    description: >
+      AI-powered writing assistance: summarize, translate, improve
+      writing, adjust tone, extract action items, generate content.
+      Q&A across workspace content.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Granular Access Control
+    branded_name: Permissions (page-level, teamspace, guests)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Page-level and database-level permissions. Teamspace access
+      control. Guest sharing for external collaborators. Permission
+      inheritance through page hierarchy.
+    protocols:
+      - HTTP/REST (Notion API)
+
+  - name: Third-Party Integration
+    branded_name: Connections / Notion API / Embeds
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Pre-built connections (Slack, Google Calendar, GitHub, etc.).
+      REST API for programmatic access. Embed external content
+      (Figma, Loom, Google Docs, etc.) inline.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge
+
+source:
+  seed:  (seed decomposition catalogs) + 
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)

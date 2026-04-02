@@ -1,0 +1,160 @@
+# Attio CRM — Primitive Decomposition
+#
+# Decomposes Attio into neutral functional primitives. Attio is a
+# modern, data-model-flexible CRM that emphasizes relationship
+# intelligence and API-first design over traditional CRM feature
+# bundling. Interesting as an architectural contrast — it attempts
+# to reduce lock-in by design (flexible schema, open API).
+
+vendor:
+  name: Attio
+  company: Attio
+  category: CRM (relationship-intelligence focused)
+
+lock_in_signals:
+  - Custom object definitions not portable (vendor-specific schema config)
+  - Enrichment data sourced from Attio's proprietary data network
+  - Workflow automation logic stored in vendor platform
+  - Relationship graph (auto-built from email/calendar) not exportable as structured data
+  - SaaS only — no self-hosted option
+  # Note: lighter lock-in than Salesforce/Zoho — API-first design,
+  # CSV/Excel export, migration tools from competitors
+
+open_alternative:
+  name: PostgreSQL + custom schema + email parsing
+  why: Standard SQL for flexible schema, IMAP parsing for relationship intelligence
+
+primitives:
+  - name: Contact Management
+    branded_name: People & Companies (Custom Objects)
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Store people and company records with user-defined custom objects.
+      Flexible data model — not locked to fixed Contact/Account schema.
+      Supports arbitrary entity types (investors, portfolio companies, etc.).
+    protocols:
+      - SQL
+      - vCard
+
+  - name: Sales Pipeline Tracking
+    branded_name: Deals (List Views)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Track deals through stages using list-based views with filters
+      and kanban boards. Less pipeline-centric than Pipedrive; pipeline
+      is one view among many rather than the core organizing metaphor.
+    protocols:
+      - SQL
+
+  - name: Activity Logging
+    branded_name: Activity Timeline
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Consolidated view of emails, calls, meetings, and interactions
+      per record. Auto-populated from email and calendar sync.
+    protocols:
+      - SQL
+      - iCalendar
+
+  - name: Data Enrichment
+    branded_name: Data Enrichment
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Automatically populate company and contact records with external
+      data — job titles, employee count, funding rounds, social profiles,
+      industry classification. Unique primitive not present in traditional
+      CRMs as a first-class capability (Salesforce requires AppExchange
+      add-ons; Zoho has basic enrichment).
+    protocols:
+      - HTTP/REST
+
+  - name: Relationship Intelligence
+    branded_name: Relationship Graph (Email & Calendar Sync)
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Auto-build relationship map from email and calendar history.
+      Identifies who knows whom, interaction frequency, and relationship
+      strength. Distinct from Activity Logging — this is the derived
+      graph, not the raw events.
+    protocols:
+      - IMAP
+      - CalDAV
+
+  - name: Reporting and Analytics
+    branded_name: Reports & Dashboards
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Real-time customizable dashboards and reports. Revenue attribution
+      and conversion metrics. Custom reports over any object type.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Workflow Automation
+    branded_name: Workflows
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Automation engine with conditional routing, multi-step sequences,
+      and trigger-based actions. Includes AI-powered automation for
+      prospecting and lead scoring.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Email Communication
+    branded_name: Email Sync & Sequences
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Two-way email sync with Gmail/Outlook. Sequences for personalized
+      outreach campaigns at scale. Emails auto-linked to records.
+    protocols:
+      - SMTP
+      - IMAP
+
+  - name: Third-Party Integration
+    branded_name: API, SDK & Integrations
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      REST API and SDK for custom integrations. MCP support for AI
+      agent access. Data warehouse and billing system connectors.
+      Migration tools from Salesforce, HubSpot, Pipedrive, Zoho.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+  - name: Data Import and Export
+    branded_name: Import / Export (CSV, Excel, Migration)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Import from CSV, Excel, and competitor CRMs. Export capabilities
+      for data portability. Positioned as a competitive advantage
+      (easy to switch to Attio).
+    protocols:
+      - CSV
+      - HTTP/REST
+
+source:
+  seed: semops-orchestrator/docs/domain-patterns/retired/open-primitive-pattern.md
+  validated_against:
+    - salesforce-crm.yaml (maximal baseline)
+    - pipedrive-crm.yaml (minimal baseline)
+    - zoho-crm.yaml (second maximal)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

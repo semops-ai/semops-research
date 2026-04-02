@@ -1,0 +1,79 @@
+# Category Catalog Schema
+#
+# Each file in this directory represents a generic architectural category
+# (CRM, PIM, DAM, CMS, etc.) — the universal primitives that define what
+# a category IS, independent of any specific vendor product.
+#
+# Relationship to other catalogs:
+#   - Vendor decompositions (data/catalogs/decompositions/) → individual products
+#   - Category catalogs (this directory) → the generic pattern across products
+#   - Business model catalogs (data/catalogs/business-models/) → what a business needs
+#
+# Conceptual model (TOGAF):
+#   - Category = Architecture Building Block (ABB) — the abstract capability
+#   - Vendor product = Solution Building Block (SBB) — a specific implementation
+#
+# Provenance:
+#   Categories are established in one of two ways:
+#
+#   1. DERIVED — Cross-product analysis of multiple vendor decompositions
+#      identifies universal primitives by frequency. Tier 1 primitives (present
+#      in all analyzed products) define the category. Research doc in
+#      docs/research/decompositions/<category>-primitive-analysis.md is the
+#      reasoning chain.
+#      Example: CRM derived from Salesforce, Pipedrive, Zoho, Attio → 7 Tier 1 primitives
+#
+#   2. FOUND — Identified as a recognized 3P pattern (from BIZBOK, TOGAF, APQC,
+#      or industry standard). Primitives extracted from framework definition or
+#      a single authoritative reference product.
+#      Example: PIM found as 3P pattern, primitives from Akeneo decomposition
+#
+# Authority:
+#   Pattern definitions (what CRM/PIM/DAM mean architecturally) live in
+#   semops-data (PATTERNS.md, registry.yaml, STRATEGIC_DDD.md).
+#   This catalog extends — not duplicates — those definitions by adding
+#   the tiered primitive breakdown for use in the outside-in pipeline.
+#
+# Graph model (Neo4j):
+#   (:Category)-[:DEFINES]->(:Primitive)               # universal primitives
+#   (:Category)<-[:INSTANCE_OF]-(:VendorProduct)        # vendor implements category
+#   (:BusinessModel)-[:REQUIRES]->(:Category)           # business needs this category
+#   (:Category)-[:PATTERN_REF]->(:SemOpsPattern)        # authority link to semops
+#
+# ---
+# category:
+#   name: string                    # Category name (e.g., "CRM", "PIM", "DAM")
+#   description: string             # One-line definition
+#   semops_pattern: string | null   # Pattern name in semops-data registry (if registered)
+#   apqc_primary: string            # Primary APQC PCF category (e.g., "3.0 Market and Sell")
+#
+# provenance:
+#   type: derived | found           # How this category was established
+#   sources:                        # What it was derived/found from
+#     - string                      # Vendor decomposition filenames or 3P framework references
+#   research: string | null         # Path to cross-product analysis doc (if derived)
+#   vendor_count: int | null        # Number of vendors analyzed (if derived)
+#
+# primitives:
+#   tier_1:                         # Universal — "this IS the category"
+#     description: string           # What tier 1 means for this category
+#     items:
+#       - name: string              # BIZBOK-style capability name
+#         apqc_context: string      # APQC PCF reference
+#         description: string       # What this primitive does
+#
+#   tier_2:                         # Common — scale/context-dependent
+#     description: string           # What tier 2 means for this category
+#     items:
+#       - name: string
+#         apqc_context: string
+#         description: string
+#         condition: string         # When/why this primitive appears
+#
+#   tier_3:                         # Differentiator — vendor-philosophy-dependent
+#     description: string           # What tier 3 means for this category
+#     items:
+#       - name: string
+#         apqc_context: string
+#         description: string
+#         signal: string            # What the presence of this primitive tells you

@@ -1,0 +1,510 @@
+# Jobber — Primitive Decomposition
+#
+# Decomposes Jobber into neutral functional primitives.
+# Jobber is a field service management platform for small home service
+# businesses — scheduling, quoting, invoicing, CRM, and job tracking
+# in one system. Primary competitor to Housecall Pro and ServiceTitan.
+# Scoped to Jobber Core + Connect + Grow tiers.
+#
+# NOTE: Primitives from model knowledge. data_access section VALIDATED
+# 2026-04-01 via doc crawl (developer.getjobber.com, Make.com, third-party guides).
+# Full vendor docs: companies//vendor-docs/jobber/
+
+vendor:
+  name: Field Service Management
+  company: Jobber
+  category: Field Service Management (FSM)
+
+lock_in_signals:
+  - Custom fields use proprietary schema — no standard export format for property/job metadata
+  - Client hub (customer portal) tied to Jobber domain — not portable
+  - Jobber Payments (Stripe-powered) with preferential rates — switching payment provider resets rates
+  - Automations (follow-ups, reminders) use Jobber-specific trigger/action model — not transferable
+  - Quote templates and pricing rules stored in Jobber format — no standard quote interchange
+  - Route optimization locked to Jobber scheduling — can't export optimized routes
+  - Job forms (custom checklists) proprietary — no standard checklist schema export
+  - Reporting built on Jobber's internal data model — custom reports don't export as reusable definitions
+  - Mobile app offline data synced through Jobber's proprietary sync — field data capture tied to platform
+
+open_alternative:
+  name: Custom stack — PostgreSQL + CalDAV + Stripe + custom mobile app
+  why: >
+    Standard protocols exist for nearly every Jobber primitive. The vendor
+    premium is integrated UX, not data model innovation. An explicit
+    enterprise approach uses commodity components with standard protocols
+    for each primitive, making every capability agent-queryable and
+    data-transparent.
+
+primitives:
+
+  # --- Scheduling & Dispatch ---
+  - name: Recurring Schedule Management
+    branded_name: Recurring Jobs
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Create and manage recurring service schedules — weekly, biweekly,
+      monthly, or custom intervals. Handles skip requests, holiday
+      adjustments, and frequency changes. The recurring schedule generates
+      individual job instances on the calendar.
+    protocols:
+      - Jobber API (GraphQL)
+      - iCal export (read-only)
+    explicit_alternative:
+      what: "CalDAV server + RRULE recurrence patterns + job template in PostgreSQL"
+      standard: "RFC 5545 (iCalendar), RFC 4791 (CalDAV). RRULE handles any recurrence pattern: FREQ=WEEKLY;INTERVAL=2;BYDAY=TU = biweekly Tuesday. EXDATE for skip requests. Every calendar app since 1998 understands this."
+      agent_friendly: "Agent queries a standard calendar API for available slots, creates recurring events with RRULE, modifies exceptions — all with standard protocols. No vendor API dependency. The schedule is just data."
+      build_effort: low
+
+  - name: Job Scheduling and Calendar Management
+    branded_name: Scheduling / Calendar View
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Visual calendar for placing one-time and recurring jobs on specific
+      dates and time slots. Drag-and-drop scheduling, conflict detection,
+      team/crew assignment. Day, week, and month views.
+    protocols:
+      - Jobber API (GraphQL)
+    explicit_alternative:
+      what: "Cal.com (open source) or any CalDAV client + PostgreSQL job metadata"
+      standard: "CalDAV for calendar ops. The visual UI is the vendor premium — the data model is just events with metadata (provider, property, service type, duration)."
+      agent_friendly: "Agent reads/writes calendar events via CalDAV. Conflict detection is a simple overlap query on time ranges. No visual UI needed for agent operations."
+      build_effort: low
+
+  - name: Crew and Provider Assignment
+    branded_name: Team Scheduling
+    apqc_context: "7.1"
+    apqc_name: Develop and manage human resources planning
+    description: >
+      Assign jobs to specific team members or crews. View per-person
+      schedules, availability, and workload. Supports multi-person
+      crews with a primary assignee.
+    protocols:
+      - Jobber API (GraphQL)
+    explicit_alternative:
+      what: "Provider table in PostgreSQL + calendar-per-provider + assignment join table"
+      standard: "Relational model: providers have calendars, jobs get assigned to providers. Many-to-many with a primary flag for crews. Standard SQL."
+      agent_friendly: "Agent queries provider availability (calendar - assigned jobs = open slots), matches provider skills/territory to job requirements. Pure data query."
+      build_effort: trivial
+
+  - name: Route Sheet Generation
+    branded_name: Route Optimization (Grow plan)
+    apqc_context: "4.4"
+    apqc_name: Deliver product
+    description: >
+      Generate daily route sheets with job sequence and navigation links.
+      Grow plan includes basic route optimization (resequencing for
+      proximity). Not algorithmic — more like "here's your jobs on a map."
+    protocols:
+      - Google Maps deep link
+      - Apple Maps deep link
+    explicit_alternative:
+      what: "Google OR-Tools (open source VRP solver) or OSRM (open source routing) + Leaflet (open source maps)"
+      standard: "Vehicle Routing Problem with Time Windows (VRPTW) is a well-studied optimization problem. OR-Tools solves it. OSRM provides distance/duration matrices from OpenStreetMap data. Both open source, self-hostable."
+      agent_friendly: "Agent feeds today's jobs + provider locations to OR-Tools, gets optimized sequence. No vendor dependency. Can factor in real-time traffic, cancellations, priority changes. Dramatically better than Jobber's basic resequencing."
+      build_effort: medium
+
+  # --- Quoting & Pricing ---
+  - name: Quote Generation
+    branded_name: Quotes
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Create itemized quotes with line items, descriptions, quantities,
+      and pricing. Quote templates for common service packages. Attach
+      photos. Send via email with one-click acceptance. Track quote
+      status (draft, sent, accepted, rejected).
+    protocols:
+      - Jobber API (GraphQL)
+      - Email (quote delivery)
+      - PDF export
+    explicit_alternative:
+      what: "Quote table in PostgreSQL + line items + PDF generation (WeasyPrint or similar) + email delivery"
+      standard: "A quote is: header (customer, property, date) + line items (service, qty, rate, amount) + status (draft/sent/accepted/rejected). Standard relational model. UBL (Universal Business Language) is the XML standard but overkill here."
+      agent_friendly: "Agent generates quote from QuoteModel output (hours × rate + risk margin), writes to database, triggers PDF + email. The entire quote lifecycle is agent-driven — no manual template filling."
+      build_effort: low
+
+  - name: Quote Follow-Up Automation
+    branded_name: Quote Follow-Ups (Grow plan)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Automated email follow-ups on unresponded quotes at configurable
+      intervals. Tracks open/click rates.
+    protocols:
+      - Email
+    explicit_alternative:
+      what: "Cron job + email service (SendGrid, Postmark, or SMTP) + quote status check"
+      standard: "Check quote.status == 'sent' AND quote.sent_date < now - interval. Send templated email. Commodity automation."
+      agent_friendly: "Agent checks pending quotes on schedule, decides whether to follow up based on lead score and elapsed time. Can personalize follow-up based on property/service context. Smarter than interval-based automation."
+      build_effort: trivial
+
+  # --- Job Execution ---
+  - name: Job Tracking and Completion
+    branded_name: Job Details / Job Status
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Track job lifecycle from scheduled through in-progress to complete.
+      Job notes, internal notes, time tracking (optional), expenses.
+      Mark job complete to trigger invoicing.
+    protocols:
+      - Jobber API (GraphQL)
+      - Mobile app
+    explicit_alternative:
+      what: "Job table in PostgreSQL with state machine (scheduled → dispatched → in_progress → completed → invoiced) + mobile PWA"
+      standard: "State machine pattern. Job entity with status enum, timestamps per transition, notes as JSONB. Standard event sourcing if audit trail needed."
+      agent_friendly: "Agent monitors job state transitions, triggers downstream actions (invoice on complete, alert on overdue, reroute on delay). Full event stream available for analytics."
+      build_effort: low
+
+  - name: Job Forms and Checklists
+    branded_name: Job Forms (Grow plan)
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Custom forms attached to jobs — checklists, inspection fields,
+      signature capture, photo upload. Grow plan feature. No structured
+      intelligence capture or property observation workflow.
+    protocols:
+      - Mobile app (offline capable)
+      - Jobber API (limited — form data not fully queryable)
+    explicit_alternative:
+      what: "JSON Schema-defined forms + mobile PWA with offline sync + PostgreSQL JSONB storage"
+      standard: "JSON Schema (RFC draft) defines form structure. Form responses stored as JSONB — fully queryable. Photos as S3/MinIO objects with metadata. Offline sync via service worker + conflict resolution."
+      agent_friendly: "Agent can read every field of every completed checklist — query across all jobs for patterns (which items get flagged most often, which providers skip items). Jobber's form data is not fully queryable via API. This is the critical difference for intelligence capture."
+      build_effort: medium
+
+  - name: GPS Time Tracking
+    branded_name: GPS Tracking & Timer
+    apqc_context: "7.1"
+    apqc_name: Develop and manage human resources planning
+    description: >
+      Track time on-site via mobile app timer with GPS location.
+      Generates timesheet entries.
+    protocols:
+      - Mobile app
+      - Jobber API (timesheet data)
+    explicit_alternative:
+      what: "Geofence check-in/out + timesheet table in PostgreSQL"
+      standard: "HTML5 Geolocation API for position. Geofence = is the provider within X meters of the property address? Automatic check-in/out. Timesheet is just (provider, job, start_time, end_time, location)."
+      agent_friendly: "Automatic geofence-based time tracking removes manual timer start/stop. Agent gets accurate on-site time without provider compliance dependency. Feeds route efficiency and quote accuracy analytics automatically."
+      build_effort: low
+
+  # --- Customer Management ---
+  - name: Customer Record Management
+    branded_name: Client Manager / CRM
+    apqc_context: "6.1"
+    apqc_name: Plan and manage customer service contacts
+    description: >
+      Customer profiles with contact info, multiple properties, service
+      history, communication log, tags, and custom fields.
+    protocols:
+      - Jobber API (GraphQL)
+      - CSV import/export
+    explicit_alternative:
+      what: "Customer + Property tables in PostgreSQL + full-text search (pg_trgm)"
+      standard: "Standard relational CRM model. Customer has many Properties, Properties have many Jobs. Tags as array column or join table. Custom fields as JSONB. Full-text search via PostgreSQL built-in."
+      agent_friendly: "Agent has full SQL access to customer history, property details, job outcomes. Can answer 'which customers in Renton haven't been serviced in 6 weeks?' instantly. No API pagination limits."
+      build_effort: low
+
+  - name: Property Management
+    branded_name: Properties (within Client Manager)
+    apqc_context: "6.1"
+    apqc_name: Plan and manage customer service contacts
+    description: >
+      Multiple properties per customer. Property address, map location,
+      access notes, gate codes. Custom fields for property-specific
+      details. No structured property intelligence or pre-population.
+    protocols:
+      - Jobber API (GraphQL)
+    explicit_alternative:
+      what: "Property table in PostgreSQL + PostGIS (geospatial) + PropertyProfile (pre-populated from public records)"
+      standard: "PostGIS for geospatial queries (distance calculations, service area containment, geographic clustering). PropertyProfile enriched from county assessor API + Zillow/Redfin. Operational notes as structured JSONB (not free text)."
+      agent_friendly: "Agent queries 'properties within 3 miles of this address' (PostGIS), enriches new properties from public records automatically, maintains structured intelligence notes queryable across all properties. Jobber has none of this."
+      build_effort: medium
+
+  - name: Customer Portal
+    branded_name: Client Hub
+    apqc_context: "6.1"
+    apqc_name: Plan and manage customer service contacts
+    description: >
+      Self-service portal for customers — view upcoming jobs, approve
+      quotes, pay invoices, request new work, view job history.
+    protocols:
+      - HTTPS (customer-facing web portal)
+    explicit_alternative:
+      what: "Next.js or similar frontend + API reading from the same PostgreSQL backend"
+      standard: "Standard web app. Customer authenticates, sees their jobs/quotes/invoices/property reports. Same data the agent and staff see, filtered by customer."
+      agent_friendly: "Customer interactions (quote approval, feedback, requests) are events the agent can act on immediately. No polling Jobber's client hub for status changes."
+      build_effort: medium
+
+  - name: Customer Communication and Reminders
+    branded_name: Automated Reminders / Two-Way Text
+    apqc_context: "6.1"
+    apqc_name: Plan and manage customer service contacts
+    description: >
+      Automated appointment reminders (email + SMS), job completion
+      notifications, on-my-way texts. Two-way texting.
+    protocols:
+      - Email
+      - SMS
+      - Jobber API (limited)
+    explicit_alternative:
+      what: "Twilio (SMS) + SendGrid/Postmark (email) + event-driven triggers"
+      standard: "SMS via Twilio API, email via SMTP/SendGrid. Triggers from job state machine events (job_scheduled → send reminder, provider_dispatched → send on-my-way, job_completed → send feedback request)."
+      agent_friendly: "Agent orchestrates the full engagement cycle: pre-visit solicitation ('any areas to focus on?'), on-my-way notification, post-visit intelligence report. Context-aware — not just template fill. The agent knows the customer's history and property intelligence."
+      build_effort: low
+
+  # --- Billing & Payments ---
+  - name: Invoice Generation
+    branded_name: Invoicing
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Generate invoices from completed jobs — auto-populated from job
+      details. Batch invoicing. Send via email with payment link.
+    protocols:
+      - Jobber API (GraphQL)
+      - Email
+      - PDF export
+    explicit_alternative:
+      what: "Invoice table in PostgreSQL + PDF generation + email delivery"
+      standard: "Invoice = header + line items + payment status. Standard relational model. PDF via WeasyPrint or Puppeteer. Could use Stripe Invoicing for the full lifecycle."
+      agent_friendly: "Agent generates invoice on job completion, applies any adjustments (scope change, tip), sends with intelligence report. Stripe Invoicing API handles the payment link and collection."
+      build_effort: low
+
+  - name: Payment Processing
+    branded_name: Jobber Payments
+    apqc_context: "10.4"
+    apqc_name: Manage accounts receivable
+    description: >
+      Credit card and ACH processing via Jobber Payments (Stripe-powered).
+      Autopay. Card-on-file. Payment reminders.
+    protocols:
+      - Stripe (underlying)
+      - Jobber API
+    explicit_alternative:
+      what: "Stripe direct — same underlying provider, no Jobber middleman"
+      standard: "Stripe API for payments, subscriptions, card-on-file. Stripe is already under Jobber Payments. Going direct removes the intermediary, gives full Stripe dashboard access, and eliminates Jobber's payment processing markup."
+      agent_friendly: "Full Stripe API access — webhooks for payment events, Stripe Billing for autopay, Stripe Connect if ever needed for multi-party payments. Agent handles failed payment recovery with context-aware outreach."
+      build_effort: trivial
+
+  # --- Booking & Lead Capture ---
+  - name: Online Booking
+    branded_name: Online Booking (Grow plan)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Embeddable booking widget for website. Customers select service,
+      enter address, choose date/time. Creates a request.
+    protocols:
+      - HTTPS (embeddable widget)
+      - Jobber API
+    explicit_alternative:
+      what: "Cal.com (open source) embeddable widget or custom form → scheduling API"
+      standard: "Cal.com provides embeddable scheduling with CalDAV backend. Or a simple form (address + service type + preferred time) that triggers the agent to check availability and respond. The form doesn't need to show a calendar — just capture intent."
+      agent_friendly: "Agent processes the booking request with full context: pre-populates property from address, checks capacity via schedule query, generates quote, responds to customer — all without human intervention. Jobber's widget just creates a request that someone has to manually process."
+      build_effort: low
+
+  - name: Lead Capture and Request Management
+    branded_name: Requests
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Incoming service requests logged as leads. Request-to-quote
+      workflow. Track lead source.
+    protocols:
+      - Jobber API
+      - Email parsing
+    explicit_alternative:
+      what: "Lead table in PostgreSQL + webhook receivers for each channel (website form, Angi API, email parsing)"
+      standard: "Lead = (source, contact_info, property_address, service_requested, status, created_at). Standard CRM pipeline model. Webhook or polling integration per lead source."
+      agent_friendly: "Agent processes incoming leads immediately — pre-populates property, generates quote, checks capacity, responds within minutes. No manual triage step. Lead-to-response time drops from hours to seconds."
+      build_effort: low
+
+  # --- Reporting ---
+  - name: Business Performance Reporting
+    branded_name: Reporting
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Pre-built reports: revenue, job costing, quote conversion, AR
+      aging, team utilization. Limited customization. CSV export.
+    protocols:
+      - CSV export
+      - Jobber API (raw data, not reports)
+    explicit_alternative:
+      what: "SQL queries on PostgreSQL + Metabase (open source BI) or custom dashboards"
+      standard: "When all data is in PostgreSQL, every report is a SQL query. Metabase provides self-service dashboards with no code. Or expose metrics via API for custom dashboards."
+      agent_friendly: "Agent can answer any business question by querying the database directly. 'What's our quote conversion rate this month for properties over 2000 sqft in Renton?' — a SQL query, not a canned report. This is the fundamental advantage of owning your data."
+      build_effort: low
+
+  # --- Integrations ---
+  - name: Accounting Integration
+    branded_name: QuickBooks Online / Xero Sync
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Two-way sync with QuickBooks Online or Xero.
+    protocols:
+      - QuickBooks API
+      - Xero API
+    explicit_alternative:
+      what: "Direct QuickBooks API integration or Heron Data (open banking + accounting sync)"
+      standard: "QuickBooks Online API is well-documented. Invoice and payment events write to QB. No Jobber middleman needed."
+      agent_friendly: "Agent posts journal entries directly to QuickBooks on job completion. Can reconcile, flag discrepancies, and generate financial reports from the source data."
+      build_effort: low
+
+  - name: Third-Party Integration Platform
+    branded_name: Zapier + Jobber API
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Zapier integration for 5000+ apps. GraphQL API on Connect/Grow.
+      Webhooks for event notifications.
+    protocols:
+      - GraphQL API
+      - Webhooks
+      - Zapier
+    explicit_alternative:
+      what: "PostgreSQL LISTEN/NOTIFY + webhooks + direct API integrations"
+      standard: "When you own the database, every table change can trigger a webhook via PostgreSQL LISTEN/NOTIFY or change data capture. No Zapier needed — the event stream IS the integration platform."
+      agent_friendly: "Agent subscribes to domain events directly. No polling, no Zapier delay, no middleware. Event-driven architecture from the ground up."
+      build_effort: trivial
+
+data_access:
+  # How data gets OUT of Jobber — critical for integration and migration
+  # Validated 2026-04-01 from developer.getjobber.com, Make.com modules, third-party guides
+  # Full docs: companies//vendor-docs/jobber/
+  api:
+    type: GraphQL
+    endpoint: "https://api.getjobber.com/api/graphql"
+    plans: [Grow, Plus]  # Grow minimum for API/Developer Center access
+    authentication: OAuth 2.0
+    version_header: "X-JOBBER-GRAPHQL-VERSION"
+    current_version: "2023-11-15"
+    content_type: "application/json (only — since April 2024)"
+    rate_limits:
+      ddos_protection:
+        limit: "2,500 requests per 5 minutes"
+        scope: "per app + per account"
+        error: "HTTP 429"
+        engine: "Rack::Attack"
+      query_cost:
+        type: "points-based, leaky bucket algorithm"
+        max_points: "not publicly documented"
+        recommendation: "use cursor-based pagination, avoid deep nesting"
+    entities_full_crud:
+      - Clients — query, search, filter (tag/city/region/date), create, update, archive
+      - Properties — query, search, create, update (multiple per client)
+      - Jobs — query, search, filter (status/date/assignee), create, update, close, reopen
+      - Quotes — query, search, create (line items/taxes/discounts), update. PDF via documentUrl
+      - Invoices — query, search, create, update
+      - Visits — search, create, update, delete, complete/incomplete
+      - Requests — query, create, archive (work requests / booking intake)
+      - Expenses — create, update, delete
+      - Tasks — query, create, delete
+      - Notes — create, list, update (quote notes confirmed; job/client notes via entityId)
+    entities_read_only:
+      - Account — company name, phone, industry, features, creation date
+      - Users/Team — member info, assignment. Min scope requirement
+      - Timesheets — TimeSheetEntryConnection on jobs (provider, job, start/end time)
+    entities_limited:
+      - Job Forms — "can attach forms to jobs via jobFormIds. Form RESPONSES (checklist answers, field values) queryability uncertain — critical gap for intelligence capture"
+      - Custom Fields — "app can create up to 5 configs per object type. Cannot delete own configs. Cannot read/write fields from other apps. Supported on: Clients, Properties, Quotes, Jobs, Invoices, Team"
+    entities_not_accessible:
+      - Automations — "rules not accessible via API"
+      - Reports — "raw entity data only, no report definitions"
+      - Route Optimization — "UI-only feature, no API"
+      - Customer Communication — "reminders/SMS internal to Jobber, no API"
+      - Customer Portal — "Client Hub is Jobber-hosted, no API"
+    webhooks:
+      available: true
+      plans: [Grow, Plus]
+      confirmed_events:
+        - CLIENT_CREATE
+        - QUOTE_CREATE
+        - QUOTE_APPROVAL
+        - REQUEST_CREATE
+        - INVOICE_CREATE
+        - JOB_COMPLETE
+        - APP_CONNECT
+        - APP_DISCONNECT
+      probable_events: "JOB_CREATE, JOB_UPDATE, CLIENT_UPDATE (from Make.com Watch modules)"
+      full_list: "WebHookTopicEnum in GraphQL schema — not published statically"
+      payload: "metadata only (topic, appId, accountId, itemId, occurredAt) — must follow up with GraphQL query for entity data"
+      security: "HMAC-SHA256 signature verification"
+      delivery: "at-least-once (idempotency required)"
+    notes: >
+      GraphQL API is the primary integration path. Grow plan ($199/mo individual,
+      $349/mo team/10 users) is minimum for API + webhook access. Schema is live
+      in GraphiQL — no static schema published. Make.com exposes 47 modules
+      revealing the actual API surface.
+
+  bulk_export:
+    csv_export:
+      available: true
+      entities: [Clients, Jobs, Invoices, Quotes, Timesheets]
+      notes: "Manual export from web UI. Not automated — no scheduled exports."
+    report_export:
+      available: true
+      format: CSV
+      notes: "Pre-built reports exportable as CSV. Limited to Jobber's report definitions."
+
+  direct_database:
+    available: false
+    notes: "SaaS — no direct database access. All data access through API or manual export."
+
+  third_party_sync:
+    quickbooks:
+      direction: bidirectional
+      entities: [Invoices, Payments, Customers]
+      notes: "Native integration. Reliable for financial data sync."
+    zapier:
+      direction: bidirectional
+      triggers: "New client, new job, job completed, invoice created, quote approved"
+      actions: "Create client, create job, create invoice"
+      notes: "Zapier adds latency (polling-based) but covers entity creation. Useful as a backup integration path."
+
+  migration_assessment:
+    # Updated 2026-04-01 with validated API capabilities
+    extractable_easily:
+      - Customer profiles and contact info (full CRUD via API)
+      - Property addresses and details (full CRUD via API)
+      - Job history, status, scheduling (full CRUD with filters)
+      - Quotes with line items, taxes, discounts (full CRUD)
+      - Invoices with line items (full CRUD)
+      - Timesheets (read via TimeSheetEntryConnection on jobs)
+      - Work requests / leads (full CRUD)
+      - Visits with line items (full CRUD)
+      - Expenses (full CRUD)
+    extractable_with_effort:
+      - Custom field values (API access scoped — only fields your app created. Other apps' fields not readable)
+      - Notes (quote notes confirmed; job/client notes require entityId params)
+      - User/team member data (read-only, minimum scope requirement)
+    difficult_to_extract:
+      - Job form/checklist responses (can attach forms but reading responses uncertain — CRITICAL GAP)
+      - Automation rules (not accessible via API — must recreate manually)
+      - Route optimization settings (UI-only, not exported)
+      - Client hub / portal configuration (not accessible)
+      - Communication history (reminders/SMS not accessible via API)
+    not_extractable:
+      - Jobber-specific analytics/reporting definitions
+      - Payment processing details (Stripe-intermediated — may access via Stripe directly)
+      - Booking widget configuration
+
+catalog_meta:
+  version: "1.1.0"
+  created: "2026-03-30"
+  last_refreshed: "2026-04-02"
+  refresh_source: doc-crawl
+
+source:
+  seed: "Jobber product knowledge + field service industry analysis"
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - shopify-commerce.yaml (decomposition format reference)
+    - field-service-recurring.yaml (business model catalog)
+    - RFC 5545 / RFC 4791 (iCalendar / CalDAV standards)

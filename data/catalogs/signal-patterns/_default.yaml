@@ -1,0 +1,57 @@
+# Default Signal Patterns — Universal (all verticals)
+#
+# These patterns appear on virtually every business website.
+# Loaded by /recon for all engagements regardless of industry.
+
+vertical: default
+description: Universal URL path patterns common to all business websites
+
+patterns:
+  # --- Pricing ---
+  - paths: ["/pricing", "/plans", "/packages"]
+    signal_type: pricing_page
+    confidence: 0.7
+
+  # --- Marketing / Company Info ---
+  - paths: ["/about", "/team", "/company", "/mission"]
+    signal_type: marketing
+    confidence: 0.7
+
+  - paths: ["/blog", "/press", "/news", "/media"]
+    signal_type: marketing
+    confidence: 0.7
+
+  # --- Technical ---
+  - paths: ["/docs", "/api", "/reference", "/developer"]
+    signal_type: api_docs
+    confidence: 0.7
+
+  - paths: ["/integrations", "/partners", "/marketplace"]
+    signal_type: integrations
+    confidence: 0.7
+
+  - paths: ["/changelog", "/releases", "/whats-new"]
+    signal_type: changelog
+    confidence: 0.7
+
+  - paths: ["/webhooks", "/events/api"]
+    signal_type: webhook_events
+    confidence: 0.7
+
+  - paths: ["/open-source", "/github", "/oss"]
+    signal_type: open_source
+    confidence: 0.7
+
+  # --- People ---
+  - paths: ["/careers", "/jobs", "/hiring", "/join"]
+    signal_type: job_postings
+    confidence: 0.7
+
+  # --- Trust ---
+  - paths: ["/security", "/compliance", "/certifications"]
+    signal_type: certifications
+    confidence: 0.7
+
+  - paths: ["/case-studies", "/customers", "/testimonials"]
+    signal_type: customer_voice
+    confidence: 0.7

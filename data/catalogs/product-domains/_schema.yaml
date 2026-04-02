@@ -1,0 +1,20 @@
+# Product Domain Entity Catalog Schema
+#
+# Entities layered on top of industry + business model entities based on
+# what the company's product actually does (its technical domain).
+#
+# Product domains are specified in Classification.metadata["product_domains"].
+# Multiple domains can apply (e.g., a company might be in both "search"
+# and "analytics_bi").
+#
+# Used by reference.py _predict_entities — layered after universal +
+# industry + business model entities. Domain type: always CORE
+# (product domain = what the company builds).
+#
+# Replaces: ENTITIES_BY_PRODUCT_DOMAIN in lookups.py
+#
+# ---
+# product_domains:
+#   <domain_key>:                     # Lookup key (e.g., "search", "ml_ai")
+#     - name: string                  # Entity name (PascalCase)
+#       category: string              # Always "product" for product domain entities

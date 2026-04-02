@@ -1,0 +1,160 @@
+# Wappalyzer — Primitive Decomposition
+#
+# Decomposes Wappalyzer into neutral functional primitives. Wappalyzer is a
+# technology detection / web profiling tool. The detection engine is open-source
+# pattern matching — the value is the curated signature database (3,000+
+# technologies) and the commercial data enrichment layer on top.
+#
+# This is the first decomposition in the Technology Detection / Web Profiling
+# domain. No cross-product analysis yet (would need BuiltWith, WhatRuns, etc.).
+
+vendor:
+  name: Wappalyzer
+  company: Wappalyzer (acquired by Sincera, 2023)
+  category: Technology Detection / Web Profiling
+
+lock_in_signals:
+  - Proprietary enrichment data (company info, contact data layered on tech detection)
+  - API rate limits and pricing tiers gate access to bulk detection
+  - Historical technology tracking (adoption/drop timelines) not available elsewhere
+  - Lead generation features built on detection data (tech-targeted prospecting)
+  - Browser extension as distribution channel and data collection flywheel
+  - Aggregated install-base statistics (market share data) are proprietary
+  - Lookup API returns enriched company metadata beyond raw detection
+
+open_alternative:
+  name: Webanalyze (Go) / python-Wappalyzer + Wappalyzer signature files
+  why: >
+    The signature database itself is open-source (MIT-licensed JSON/JSON5).
+    Multiple open-source engines (Go, Rust, Python) consume the same signatures.
+    The detection engine is ~200 lines of regex matching. Self-hosted detection
+    with full data control is trivial; what you lose is the enrichment layer.
+
+primitives:
+  - name: HTTP Header Inspection
+    branded_name: Response header analysis
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Read HTTP response headers to identify server technologies.
+      Matches patterns in Server, X-Powered-By, X-Generator, Set-Cookie,
+      and other standard/custom headers against known technology signatures.
+    protocols:
+      - HTTP/1.1
+      - HTTP/2
+
+  - name: DOM Pattern Matching
+    branded_name: HTML/JS analysis
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Regex matching against rendered HTML content. Inspects meta tags,
+      script src attributes, link tags, HTML comments, and inline markup
+      patterns to identify CMS platforms, frameworks, and libraries.
+    protocols:
+      - HTML5
+      - HTTP/REST
+
+  - name: JavaScript Global Detection
+    branded_name: JS variable detection
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Detect JavaScript global variables and objects injected by frameworks.
+      Checks window.* properties (e.g., window.React, window.__NEXT_DATA__,
+      window.jQuery) to identify client-side technologies and their versions.
+    protocols:
+      - JavaScript (DOM API)
+
+  - name: Cookie Fingerprinting
+    branded_name: Cookie analysis
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Match cookie names and value patterns to known platform signatures.
+      Platform-specific cookies (e.g., PHPSESSID, _shopify_s, wp_*,
+      laravel_session) reveal server-side technology stack.
+    protocols:
+      - HTTP (Set-Cookie / Cookie)
+
+  - name: DNS Record Inspection
+    branded_name: DNS analysis
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Query DNS records (CNAME, TXT, MX, NS) to identify hosting,
+      CDN, email, and security providers. CNAME chains reveal CDN
+      (e.g., *.cloudfront.net), TXT records reveal verification
+      tokens for SaaS tools.
+    protocols:
+      - DNS
+
+  - name: Technology Signature Registry
+    branded_name: Technology database (3,000+ technologies)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Community-maintained catalog of technology signatures defined as
+      structured JSON. Each entry specifies detection patterns (headers,
+      cookies, DOM, JS globals, DNS), category, website, and icon.
+      This is the core asset — the detection engine is commodity.
+    protocols:
+      - JSON (open signature format)
+
+  - name: Version Extraction
+    branded_name: Version detection
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Extract version numbers from matched patterns using regex capture
+      groups. Version data embedded in script URLs, meta tags, HTTP
+      headers, and JS globals is parsed into structured version strings.
+    protocols:
+      - (regex capture groups on HTTP/HTML/JS artifacts)
+
+  - name: Technology Categorization
+    branded_name: Category taxonomy
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Hierarchical classification of detected technologies into functional
+      categories (CMS, Framework, CDN, Analytics, Payment, etc.). Enables
+      filtering and comparison by technology function rather than brand name.
+    protocols:
+      - (proprietary taxonomy, ~100 categories)
+
+  - name: Confidence Scoring
+    branded_name: Detection confidence
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Aggregate multiple detection signals into a weighted confidence
+      score per technology. A single header match is lower confidence
+      than header + DOM + JS global combined. Reduces false positives.
+    protocols:
+      - (internal scoring model)
+
+  - name: Bulk Site Profiling
+    branded_name: Lookup API / Lists
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Batch technology detection across URL lists. Input a list of
+      target domains, output technology profiles for each. Enables
+      market research, competitive intelligence, and lead generation
+      at scale.
+    protocols:
+      - HTTP/REST (API)
+
+source:
+  seed:  (Wappalyzer decomposition) + 
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - Wappalyzer open-source signature format (GitHub)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-16"
+  last_refreshed: "2026-03-16"
+  refresh_source: model-knowledge

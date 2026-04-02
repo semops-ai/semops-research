@@ -1,0 +1,210 @@
+# Strapi — Primitive Decomposition
+#
+# Decomposes Strapi (open-source headless CMS) into neutral functional
+# primitives. Strapi is self-hosted, Node.js/TypeScript-based, and
+# API-first. As open-source, lock-in vectors are different from SaaS
+# products — they're about ecosystem/customization coupling rather
+# than data sovereignty.
+
+vendor:
+  name: Strapi
+  company: Strapi (open-source)
+  category: Headless CMS (open-source)
+
+lock_in_signals:
+  - Node.js/TypeScript runtime requirement — not portable to other stacks
+  - Strapi-specific plugin API — extensions don't work outside Strapi
+  - Custom controller/service patterns are framework-specific
+  - Content type schema format is Strapi-specific JSON (not JSON Schema)
+  - Admin panel customization tied to Strapi React internals
+  - Database abstraction (Knex.js) means raw SQL not directly used
+  - Lifecycle hooks are Strapi-specific (not standard webhooks internally)
+
+open_alternative:
+  name: Directus / custom API + PostgreSQL
+  why: >
+    Directus wraps any SQL database as an API with zero abstraction
+    penalty. Or build a custom REST/GraphQL API directly on the
+    database for full control. Strapi itself IS the open alternative
+    to proprietary CMS — the lock-in is to the framework, not the vendor.
+
+primitives:
+  - name: Content Type Definition
+    branded_name: Content-Type Builder
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Visual builder for defining structured content types with typed
+      fields. Generates API schema, database tables, and admin UI
+      automatically from the type definition.
+    protocols:
+      - JSON (Strapi schema format)
+      - HTTP/REST
+
+  - name: Content Entry Management
+    branded_name: Content Manager
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Create, read, update, and delete content entries conforming
+      to defined content types. Admin panel with list views, filters,
+      and bulk operations.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Content Relationship Linking
+    branded_name: Relations (one-to-one, one-to-many, many-to-many)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Typed relationships between content types. Supports one-to-one,
+      one-to-many, and many-to-many relations. Polymorphic relations
+      for flexible content graphs.
+    protocols:
+      - SQL (foreign keys)
+      - HTTP/REST
+
+  - name: Content Delivery (REST API)
+    branded_name: REST API (auto-generated)
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Auto-generated REST endpoints for each content type. CRUD
+      operations, filtering, sorting, pagination, population of
+      relations. No code required for basic API.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Content Query (GraphQL)
+    branded_name: GraphQL Plugin
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      GraphQL API auto-generated from content type definitions.
+      Query, mutate, and filter content with type-safe schema.
+      Plugin-based — not in core but officially maintained.
+    protocols:
+      - GraphQL
+      - HTTP
+
+  - name: Media Asset Management
+    branded_name: Media Library
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Upload and manage images, videos, audio, and documents.
+      Image manipulation (resize, crop). Folder organization.
+      Pluggable storage providers (local, S3, Cloudinary).
+    protocols:
+      - HTTP/REST
+      - S3-compatible (via provider)
+
+  - name: Publishing State Management
+    branded_name: Draft & Publish
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Content state toggle between draft and published. Draft
+      content excluded from public API responses. Per-entry
+      publish control.
+    protocols:
+      - HTTP/REST
+
+  - name: Multi-Locale Content Storage
+    branded_name: Internationalization (i18n)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Multi-locale content management with per-locale field values.
+      Define available locales, set default locale, query content
+      by locale via API parameters.
+    protocols:
+      - HTTP/REST
+      - IETF BCP 47
+
+  - name: Role-Based Access Control
+    branded_name: Roles & Permissions (admin + API)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Dual permission system — admin panel roles (Super Admin, Editor,
+      Author) and API consumer roles (Authenticated, Public). Granular
+      per-content-type, per-action permissions.
+    protocols:
+      - RBAC
+      - JWT
+
+  - name: Event Webhook Delivery
+    branded_name: Webhooks
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Configure webhook URLs triggered on content lifecycle events
+      (create, update, delete, publish). Built into admin panel.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Plugin Extensibility
+    branded_name: Plugins (Marketplace + custom)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Plugin architecture for extending functionality. Official
+      marketplace plus ability to build custom plugins. Plugins
+      can add content types, APIs, admin panel sections, and
+      lifecycle hooks.
+    protocols:
+      - HTTP/REST
+      - Node.js
+
+  - name: Custom API Logic
+    branded_name: Controllers, Services, Policies, Middlewares
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Full customization of API behavior. Override auto-generated
+      controllers, add custom services, define policies for
+      authorization, insert middleware for request processing.
+    protocols:
+      - HTTP/REST
+      - Node.js
+
+  - name: Database Abstraction
+    branded_name: Database support (SQLite, PostgreSQL, MySQL)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Database-agnostic content storage. Supports SQLite (dev),
+      PostgreSQL, MySQL/MariaDB. Schema migrations auto-generated
+      from content type definitions.
+    protocols:
+      - SQL (PostgreSQL, MySQL)
+
+  - name: Content Import and Export
+    branded_name: Import/Export Plugin
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Import and export content via CSV/JSON. Plugin-based rather
+      than core. Useful for data migration and seeding.
+    protocols:
+      - CSV
+      - JSON
+      - HTTP/REST
+
+source:
+  seed:  (brand-to-neutral decomposition methodology)
+  validated_against:
+    - strapi.io/features (official feature list)
+    - github.com/strapi/strapi (source code)
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

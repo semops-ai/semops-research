@@ -1,0 +1,54 @@
+# Team Expectations by Revenue Scale
+#
+# Source: docs/research/data-due-diligence-method.md
+# Expected data team headcount, roles, and red flags at each scale.
+#
+# Used by reference.py _predict_team.
+#
+# Replaces: TEAM_BY_SCALE in lookups.py
+
+team:
+  "<$5M":
+    headcount: "0-1"
+    roles:
+      - analyst (ops person wearing the hat)
+    signal_if_missing: Normal at this stage
+
+  "$5M-$15M":
+    headcount: "1-2"
+    roles:
+      - analytics engineer
+      - data engineer
+    signal_if_missing: Analytics in spreadsheets, no one owns data quality
+
+  "$15M-$50M":
+    headcount: "3-6"
+    roles:
+      - data lead
+      - data engineer
+      - analyst
+    signal_if_missing: Severe measurement gaps, can't diagnose problems
+
+  "$50M-$100M":
+    headcount: full data org
+    roles:
+      - platform team
+      - analytics team
+      - ML team
+    signal_if_missing: Operating blind, major technical debt
+
+  "$100M+":
+    headcount: specialized teams
+    roles:
+      - platform team
+      - analytics engineering
+      - ML team
+      - governance team
+    signal_if_missing: Crisis-level data maturity gap
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

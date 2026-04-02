@@ -1,0 +1,172 @@
+# Zapier — Primitive Decomposition
+#
+# Decomposes Zapier into neutral functional primitives. Zapier is an
+# integration/automation platform — it connects apps via trigger-action
+# workflows. Unlike other decompositions, Zapier IS a primitive
+# (workflow automation / integration) that other products have as a
+# supporting capability. Decomposing it reveals the sub-primitives
+# of the automation domain.
+
+vendor:
+  name: Zapier
+  company: Zapier
+  category: Integration / Workflow Automation
+
+lock_in_signals:
+  - Zap definitions are platform-specific (not portable workflow format)
+  - Trigger/action configurations tied to Zapier's app connector implementations
+  - Filter and path logic uses Zapier expression syntax
+  - Multi-step workflow state management is proprietary
+  - Formatter and code steps use Zapier-specific runtime
+  - Task-based pricing creates usage lock-in (switching costs increase with volume)
+  - App connection credentials stored in Zapier (OAuth tokens)
+  - No self-hosted option
+
+open_alternative:
+  name: n8n / Activepieces (self-hosted)
+  why: >
+    Open-source workflow automation with self-hosted option. n8n
+    supports 400+ integrations, visual workflow builder, and can
+    run on your own infrastructure. Full data control.
+
+primitives:
+  - name: Event Trigger Detection
+    branded_name: Triggers (instant + polling)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Detect events in connected apps that start a workflow.
+      Instant triggers (webhook-based, real-time) and polling
+      triggers (check for new data on interval). Schedule-based
+      triggers for time-driven workflows.
+    protocols:
+      - webhooks
+      - HTTP/REST (polling)
+
+  - name: Action Execution
+    branded_name: Actions (create, update, search, etc.)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Perform operations in connected apps: create records, update
+      fields, send messages, upload files, search for data. Each
+      action maps to an API call on the target app.
+    protocols:
+      - HTTP/REST
+      - OAuth 2.0
+
+  - name: Multi-Step Workflow Orchestration
+    branded_name: Multi-Step Zaps
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Chain multiple actions sequentially after a single trigger.
+      Data from each step available to subsequent steps. Build
+      complex workflows spanning 3-100+ steps across apps.
+    protocols:
+      - HTTP/REST
+
+  - name: Conditional Branching
+    branded_name: Paths (if/then logic)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Split workflow into branches based on conditions. If/then
+      logic: different paths execute different actions based on
+      data values. Enables complex decision trees.
+    protocols:
+      - (proprietary expression syntax)
+
+  - name: Data Filtering
+    branded_name: Filters
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Gate workflow execution based on conditions. Only continue
+      if data matches criteria (field equals, contains, greater
+      than, etc.). Prevents unnecessary action execution.
+    protocols:
+      - (proprietary filter syntax)
+
+  - name: Data Transformation
+    branded_name: Formatter / Code Steps (Python, JavaScript)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Transform data between steps: text manipulation, number
+      formatting, date parsing, JSON/CSV conversion. Code steps
+      for custom Python or JavaScript logic.
+    protocols:
+      - Python
+      - JavaScript
+      - HTTP/REST
+
+  - name: Record Search and Lookup
+    branded_name: Search Actions
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Query connected apps for existing records before creating
+      new ones. Find-or-create pattern prevents duplicates.
+      Lookup data for use in subsequent steps.
+    protocols:
+      - HTTP/REST
+
+  - name: Delay and Schedule Control
+    branded_name: Delay / Schedule
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Insert time delays between workflow steps. Schedule workflows
+      to run at specific times (hourly, daily, weekly, monthly,
+      custom intervals).
+    protocols:
+      - (platform-managed scheduling)
+
+  - name: App Connector Registry
+    branded_name: App Directory (7,000+ apps)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Registry of 7,000+ pre-built app connectors with standardized
+      trigger/action interfaces. Each connector wraps an app's API
+      into Zapier's trigger-action model.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - API key
+
+  - name: Error Handling and Retry
+    branded_name: Error Handling / Autoreplay
+    apqc_context: "8.7"
+    apqc_name: Deliver and support information technology services
+    description: >
+      Automatic retry on transient failures. Error notifications.
+      Task history for debugging failed steps. Replay failed
+      tasks after fixing issues.
+    protocols:
+      - HTTP/REST
+
+  - name: Webhook Endpoint
+    branded_name: Webhooks by Zapier (catch + send)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Create webhook endpoints to receive data from any source
+      (Catch Hook). Send outbound webhooks to any URL (Send Hook).
+      Enables integration with apps without native Zapier connectors.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+source:
+  seed:  (seed decomposition catalogs) + 
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

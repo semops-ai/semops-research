@@ -1,0 +1,29 @@
+# Marketplace / E-commerce — Signal Patterns
+#
+# Marketplace and e-commerce sites have product catalogs,
+# category taxonomies, and seller/vendor directories.
+
+vertical: marketplace
+description: URL patterns for marketplace and e-commerce websites
+
+patterns:
+  # --- Product/Pricing ---
+  - paths: ["/shop", "/store", "/products", "/catalog"]
+    signal_type: pricing_page
+    confidence: 0.7
+    notes: Product catalog
+
+  - paths: ["/deals", "/sale", "/promotions"]
+    signal_type: pricing_page
+    confidence: 0.5
+
+  # --- Industry Research (taxonomy, supply side) ---
+  - paths: ["/categories", "/collections", "/departments"]
+    signal_type: industry_research
+    confidence: 0.5
+    notes: Taxonomy = business structure signal
+
+  - paths: ["/sellers", "/vendors", "/brands"]
+    signal_type: industry_research
+    confidence: 0.6
+    notes: Supply side

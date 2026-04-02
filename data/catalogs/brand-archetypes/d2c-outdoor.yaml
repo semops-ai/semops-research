@@ -1,0 +1,60 @@
+# D2C Outdoor Brand Archetype
+#
+# Messaging norms for direct-to-consumer brands in the outdoor vertical.
+# Combines ecommerce-d2c business model with outdoor vertical identity.
+
+archetype:
+  name: d2c-outdoor
+  business_model: ecommerce-d2c
+  vertical: outdoor
+  description: >
+    Outdoor D2C brands lead with technical credibility and community
+    authenticity. The brand is "an outdoor company that sells direct" —
+    not "a retailer that sells outdoor gear." Sustainability is structural
+    (repair programs, material transparency), not just marketing copy.
+    Customer segments are activity-defined, not demographic.
+
+voice:
+  tone: technical but approachable
+  never:
+    - aspirational-lifestyle ("live your best life")
+    - fashion-forward positioning
+    - vague performance claims without specs
+    - demographic-based customer language (age, income)
+  always:
+    - specific technical claims ("breathes at 15K g/m²/24hr")
+    - honest about limitations and use-case fit
+    - peer relationship ("fellow outdoor people"), not brand-to-consumer
+    - activity-specific context ("ideal for shoulder-season trail running")
+
+messaging_hierarchy:
+  - performance
+  - durability
+  - sustainability
+  - community
+
+proof_patterns:
+  - field_tested_by_staff
+  - ambassador_validated
+  - spec_transparency
+  - material_provenance
+  - repair_program_existence
+
+vertical_identity_strength: HIGH
+
+typical_segments:
+  - activity_defined
+  - values_driven
+  - crossover_lifestyle
+
+provenance:
+  seed_engagement: Ridgeline Outdoor Co. 
+  validated_engagements: []
+  last_updated: 2026-03-22
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge

@@ -1,0 +1,55 @@
+# Industry Reference Model Catalog Schema
+#
+# Each file in this directory represents one industry's reference model —
+# the entities, capabilities, value streams, and domain contexts that
+# characterize how businesses in that industry are structured.
+#
+# Primary source: BIZBOK v14 Part 8 Industry Reference Models (p.603-771)
+# for 9 industries. Domain extensions (retail, events, trade_shows, marketplace)
+# are derived from engagement experience and domain knowledge.
+#
+# These catalogs replace the Python dicts formerly in lookups.py:
+#   - ENTITIES_BY_INDUSTRY → entities section per industry file
+#   - DOMAIN_CONTEXTS_BY_INDUSTRY → domain_contexts section (where available)
+#   - UNIVERSAL_ENTITIES → _common.yaml
+#
+# Relationship to other catalogs:
+#   - Business model catalogs define WHAT capabilities a company needs;
+#     industry catalogs define the domain ENTITIES that populate those capabilities
+#   - Decomposition catalogs map vendor products → neutral primitives;
+#     industry catalogs provide the entity vocabulary those primitives operate on
+#   - Process catalogs (APQC) define standard processes;
+#     industry catalogs add industry-specific entities implied by those processes
+#
+# How industry catalogs affect the pipeline:
+#   - /classify: Industry field selects which catalog to load
+#   - /predict: Entities layered from _common.yaml + industry file
+#   - /derive: Domain contexts (if present) seed bounded context definitions
+#
+# Domain type is NOT assigned in industry catalogs — it depends on the
+# consuming company's business model and is determined per-engagement.
+# Exception: domain_contexts include domain_type because it represents the
+# strategic DDD classification of each bounded context.
+#
+# ---
+# industry:
+#   key: string                       # Lookup key (matches Classification.industry or .sector)
+#   name: string                      # Human-readable name
+#   bizbok_section: string | null     # BIZBOK v14 section reference (e.g., "§8.1")
+#   bizbok_pages: string | null       # Page range for traceability
+#   source: string                    # "bizbok-v14" | "domain-extension"
+#
+# entities:                           # Industry-specific entities
+#   - name: string                    # Entity name (PascalCase, e.g., "FinancialAccount")
+#     category: string                # core | financial | regulatory | operational | clinical | etc.
+#     bizbok_source: string | null    # Specific BIZBOK reference (e.g., "§8.1 primary")
+#     description: string | null      # Optional description
+#
+# domain_contexts:                    # Bounded context overlay (where available)
+#   - name: string                    # Context name
+#     domain_type: string             # core | supporting | generic
+#     aggregate_root: string          # Primary entity owning invariants
+#     rationale: string               # Why this classification
+#     entities:                       # Entities belonging to this context
+#       - name: string
+#         category: string

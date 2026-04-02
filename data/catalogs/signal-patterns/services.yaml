@@ -1,0 +1,77 @@
+# Services / Field Service — Signal Patterns
+#
+# Service businesses emphasize booking, coverage area, and social proof.
+# The "pricing page" equivalent is often a quote/booking form.
+# Vertical segment pages (who they serve) are a common pattern.
+
+vertical: services
+description: URL patterns for service and field service business websites
+
+patterns:
+  # --- Pricing (booking/quote) ---
+  - paths: ["/book", "/booking", "/schedule-service", "/get-quote"]
+    signal_type: pricing_page
+    confidence: 0.7
+    notes: Service booking/quote = pricing signal
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Service Catalog ---
+  - paths: ["/services", "/our-services", "/what-we-do"]
+    signal_type: marketing
+    confidence: 0.7
+    notes: Service catalog
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Geographic ---
+  - paths: ["/areas-served", "/service-area", "/locations", "/offices"]
+    signal_type: marketing
+    confidence: 0.6
+    notes: Geographic coverage
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Social Proof ---
+  - paths: ["/our-work", "/portfolio", "/before-after"]
+    signal_type: customer_voice
+    confidence: 0.6
+    notes: Visual social proof
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/reviews", "/ratings"]
+    signal_type: customer_voice
+    confidence: 0.8
+    notes: Direct customer signal
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Hiring ---
+  - paths: ["/employee-application", "/apply", "/join-our-team"]
+    signal_type: job_postings
+    confidence: 0.7
+    learned_from:
+      engagement: 
+      issue: ""
+
+  # --- Info ---
+  - paths: ["/faq", "/how-it-works"]
+    signal_type: marketing
+    confidence: 0.5
+    learned_from:
+      engagement: 
+      issue: ""
+
+  - paths: ["/checklist", "/standards", "/guarantee"]
+    signal_type: certifications
+    confidence: 0.6
+    notes: Quality assurance signal
+    learned_from:
+      engagement: 
+      issue: ""

@@ -1,0 +1,103 @@
+# Catalog Lineage Schema
+#
+# Defines the structure of catalog-lineage.yaml in each engagement's
+# governance layer. Located at:
+#   {engagement}/mirror/infrastructure/data/governance/catalog-lineage.yaml
+#   (or companies/{name}/mirror/governance/ for in-repo engagements)
+#
+# Pattern: extract-promote (3P)
+# Capability: catalog-traceability
+# ADR: ADR-0003 (catalog traceability convention)
+#
+# Design model: Shared catalog with engagement provenance.
+# Engagements write directly to shared catalogs with provenance.
+# No promotion gate — demand-driven creation, staleness-triggered refresh.
+# See  for design rationale.
+#
+# ---
+# catalog_lineage:
+#   engagement: string              # Engagement slug (matches repo name or company dir)
+#   generated_by: string            # Pipeline command that last updated this file
+#   last_updated: date-string       # ISO date of last update
+#
+#   # --- Business model ---
+#   business_model:
+#     archetype:
+#       path: string                # Relative to semops-research root (e.g., data/catalogs/business-models/ecommerce-d2c.yaml)
+#       version: string             # SemVer from catalog_meta.version
+#       consumed_at: date-string    # When consumed by this engagement
+#     analytics:
+#       path: string
+#       version: string
+#       consumed_at: date-string
+#
+#   # --- Classification inputs ---
+#   classification:
+#     industry:
+#       path: string
+#       version: string
+#       consumed_at: date-string
+#     vertical:                     # Optional — not all engagements have vertical catalogs
+#       path: string
+#       version: string
+#       consumed_at: date-string
+#     brand_archetype:              # Optional
+#       path: string
+#       version: string
+#       consumed_at: date-string
+#
+#   # --- Frameworks ---
+#   frameworks:                     # Array of framework catalog refs
+#     - path: string
+#       version: string
+#       consumed_at: date-string
+#
+#   # --- Operational refs ---
+#   operational:                    # Array of operational catalog refs
+#     - path: string
+#       version: string
+#       consumed_at: date-string
+#
+#   # --- Vendor decompositions ---
+#   # Systems without decompositions are absent — coverage gap visible by
+#   # comparing against system-inventory.yaml.
+#   decompositions:                 # Array of per-system decomposition refs
+#     - system: string              # Stable kebab-case id (matches system-inventory.yaml id field)
+#       catalog: string             # Path to decomposition in semops-research (relative to repo root)
+#       version: string             # SemVer from catalog_meta.version
+#       consumed_at: date-string    # When first consumed by this engagement
+#       provenance:
+#         created_by: string        # Engagement that first triggered this catalog entry's creation
+#         pipeline_step: string     # Pipeline command that consumed it (e.g., /decompose-vendor)
+#       history:                    # Append-only event log — preserves outside-in progression
+#         - action: string          # created | refreshed | validated | version-bumped
+#           timestamp: date-string  # When this event occurred
+#           pipeline_step: string   # Command that triggered this event
+#           engagement: string      # Which engagement triggered it
+#           notes: string?          # Optional context (e.g., "refreshed after vendor v2 release")
+#
+#   # --- Analytics patterns ---
+#   analytics:                      # Array of analytics pattern catalog refs
+#     - path: string
+#       version: string
+#       consumed_at: date-string
+#
+# ---
+# Join keys:
+#   decompositions[].system  ↔  system-inventory.yaml systems[].id
+#
+# Convention:
+#   - system id is a manually curated kebab-case stable identifier
+#   - Once assigned, id does not change even if display name changes
+#   - id is a domain concept (e.g., akeneo-pim), not a mechanical transform of the display name
+#
+# History model:
+#   The history array is append-only. Each event records what happened, when, and why.
+#   On pipeline re-run (e.g., /decompose-vendor refreshes a catalog entry), a new event
+#   is appended — the original "created" event is preserved. This makes the outside-in
+#   progression visible: initial prediction → first decomposition → refresh → validation.
+#
+# Empty decompositions:
+#   Engagements with no vendor decompositions use `decompositions: []`.
+#   This is valid — not all businesses have decomposable vendor stacks
+#   (e.g.,  is Work-dominant with spreadsheets and email).

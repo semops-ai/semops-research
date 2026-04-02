@@ -1,0 +1,69 @@
+# Business Model Entity Overlay
+#
+# Entities layered on top of industry entities based on business model type.
+# These are keyed by revenue model (subscription, usage_based, etc.), not
+# by specific archetype (SaaS B2B, marketplace, etc.).
+#
+# Used by reference.py _predict_entities — layered after universal +
+# industry entities. Domain type depends on business model weight:
+#   - weight >= 0.5 → CORE (primary revenue driver)
+#   - weight < 0.5 → SUPPORTING (secondary model)
+#
+# Replaces: ENTITIES_BY_BUSINESS_MODEL in lookups.py
+
+business_models:
+  subscription:
+    - name: Subscription
+      category: core
+    - name: Plan
+      category: core
+    - name: BillingCycle
+      category: financial
+    - name: Renewal
+      category: financial
+    - name: Churn
+      category: operational
+
+  usage_based:
+    - name: UsageRecord
+      category: core
+    - name: UsageMetric
+      category: core
+    - name: RatingRule
+      category: financial
+
+  transactional:
+    - name: Order
+      category: core
+    - name: OrderItem
+      category: core
+    - name: Cart
+      category: core
+
+  marketplace:
+    - name: Listing
+      category: core
+    - name: Commission
+      category: financial
+
+  advertising:
+    - name: AdImpression
+      category: core
+    - name: Campaign
+      category: core
+    - name: AdPlacement
+      category: core
+
+  freemium:
+    - name: Trial
+      category: core
+    - name: ConversionEvent
+      category: operational
+
+  licensing:
+    - name: License
+      category: core
+    - name: LicenseKey
+      category: core
+    - name: Entitlement
+      category: core

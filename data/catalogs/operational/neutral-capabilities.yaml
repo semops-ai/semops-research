@@ -1,0 +1,59 @@
+# Neutral Data Platform Capabilities
+#
+# Source: docs/research/data-systems-vendor-comparison.md
+# Core capabilities any data platform needs, and which are expected
+# at each revenue scale.
+#
+# Used by reference.py _predict_neutral_capabilities.
+#
+# Replaces: NEUTRAL_CAPABILITIES, NEUTRAL_CAPABILITY_BY_SCALE in lookups.py
+
+capabilities:
+  - Ingestion & Streaming
+  - Raw Storage
+  - Table Layer
+  - Analytic Engine
+  - Orchestration & Pipelines
+  - Governance & Catalog
+  - AI / ML Services
+
+by_scale:
+  "<$5M":
+    expected:
+      - Raw Storage
+      - Analytic Engine
+    complexity: basic
+  "$5M-$20M":
+    expected:
+      - Raw Storage
+      - Analytic Engine
+      - Orchestration & Pipelines
+      - Table Layer
+    complexity: basic
+  "$20M-$100M":
+    expected:
+      - Ingestion & Streaming
+      - Raw Storage
+      - Table Layer
+      - Analytic Engine
+      - Orchestration & Pipelines
+      - Governance & Catalog
+      - AI / ML Services
+    complexity: full
+  "$100M+":
+    expected:
+      - Ingestion & Streaming
+      - Raw Storage
+      - Table Layer
+      - Analytic Engine
+      - Orchestration & Pipelines
+      - Governance & Catalog
+      - AI / ML Services
+    complexity: enterprise-grade
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

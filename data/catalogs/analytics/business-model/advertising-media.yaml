@@ -1,0 +1,136 @@
+# Advertising / Media — Business Model Analytics
+#
+# Revenue pattern: Impression/engagement-based; sold inventory.
+# Revenue tied to audience attention, not product sales. Yield
+# optimization (revenue per impression) is critical. Two-sided:
+# content for users, inventory for advertisers.
+
+business_model:
+  name: Advertising / Media
+  category: Advertising/Media
+  description: >
+    Revenue from selling audience attention to advertisers. Content
+    attracts and retains audience; advertising inventory is sold
+    against that attention. Yield optimization and audience quality
+    are the core analytical challenges.
+  revenue_pattern: Impression/engagement-based, sold inventory
+
+core_metrics:
+  - name: Impressions
+    definition: Ad views served
+    formula: "COUNT(ad_impressions)"
+    why_it_matters: Inventory volume — the raw material being sold
+
+  - name: CPM
+    definition: Cost Per Mille (1000 impressions)
+    formula: "revenue / (impressions / 1000)"
+    why_it_matters: Yield measure — revenue per unit of attention
+    benchmarks:
+      healthy: "Stable or increasing CPM"
+      warning: "Declining CPM (audience quality degrading or oversupply)"
+      source: "IAB / eMarketer benchmarks"
+
+  - name: Fill Rate
+    definition: Impressions sold divided by available inventory
+    formula: "COUNT(sold_impressions) / COUNT(available_impressions)"
+    why_it_matters: Monetization efficiency — unfilled = lost revenue
+    benchmarks:
+      healthy: ">80%"
+      warning: "<50% (oversupply or poor targeting)"
+      source: "IAB Standards"
+
+  - name: eCPM
+    definition: Effective CPM — blended yield across all ad types
+    formula: "total_ad_revenue / (total_impressions / 1000)"
+    why_it_matters: True yield across direct, programmatic, and remnant
+    benchmarks:
+      healthy: "Higher than programmatic-only CPM"
+      warning: "Converging with programmatic floor"
+      source: "Publisher yield optimization"
+
+  - name: CTR
+    definition: Click-Through Rate
+    formula: "clicks / impressions"
+    why_it_matters: Ad effectiveness — engagement beyond viewing
+    benchmarks:
+      healthy: ">0.5% display, >2% search"
+      warning: "<0.1% (banner blindness)"
+      source: "Google Ads benchmarks"
+
+  - name: ARPU
+    definition: Average Revenue Per User
+    formula: "total_revenue / active_users"
+    why_it_matters: Per-user monetization efficiency
+    benchmarks:
+      healthy: "Growing with engagement"
+      warning: "Declining while user count grows (monetization problem)"
+      source: "eMarketer / Insider Intelligence"
+
+  - name: DAU / MAU
+    definition: Daily and Monthly Active Users
+    formula: "COUNT(DISTINCT users_active_today) / COUNT(DISTINCT users_active_this_month)"
+    why_it_matters: Engagement stickiness — higher ratio = daily habit
+    benchmarks:
+      healthy: ">50% DAU/MAU (daily habit)"
+      warning: "<20% (occasional use)"
+      source: "Reforge growth models"
+
+  - name: Time on Site / App
+    definition: Average engagement duration per session
+    formula: "AVG(session_duration)"
+    why_it_matters: Inventory potential — more time = more impressions
+    benchmarks:
+      healthy: "Increasing or stable"
+      warning: "Declining (content quality or UX issues)"
+      source: "Google Analytics benchmarks"
+
+  - name: Sell-Through Rate
+    definition: Premium inventory sold vs. available
+    formula: "COUNT(premium_sold) / COUNT(premium_available)"
+    why_it_matters: Pricing power indicator for premium inventory
+    benchmarks:
+      healthy: ">90% premium, >70% overall"
+      warning: "Heavy 'SOLD' markers indicate demand exceeding supply (pricing opportunity)"
+      source: "Publisher operations"
+
+key_dimensions:
+  - "Ad Unit / Placement — banner, video, native, position"
+  - "Advertiser / Campaign — who's buying"
+  - "Audience Segment — demographics, interests, behavior"
+  - "Content Category — editorial section, topic"
+  - "Device / Platform — mobile, desktop, app, web"
+
+time_patterns:
+  - "Real-time bidding — programmatic auctions per impression"
+  - "Campaign flights — start/end dates, pacing"
+  - "Seasonal demand — Q4 holiday ad spend surge"
+  - "Content freshness — news cycles, trending topics"
+
+fact_table:
+  grain: "One row per ad impression"
+  name: ad_impressions_fact
+  columns:
+    - impression_id
+    - timestamp
+    - user_id
+    - ad_unit_id
+    - campaign_id
+    - advertiser_id
+    - bid_price
+    - winning_price
+    - clicked
+    - viewable
+
+standard_frameworks:
+  - name: "IAB (Interactive Advertising Bureau)"
+    focus: "Ad standards, viewability, brand safety"
+  - name: "MRC (Media Rating Council)"
+    focus: "Measurement accreditation"
+  - name: "eMarketer / Insider Intelligence"
+    focus: "Digital ad benchmarks"
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against:
+    - " engagement (advertising weight 0.25 — sponsorship as sold inventory)"
+    - " engagement (ad_network stream — impression-based venue inventory)"

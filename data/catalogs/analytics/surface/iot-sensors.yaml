@@ -1,0 +1,102 @@
+# IoT / Sensors — Surface Analytics Patterns
+#
+# Embedded devices, industrial sensors, smart products. Time-series
+# data at high volume. Predictive maintenance patterns. Edge computing.
+# This is operational analytics, not business analytics — distinct
+# from function-based categories.
+
+surface:
+  name: IoT / Sensors
+  category: iot-sensors
+  description: >
+    Embedded devices, industrial sensors, and smart products generating
+    time-series telemetry data. High volume, low latency. Predictive
+    maintenance is the flagship analytical pattern. Edge computing
+    processes data at source. This is operational analytics — measuring
+    physical world state, not business transactions or user behavior.
+  system_types:
+    - Application  # telemetry collection, device state, commands
+    - Record       # MES (Manufacturing Execution), ERP integration
+
+unique_characteristics:
+  - "Time-series sensor data (high volume, low latency)"
+  - "Predictive maintenance patterns (anomaly detection, failure prediction)"
+  - "Edge computing (process at source, reduce data transfer)"
+  - "Physical world instrumentation (not digital user behavior)"
+  - "Clear separation between operational (real-time) and analytical (historical)"
+
+surface_metrics:
+  - name: Device Uptime
+    definition: Percentage of time devices are operational
+    formula: "SUM(uptime_hours) / SUM(total_hours)"
+    benchmarks:
+      healthy: ">99.5%"
+      warning: "<95%"
+      source: "Industrial IoT benchmarks"
+
+  - name: MTBF (Mean Time Between Failures)
+    definition: Average time between device/equipment failures
+    formula: "SUM(operational_hours) / COUNT(failures)"
+    benchmarks:
+      healthy: "Increasing with predictive maintenance"
+      warning: "Decreasing (aging fleet, missed maintenance)"
+      source: "Reliability engineering standards"
+
+  - name: MTTR (Mean Time to Repair)
+    definition: Average time to restore after failure
+    formula: "AVG(repair_end - failure_detected)"
+    benchmarks:
+      healthy: "<4 hours (critical systems)"
+      warning: ">24 hours"
+      source: "Industrial maintenance benchmarks"
+
+  - name: Anomaly Detection Rate
+    definition: Out-of-spec readings detected before failure
+    formula: "COUNT(anomalies_detected_before_failure) / COUNT(failures)"
+    benchmarks:
+      healthy: ">80% (predictive maintenance working)"
+      warning: "<30% (reactive maintenance only)"
+      source: "Predictive maintenance industry"
+
+  - name: Sensor Data Freshness
+    definition: Lag between reading and availability
+    formula: "AVG(available_timestamp - reading_timestamp)"
+    benchmarks:
+      healthy: "<1 second (real-time), <5 min (batch)"
+      warning: ">15 min (stale data for operational decisions)"
+      source: "IoT platform benchmarks"
+
+key_dimensions:
+  - "Device — model, firmware version, location"
+  - "Sensor Type — temperature, pressure, vibration, flow"
+  - "Location — facility, zone, line, station"
+  - "Time — sub-second granularity for time-series"
+  - "Alert Level — normal, warning, critical"
+
+instrumentation:
+  - "IoT platforms (AWS IoT, Azure IoT Hub, GCP IoT Core)"
+  - "Time-series databases (InfluxDB, TimescaleDB)"
+  - "Edge gateways (process and filter at source)"
+  - "SCADA/PLC systems (industrial control)"
+
+business_models_where_dominant:
+  - "Manufacturing — production line sensors"
+  - "Logistics — fleet tracking, warehouse automation"
+  - "Smart products — connected devices, appliances"
+  - "Utilities — grid monitoring, smart meters"
+
+tools:
+  - "InfluxDB, TimescaleDB (time-series storage)"
+  - "Grafana (operational dashboards)"
+  - "AWS IoT / Azure IoT Hub (platform)"
+  - "Apache Kafka (event streaming)"
+
+convergence_test:
+  multi_function_convergence: false  # primarily Operations
+  unified_instrumentation: false     # fragmented across vendors and protocols
+  dedicated_tooling_and_teams: false  # operational analytics, not business analytics
+  verdict: "Operational analytics — not a business analytics category. IoT analytics measures physical world state, distinct from user behavior or financial metrics."
+
+source:
+  seed: "docs/research/surface-system-analytics.md"
+  validated_against: []

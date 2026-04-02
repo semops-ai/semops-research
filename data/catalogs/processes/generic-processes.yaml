@@ -1,0 +1,374 @@
+# Generic Process Catalog — APQC Categories 7-13
+#
+# Standard business processes that exist in every company regardless of industry,
+# business model, or domain type. These are commodity — the value is knowing they
+# exist and having the automation path documented, not building custom solutions.
+#
+# Usage:
+#   When evaluating a client problem (intake), check generic processes first.
+#   If the problem maps here, the answer is:
+#     "This is a standard [apqc_category] process. Cognitive load is [X].
+#      Automation path is [Y]. Recommended tools: [Z]."
+#
+# Relationship to engagement-specific process models:
+#   - Engagement process files (companies/<name>/mirror/domain/processes/*.yaml)
+#     model processes with full DDD placement, steps, triggers, and boundary
+#     interactions. They may reference generic processes via generic_process field.
+#   - This catalog provides the reusable reference entries. Engagements consume
+#     them; they don't redefine them.
+#
+# Schema:
+#   id: string                    # Stable identifier (gp-kebab-name)
+#   name: string                  # Human-readable name
+#   apqc_category: string         # APQC PCF top-level category (7-13)
+#   apqc_reference: string        # APQC PCF code (e.g., "7.1")
+#   typical_context: string       # Where this usually lives in a DDD model
+#   cognitive_load: deterministic | categorical | inferential | reasoning | judgment
+#   automation_path: string       # How to automate — phases, what stays human
+#   tools: [string]               # Recommended tools/vendors
+#   tags: [string]                # Cross-cutting concerns for filtering
+#
+# APQC Process Classification Framework (PCF) — Categories 7-13:
+#   7.0  Develop and Manage Human Capital
+#   8.0  Manage Information Technology
+#   9.0  Manage Financial Resources
+#  10.0  Acquire, Construct, and Manage Assets
+#  11.0  Manage Enterprise Risk, Compliance, Remediation, and Resiliency
+#  12.0  Manage External Relationships
+#  13.0  Develop and Manage Business Capabilities
+
+catalog: generic-processes
+version: 1
+apqc_scope: "7.0-13.0"
+
+processes:
+
+  # ============================================================
+  # APQC 7.0 — DEVELOP AND MANAGE HUMAN CAPITAL
+  # ============================================================
+
+  - id: gp-hiring
+    name: Candidate Screening and Hiring
+    apqc_category: "7.0 Develop and Manage Human Capital"
+    apqc_reference: "7.1"
+    typical_context: generic (HR)
+    cognitive_load: judgment
+    automation_path: >
+      Agent assists with resume screening (categorical), interview
+      scheduling (deterministic). Hiring decision stays human (judgment).
+    tools: [Greenhouse, Lever, LinkedIn Recruiter]
+    tags: [hr, talent-acquisition]
+
+  - id: gp-onboarding
+    name: Employee Onboarding
+    apqc_category: "7.0 Develop and Manage Human Capital"
+    apqc_reference: "7.1.4"
+    typical_context: generic (HR)
+    cognitive_load: categorical
+    automation_path: >
+      Highly automatable — checklist-driven. Provisioning accounts,
+      scheduling training, document collection.
+    tools: [Rippling, BambooHR]
+    tags: [hr, onboarding]
+
+  - id: gp-performance-review
+    name: Performance Review Cycle
+    apqc_category: "7.0 Develop and Manage Human Capital"
+    apqc_reference: "7.3.4"
+    typical_context: generic (HR)
+    cognitive_load: reasoning
+    automation_path: >
+      Agent can gather evidence (project outcomes, peer feedback),
+      draft self-assessment summaries. Rating and conversation stay human.
+    tools: [Lattice, 15Five, Culture Amp]
+    tags: [hr, performance-management]
+
+  # ============================================================
+  # APQC 8.0 — MANAGE INFORMATION TECHNOLOGY
+  # ============================================================
+
+  - id: gp-incident-management
+    name: IT Incident Management
+    apqc_category: "8.0 Manage Information Technology"
+    apqc_reference: "8.3.1"
+    typical_context: generic (IT)
+    cognitive_load: categorical
+    automation_path: >
+      Alert routing and initial triage are automatable (categorical).
+      Runbook execution for known issues is scriptable. Novel incidents
+      require human reasoning. Post-incident review is judgment.
+    tools: [PagerDuty, Opsgenie, Datadog, Rootly]
+    tags: [it, operations, incident-response]
+
+  - id: gp-access-provisioning
+    name: User Access Provisioning and Deprovisioning
+    apqc_category: "8.0 Manage Information Technology"
+    apqc_reference: "8.2.2"
+    typical_context: generic (IT)
+    cognitive_load: categorical
+    automation_path: >
+      Role-based provisioning is deterministic given role definitions.
+      Deprovisioning on termination is fully automatable. Access reviews
+      (quarterly recertification) need human judgment for edge cases.
+    tools: [Okta, Rippling, JumpCloud]
+    tags: [it, identity, security]
+
+  - id: gp-change-management
+    name: IT Change Management
+    apqc_category: "8.0 Manage Information Technology"
+    apqc_reference: "8.3.2"
+    typical_context: generic (IT)
+    cognitive_load: reasoning
+    automation_path: >
+      Change request intake and categorization are categorical.
+      Impact analysis requires reasoning about system dependencies.
+      Approval routing is deterministic. Rollback planning needs
+      system-specific knowledge.
+    tools: [Jira Service Management, ServiceNow, Linear]
+    tags: [it, operations, governance]
+
+  # ============================================================
+  # APQC 9.0 — MANAGE FINANCIAL RESOURCES
+  # ============================================================
+
+  - id: gp-vendor-invoice
+    name: Vendor Invoice Processing
+    apqc_category: "9.0 Manage Financial Resources"
+    apqc_reference: "9.5.1"
+    typical_context: finance
+    cognitive_load: categorical
+    automation_path: >
+      Three-way match is highly automatable. Auto-approve under threshold,
+      route exceptions.
+    tools: [bill.com, Tipalti, QBO automation rules]
+    tags: [finance, accounts-payable]
+
+  - id: gp-expense-reporting
+    name: Expense Reporting and Approval
+    apqc_category: "9.0 Manage Financial Resources"
+    apqc_reference: "9.5.4"
+    typical_context: finance
+    cognitive_load: categorical
+    automation_path: >
+      Receipt capture (OCR), policy validation (categorical),
+      approval routing (deterministic).
+    tools: [Expensify, Brex, Ramp]
+    tags: [finance, expense-management]
+
+  - id: gp-monthly-close
+    name: Monthly Financial Close
+    apqc_category: "9.0 Manage Financial Resources"
+    apqc_reference: "9.3.1"
+    typical_context: finance
+    cognitive_load: reasoning
+    automation_path: >
+      Bank reconciliation and payment matching are scriptable.
+      Accruals and adjusting entries need judgment. Period close
+      process is well-defined but human reviews are load-bearing.
+    tools: [FloQast, BlackLine, QBO]
+    tags: [finance, accounting, period-close]
+
+  - id: gp-tax-compliance
+    name: Sales Tax Filing
+    apqc_category: "9.0 Manage Financial Resources"
+    apqc_reference: "9.6.1"
+    typical_context: finance
+    cognitive_load: categorical
+    automation_path: >
+      Largely solved by tax automation platforms. Rate calculation,
+      filing, and remittance are deterministic given transaction data.
+    tools: [Avalara, TaxJar]
+    tags: [finance, tax, compliance]
+
+  - id: gp-ad-spend-tracking
+    name: Advertising Spend Recording
+    apqc_category: "9.0 Manage Financial Resources"
+    apqc_reference: "9.3.3"
+    typical_context: finance
+    cognitive_load: categorical
+    automation_path: >
+      API pull from ad platforms, categorize by campaign naming
+      convention, record journal entries. Scriptable end-to-end
+      if campaign naming is disciplined.
+    tools: [Triple Whale, Supermetrics]
+    tags: [finance, marketing-ops, advertising]
+
+  # ============================================================
+  # APQC 10.0 — ACQUIRE, CONSTRUCT, AND MANAGE ASSETS
+  # ============================================================
+
+  - id: gp-asset-tracking
+    name: Fixed Asset Tracking and Depreciation
+    apqc_category: "10.0 Acquire, Construct, and Manage Assets"
+    apqc_reference: "10.1.3"
+    typical_context: finance
+    cognitive_load: deterministic
+    automation_path: >
+      Asset register maintenance and depreciation schedules are
+      fully deterministic. Disposal decisions need human approval.
+      Most SMBs handle this in their accounting system.
+    tools: [QBO Fixed Assets, Sage, NetSuite]
+    tags: [finance, assets]
+
+  - id: gp-facility-management
+    name: Facility and Workspace Management
+    apqc_category: "10.0 Acquire, Construct, and Manage Assets"
+    apqc_reference: "10.2.1"
+    typical_context: generic (operations)
+    cognitive_load: categorical
+    automation_path: >
+      Space booking and maintenance scheduling are deterministic.
+      Lease management and buildout decisions are judgment.
+      Mostly relevant for companies with physical offices/warehouses.
+    tools: [Envoy, OfficeSpace, Robin]
+    tags: [operations, facilities]
+
+  # ============================================================
+  # APQC 11.0 — MANAGE ENTERPRISE RISK, COMPLIANCE, REMEDIATION
+  # ============================================================
+
+  - id: gp-compliance-audit
+    name: Internal Compliance Audit
+    apqc_category: "11.0 Manage Enterprise Risk, Compliance, Remediation, and Resiliency"
+    apqc_reference: "11.2.3"
+    typical_context: generic (compliance)
+    cognitive_load: reasoning
+    automation_path: >
+      Evidence gathering automatable. Control testing partially
+      automatable (transaction sampling, segregation-of-duty checks).
+      Findings evaluation and report drafting need reasoning.
+    tools: [AuditBoard, Workiva, Diligent]
+    tags: [compliance, audit, governance]
+
+  - id: gp-data-privacy
+    name: Data Privacy Request Processing (GDPR/CCPA)
+    apqc_category: "11.0 Manage Enterprise Risk, Compliance, Remediation, and Resiliency"
+    apqc_reference: "11.1.2"
+    typical_context: generic (compliance)
+    cognitive_load: categorical
+    automation_path: >
+      Deletion/export requests follow deterministic workflows.
+      Cross-system data discovery is the hard part — knowing where
+      customer data lives across all systems.
+    tools: [OneTrust, Transcend]
+    tags: [compliance, privacy, gdpr, ccpa]
+
+  - id: gp-business-continuity
+    name: Business Continuity Planning
+    apqc_category: "11.0 Manage Enterprise Risk, Compliance, Remediation, and Resiliency"
+    apqc_reference: "11.3.1"
+    typical_context: generic (operations)
+    cognitive_load: reasoning
+    automation_path: >
+      Dependency mapping and impact analysis can be partially automated
+      from system inventory. Recovery plan creation and testing need
+      human reasoning about priorities and acceptable downtime.
+    tools: [Fusion Risk Management, Castellan]
+    tags: [compliance, risk, operations]
+
+  # ============================================================
+  # APQC 12.0 — MANAGE EXTERNAL RELATIONSHIPS
+  # ============================================================
+
+  - id: gp-vendor-management
+    name: Vendor Evaluation and Selection
+    apqc_category: "12.0 Manage External Relationships"
+    apqc_reference: "12.1.1"
+    typical_context: generic (procurement)
+    cognitive_load: reasoning
+    automation_path: >
+      Agent can research vendors (web, G2, references), build
+      comparison matrices, draft RFPs. Selection decision is judgment.
+    tools: [G2, Gartner Peer Insights]
+    tags: [procurement, vendor-management]
+
+  - id: gp-contract-negotiation
+    name: Contract Negotiation
+    apqc_category: "12.0 Manage External Relationships"
+    apqc_reference: "12.1.2"
+    typical_context: generic (legal)
+    cognitive_load: judgment
+    automation_path: >
+      Agent can review contract terms against playbook, flag deviations,
+      draft redlines. Negotiation strategy and tradeoff decisions stay
+      human.
+    tools: [Ironclad, DocuSign CLM]
+    tags: [legal, contracts, procurement]
+
+  # ============================================================
+  # APQC 13.0 — DEVELOP AND MANAGE BUSINESS CAPABILITIES
+  # ============================================================
+
+  - id: gp-project-management
+    name: Project Planning and Tracking
+    apqc_category: "13.0 Develop and Manage Business Capabilities"
+    apqc_reference: "13.1.1"
+    typical_context: generic (operations)
+    cognitive_load: categorical
+    automation_path: >
+      Task creation, status tracking, dependency management are
+      well-served by existing tools. Agent can assist with scope
+      decomposition and status reporting.
+    tools: [Asana, Linear, Jira, Monday]
+    tags: [operations, project-management]
+
+  - id: gp-strategic-planning
+    name: Strategic Planning and Goal Setting
+    apqc_category: "13.0 Develop and Manage Business Capabilities"
+    apqc_reference: "13.1.2"
+    typical_context: generic (executive)
+    cognitive_load: judgment
+    automation_path: >
+      Agent can gather market data, competitive intelligence, and
+      performance metrics. Goal decomposition (OKR cascading) can be
+      structured. Strategy formulation is human judgment.
+    tools: [Lattice Goals, Ally.io, Notion]
+    tags: [strategy, planning, okrs]
+
+  - id: gp-key-results
+    name: Key Results Decomposition and Tracking
+    apqc_category: "13.0 Develop and Manage Business Capabilities"
+    apqc_reference: "13.1.2"
+    typical_context: generic (cross-context)
+    cognitive_load: reasoning
+    automation_path: >
+      Goal decomposition into key results is structured reasoning —
+      given a goal, identify which capabilities and analytics patterns
+      are load-bearing. Measurement is deterministic once metrics are
+      defined. Priority weighting across capability gaps is reasoning.
+      Goal-setting itself stays human (judgment, see gp-strategic-planning).
+    tools: [Lattice Goals, Ally.io, Notion]
+    tags: [strategy, okrs, key-results, capability-prioritization]
+    # Pattern type: process (pattern_type: process in pattern_v1.yaml)
+    # Scope: choreography — cross-context coordination without a central
+    # coordinator. The analytics pattern serves as the observable lifecycle
+    # (start: goal set, during: capabilities operate, end: time horizon expires).
+    #
+    # Constraint: every KR metric must reference either an analytics
+    # pattern (Gold layer) or a capability name. No free-form metrics.
+    # This makes goals traceable to the domain model and measurable
+    # through existing instrumentation.
+    #
+    # Relationship to gp-strategic-planning:
+    #   Strategic planning (judgment) produces goals.
+    #   Key results decomposition (reasoning) breaks goals into
+    #   measurable KRs anchored to analytics patterns or capabilities.
+    #   Goals don't create capabilities — they reveal which ones are
+    #   load-bearing and prioritize gaps.
+    #
+    # Lifecycle: goals are time-bound (quarterly/annual), capabilities
+    # persist. When a goal expires, its priority weights are removed
+    # but the capabilities remain in the process model.
+    #
+    # Schema extension for engagement process files:
+    #   scope: choreography         # Always choreography — no coordinator
+    #   metric: string              # Must be an analytics pattern ID
+    #                               # or capability name — not free-form
+    #   metric_type: analytics_pattern | capability
+    #   baseline: number
+    #   target: number
+    #   unit: string
+    #   depends_on:
+    #     - capability: string      # Capability name from process model
+    #       context: string         # Bounded context
+    #       priority: critical | important | supporting

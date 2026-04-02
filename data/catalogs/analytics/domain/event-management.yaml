@@ -1,0 +1,209 @@
+# Event Management — Domain Analytics Patterns
+#
+# Archetype: Trade show / conference / exhibition organizer.
+# Two-sided marketplace (exhibitors + attendees) with project-based
+# execution. Annual edition cycle. Revenue from space sales,
+# sponsorship, ticketing, and services.
+
+domain:
+  name: Event Management
+  archetype: event-management
+  description: >
+    Organizations producing trade shows, conferences, or exhibitions.
+    Two-sided marketplace dynamics (exhibitors/sponsors supply-side,
+    attendees demand-side) layered on a project-based execution model.
+    Each edition is a discrete project with its own P&L. Supply-side
+    retention (rebooking) is the leading indicator of business health.
+  bizbok_industry: transportation  # operational DNA is logistics/project coordination
+
+analytics_patterns:
+
+  - name: exhibitor-lifecycle
+    context: Exhibitor
+    domain_type: CORE
+    definition: >
+      Supply-side health of the marketplace. Tracks the exhibitor
+      lifecycle from prospect through rebooking, with rebooking rate
+      as the single most important leading indicator.
+    core_metrics:
+      - name: Rebooking rate (within 30 days)
+        formula: "COUNT(rebooked_within_30d = true) / COUNT(*)"
+        benchmarks:
+          healthy: "~80% (CEIR industry average)"
+          warning: "<70%"
+          source: " engagement (confirmed 0.80); CEIR industry benchmark"
+      - name: Supply growth (new exhibitors per edition)
+        formula: "COUNT(first_time_exhibitors) per edition"
+        benchmarks:
+          healthy: ">10% net new"
+          warning: "Declining new exhibitor interest"
+          source: " engagement"
+      - name: Services attach rate
+        formula: "SUM(services_revenue) / SUM(space_revenue)"
+        benchmarks:
+          healthy: "Increasing year-over-year"
+          warning: "Flat (not moving to 'marketing objectives' model)"
+          source: " semantic manifest"
+      - name: Average contract value
+        formula: "SUM(exhibitor_revenue) / COUNT(exhibitors)"
+        benchmarks:
+          healthy: "Growing through upsell and package adoption"
+          warning: "Declining (discounting or downsizing)"
+          source: " engagement"
+    cross_domain_source: "Marketplace supply-side retention + CRM lifecycle management"
+    maturity:
+      implementable: partial
+      gap: "Requires exhibitor CRM with lifecycle tracking.  likely uses spreadsheets today."
+
+  - name: sponsorship-yield
+    context: Sponsorship
+    domain_type: CORE
+    definition: >
+      Advertising inventory monetization. Measures sold vs. available
+      sponsorship inventory, yield per item, and renewal behavior.
+      Highest-margin revenue stream.
+    core_metrics:
+      - name: Sell-through rate (by category)
+        formula: "COUNT(sold = true) / COUNT(*) GROUP BY category"
+        benchmarks:
+          healthy: ">90% premium, >70% overall"
+          warning: "<50% (pricing too high or wrong inventory)"
+          source: " semantic manifest"
+      - name: Sponsor renewal rate
+        formula: "COUNT(is_renewal = true) / COUNT(*)"
+        benchmarks:
+          healthy: ">70%"
+          warning: "<50%"
+          source: " semantic manifest"
+      - name: CPM equivalent
+        formula: "sponsorship_price / (estimated_impressions / 1000)"
+        benchmarks:
+          healthy: "Comparable to or above industry event CPMs"
+          warning: "Significantly below digital alternatives"
+          source: "Event industry / IAB benchmarks"
+    cross_domain_source: "Advertising yield optimization — applied to physical event inventory"
+    maturity:
+      implementable: partial
+      gap: "Requires sponsorship tracking system with deliverable lifecycle."
+
+  - name: space-utilization
+    context: Exhibition Space
+    domain_type: CORE
+    definition: >
+      Physical inventory optimization. Floor plan fill percentage,
+      revenue per square foot, and assignment velocity.
+    core_metrics:
+      - name: Floor plan fill percentage (at T-90 days)
+        formula: "COUNT(assigned) / COUNT(total_spaces) at edition_date - 90"
+        benchmarks:
+          healthy: ">80% at T-90"
+          warning: "<60% at T-90 (late selling required)"
+          source: " semantic manifest"
+      - name: Revenue per sqft
+        formula: "SUM(space_revenue) / SUM(sqft_sold)"
+        benchmarks:
+          healthy: "Increasing with floor plan optimization"
+          warning: "Declining (discounting to fill)"
+          source: " engagement"
+      - name: Assignment cycle time
+        formula: "AVG(confirmed_date - reserved_date)"
+        benchmarks:
+          healthy: "Decreasing (efficient allocation)"
+          warning: "Increasing (decision friction)"
+          source: " engagement"
+    cross_domain_source: "Real estate/retail — revenue per sqft; adapted for event floor plans"
+    maturity:
+      implementable: partial
+      gap: "Requires floor plan system with space-level tracking. May be manual today."
+
+  - name: edition-performance
+    context: Event
+    domain_type: CORE
+    definition: >
+      Project-based P&L per edition. Each show is a discrete project
+      with revenue and costs that must be tracked independently.
+    core_metrics:
+      - name: Edition margin
+        formula: "(total_revenue - total_cost) / total_revenue"
+        benchmarks:
+          healthy: ">20%"
+          warning: "<10% (approaching break-even)"
+          source: " semantic manifest (priority: critical)"
+      - name: Attendee-to-exhibitor ratio
+        formula: "COUNT(attendees) / COUNT(exhibitors)"
+        benchmarks:
+          healthy: "Balanced for category (higher = more exhibitor value)"
+          warning: "Declining (exhibitors not getting enough traffic)"
+          source: " engagement"
+    cross_domain_source: "Project-based P&L — standard project accounting adapted for annual editions"
+    maturity:
+      implementable: "yes"
+      gap: "Requires per-edition financial tracking."
+
+  - name: attendee-engagement
+    context: Attendee
+    domain_type: SUPPORTING
+    definition: >
+      Demand-side health of the marketplace. Attendee growth, ticket
+      mix, and check-in rates. At , 85% are first-timers each
+      year — re-registration rate is low (15%) and not a concern.
+    core_metrics:
+      - name: Attendee growth (YoY)
+        formula: "(current_edition - prior_edition) / prior_edition"
+        benchmarks:
+          healthy: ">5% YoY"
+          warning: "Flat or declining"
+          source: " semantic manifest (10,910 in 2025, 5% growth)"
+      - name: Re-registration rate
+        formula: "COUNT(prior_edition_attended = true) / COUNT(*)"
+        benchmarks:
+          healthy: "Stable (15% for  — first-timer driven model)"
+          warning: "Dropping significantly"
+          source: " semantic manifest (confirmed 0.15)"
+      - name: Trade Pass growth
+        formula: "YoY % change WHERE ticket_type = 'trade'"
+        benchmarks:
+          healthy: ">10% (B2B engagement growing)"
+          warning: "Declining (industry professionals losing interest)"
+          source: " semantic manifest (20% surge in 2025)"
+    cross_domain_source: "Marketplace demand-side — adapted for event attendance patterns"
+    maturity:
+      implementable: "yes"
+      gap: "Registration system data (Unity Event Solutions)."
+
+  - name: lead-capture-roi
+    context: Interaction
+    domain_type: SUPPORTING
+    definition: >
+      Exhibitor value proof — did exhibitors get leads? Measures lead
+      capture volume and quality per exhibitor as the ROI argument
+      for rebooking.
+    core_metrics:
+      - name: Leads per exhibitor
+        formula: "COUNT(leads) / COUNT(exhibitors)"
+        benchmarks:
+          healthy: "Meeting exhibitor expectations (varies by show size)"
+          warning: "Exhibitor complaints about lead quality/volume"
+          source: "Event industry benchmarks"
+      - name: Lead-to-conversion rate
+        formula: "COUNT(converted) / COUNT(captured)"
+        benchmarks:
+          healthy: ">5% post-show conversion"
+          warning: "<1%"
+          source: "B2B event industry"
+    cross_domain_source: "B2B lead generation — standard lead metrics applied to event context"
+    maturity:
+      implementable: partial
+      gap: "Requires lead retrieval system integration. Badge scanning provides raw data."
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: "companies//mirror/marts/business-model-synthesis.yaml"
+  validated_against:
+    - " strategic DDD — 8 bounded contexts, 4 CORE + 2 SUPPORTING + 2 GENERIC"
+    - " semantic manifest — 9 metric definitions with formulas and confirmed values"

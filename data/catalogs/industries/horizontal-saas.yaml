@@ -1,0 +1,20 @@
+industry:
+  key: horizontal_saas
+  name: Horizontal SaaS
+  bizbok_section: null
+  bizbok_pages: null
+  source: domain-extension
+
+entities:
+  - name: Tenant
+    category: core
+  - name: User
+    category: core
+  - name: Subscription
+    category: core
+  - name: Plan
+    category: core
+  - name: Feature
+    category: product
+  - name: Invoice
+    category: financial

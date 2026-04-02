@@ -1,0 +1,169 @@
+# Salesforce CRM — Primitive Decomposition
+#
+# Decomposes Salesforce Sales Cloud (core CRM) into neutral functional
+# primitives. Scoped to the CRM product, not the full Salesforce platform
+# (Marketing Cloud, Service Cloud, etc. would be separate decompositions).
+
+vendor:
+  name: Sales Cloud
+  company: Salesforce
+  category: CRM
+
+lock_in_signals:
+  - Proprietary data model (sObjects) — not portable SQL
+  - Expensive API limits (rate-limited per edition tier)
+  - SOQL/SOSL query languages instead of standard SQL
+  - Opaque automation engine (Flow, Process Builder, Apex triggers)
+  - Vendor-controlled namespace (*.salesforce.com, no custom domain on data)
+  - Schema changes require vendor-specific tooling (Metadata API)
+  - Ecosystem lock-in via AppExchange (proprietary marketplace)
+
+open_alternative:
+  name: PostgreSQL + custom schema
+  why: Standard SQL, full data ownership, any client works, no API limits
+
+primitives:
+  - name: Contact Management
+    branded_name: Accounts & Contacts
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Store and retrieve records for people (contacts) and organizations
+      (accounts) with relationship links between them.
+    protocols:
+      - SQL
+      - vCard
+      - LDAP
+
+  - name: Sales Pipeline Tracking
+    branded_name: Opportunities
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Track potential revenue through stages from qualification to close.
+      Each opportunity has a value, probability, stage, and close date.
+    protocols:
+      - SQL
+
+  - name: Activity Logging
+    branded_name: Activity Timeline (Tasks & Events)
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Record interactions (calls, emails, meetings) linked to contacts,
+      accounts, and opportunities. Provides chronological activity history.
+    protocols:
+      - SQL
+      - iCalendar
+      - CalDAV
+
+  - name: Lead Qualification
+    branded_name: Leads
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Capture inbound interest, score readiness, and convert qualified
+      leads into contact + account + opportunity records.
+    protocols:
+      - SQL
+      - webhooks
+
+  - name: Sales Forecasting
+    branded_name: Forecasts
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Aggregate pipeline data by period, team, and category to project
+      revenue outcomes. Rollup from opportunity stage and probability.
+    protocols:
+      - SQL
+
+  - name: Reporting and Analytics
+    branded_name: Reports & Dashboards
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Build tabular and summary reports over any object, with filters,
+      groupings, and chart visualizations. Schedule and distribute.
+    protocols:
+      - SQL
+      - HTTP/REST
+
+  - name: Workflow Automation
+    branded_name: Flow / Process Builder
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Define event-driven rules that trigger actions (field updates,
+      email alerts, record creation) when data changes or on schedule.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Role-Based Access Control
+    branded_name: Profiles, Roles & Permission Sets
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Restrict record visibility and field-level access by user role,
+      org hierarchy, and sharing rules.
+    protocols:
+      - SQL (row-level security)
+      - RBAC
+
+  - name: Email Communication
+    branded_name: Email Integration / Email-to-Case
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Send, receive, and log email against CRM records. Template-based
+      outbound with open/click tracking.
+    protocols:
+      - SMTP
+      - IMAP
+
+  - name: Data Import and Export
+    branded_name: Data Loader / Data Export Service
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Bulk insert, update, and extract records. Move data between
+      Salesforce and external systems.
+    protocols:
+      - CSV
+      - SQL
+      - HTTP/REST
+
+  - name: Third-Party Integration
+    branded_name: AppExchange / Connected Apps
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Connect external applications via OAuth and API. Marketplace
+      of pre-built integrations and extensions.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+  - name: Territory Management
+    branded_name: Enterprise Territory Management
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Assign accounts and opportunities to sales territories based on
+      rules (geography, industry, revenue). Hierarchical territory model.
+    protocols:
+      - SQL
+
+source:
+  seed: semops-orchestrator/docs/domain-patterns/retired/open-primitive-pattern.md
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

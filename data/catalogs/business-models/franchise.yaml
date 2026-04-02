@@ -1,0 +1,271 @@
+# Franchise — Business Model Decomposition
+#
+# Baseline capabilities required to operate a franchise business
+# (franchisor perspective). Extends beyond analytics to the full
+# operational capability set.
+
+business_model:
+  name: Franchise
+  category: Project/Bid-Based
+  description: >
+    Centralized brand and operating system with distributed operators
+    (franchisees). Revenue from franchise fees (upfront), royalties
+    (ongoing % of revenue), and supply chain markups. The franchisor
+    sells a proven business system — consistency and brand protection
+    across locations is the core challenge.
+
+analytics_reference: "business-model-analytics.md#project--bid-based-business-model"
+system_mix_baseline:
+  app: 0.25
+  analytics: 0.15
+  work: 0.20
+  record: 0.40
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Franchise Development and Sales
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Recruit, qualify, and close new franchisees. Includes lead
+      generation, territory analysis, financial qualification, FDD
+      (Franchise Disclosure Document) delivery, and franchise
+      agreement execution. The growth engine — each new franchisee
+      is a capital-light expansion.
+    criticality: core
+    example_vendors:
+      - FranConnect
+      - Salesforce
+      - Custom franchise CRM
+
+  - name: Brand Standards and Compliance Enforcement
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Define, communicate, and enforce brand standards across all
+      locations — visual identity, service quality, product specs,
+      and operational procedures. Includes auditing and remediation.
+      Brand consistency IS the product — a bad franchisee damages
+      the entire system.
+    criticality: core
+    example_vendors:
+      - FranConnect
+      - Zenput (Crunchtime)
+      - Custom compliance tools
+
+  - name: Operations Manual and Knowledge System
+    apqc_context: "9.2"
+    apqc_name: Develop and manage knowledge management strategy
+    description: >
+      Maintain the franchise operating system — the playbook that
+      makes the business replicable. Includes operations manuals,
+      training materials, SOPs, and best practice libraries. This
+      is what franchisees pay for — a proven system.
+    criticality: core
+    example_vendors:
+      - FranConnect
+      - Trainual
+      - Notion
+
+  - name: Franchisee Training and Certification
+    apqc_context: "7.2"
+    apqc_name: Develop and counsel employees
+    description: >
+      Train new franchisees and their staff on operations, brand
+      standards, and systems. Includes initial training programs,
+      ongoing certification, and field support. Quality of training
+      directly predicts unit economics.
+    criticality: core
+    example_vendors:
+      - Lessonly (Seismic)
+      - Docebo
+      - Custom LMS
+
+  - name: Royalty and Fee Collection
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Calculate and collect royalties (typically 4-8% of gross
+      revenue), advertising fund contributions, technology fees,
+      and other recurring charges. Requires visibility into
+      franchisee revenue — the trust-but-verify challenge.
+    criticality: core
+    example_vendors:
+      - FranConnect
+      - NetSuite
+      - Custom royalty management
+
+  - name: Territory Management and Site Selection
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Manage exclusive territories, analyze market potential, assist
+      with site selection, and prevent territory overlap. Territory
+      economics determine franchisee success — the franchisor must
+      protect against cannibalization.
+    criticality: core
+    example_vendors:
+      - SiteZeus
+      - Placer.ai
+      - Custom GIS tools
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Supply Chain and Procurement Management
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Negotiate and manage approved supplier relationships, enforce
+      purchasing requirements, and provide volume pricing benefits.
+      Supply chain markups are a significant revenue stream — and
+      purchasing compliance ensures brand consistency.
+    criticality: supporting
+    example_vendors:
+      - Oracle SCM
+      - Custom procurement portal
+      - BlueCart (food service)
+
+  - name: Franchisee Performance Analytics
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track unit-level economics (AUV, four-wall EBITDA), same-store
+      sales growth, compliance scores, and benchmarking across the
+      system. Identify underperformers for intervention and top
+      performers for best practice extraction.
+    criticality: supporting
+    example_vendors:
+      - FranConnect
+      - Looker
+      - Power BI
+
+  - name: Marketing Fund Management
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Manage the national/regional advertising fund (typically 1-2%
+      of gross revenue from franchisees). Includes campaign planning,
+      local marketing support, co-op advertising, and spend
+      transparency to franchisees.
+    criticality: supporting
+    example_vendors:
+      - Balihoo
+      - SOCi
+      - Custom fund management
+
+  - name: Field Support and Consultation
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Provide ongoing operational support to franchisees through
+      field visits, business coaching, and performance consulting.
+      The relationship layer — franchise systems with strong field
+      support have higher unit economics and lower turnover.
+    criticality: supporting
+    example_vendors:
+      - FranConnect (field ops)
+      - Salesforce Field Service
+      - Custom field tracking
+
+  - name: Technology Platform and POS Standardization
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Provide standardized technology stack to franchisees — POS
+      systems, ordering platforms, loyalty programs, and reporting
+      tools. Technology standardization enables data aggregation
+      and consistent customer experience.
+    criticality: supporting
+    example_vendors:
+      - Toast (restaurant)
+      - Square
+      - Custom franchise tech stack
+
+  - name: Franchisee Communication and Advisory Council
+    apqc_context: "11.1"
+    apqc_name: Build and maintain stakeholder relationships
+    description: >
+      Maintain communication channels with franchisee community.
+      Includes advisory councils, annual conventions, newsletters,
+      and feedback mechanisms. Franchisee satisfaction correlates
+      with system growth — unhappy franchisees don't renew or refer.
+    criticality: supporting
+    example_vendors:
+      - FranConnect
+      - Slack/Teams
+      - Custom franchise intranet
+
+  # --- TABLE-STAKES: Every business needs these, not franchise-specific ---
+
+  - name: Legal and Franchise Regulatory Compliance
+    apqc_context: "12.5"
+    apqc_name: Manage government and industry relationships
+    description: >
+      Maintain FDD (Franchise Disclosure Document), comply with FTC
+      franchise rule, manage state registrations, and handle franchise
+      agreement lifecycle. Franchise-specific: Item 19 financial
+      performance representations, territory laws.
+    criticality: generic
+    example_vendors:
+      - FranConnect
+      - DocuSign
+      - Franchise-specialized law firms
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition (royalties, fees, supply chain), fund
+      accounting (advertising fund is franchisee money, not revenue),
+      and financial reporting. Franchise-specific: unit economics
+      modeling and FDD Item 19 preparation.
+    criticality: generic
+    example_vendors:
+      - NetSuite
+      - QuickBooks
+      - Sage Intacct
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Manage access for corporate staff, franchisees, and their
+      employees across shared systems. Role-based access ensuring
+      franchisees see only their own data while corporate sees all.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - Okta
+      - Azure AD
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host and maintain centralized systems (franchise portal, POS
+      backend, analytics). Franchise-specific: support distributed
+      locations with varying connectivity and technical capability.
+    criticality: generic
+    example_vendors:
+      - AWS
+      - Azure
+      - GCP
+
+differentiators:
+  - Unit economics (AUV and four-wall EBITDA) that attract quality franchisees
+  - Brand strength creating consumer demand before the location opens
+  - Operational system replicability enabling rapid scaling
+  - Franchisee satisfaction and NPS driving referral-based development
+  - Supply chain leverage providing cost advantage to franchisees
+  - Data-driven site selection reducing new unit failure rate
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + IFA franchise patterns
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Project/Bid-Based metrics — closest analog)
+    - data-system-classification.md (system mix baseline)
+    - system-primitive-decomposition.md (decomposition methodology)

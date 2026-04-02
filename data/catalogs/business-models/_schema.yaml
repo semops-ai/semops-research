@@ -1,0 +1,60 @@
+# Business Model Decomposition Catalog Schema
+#
+# Each file in this directory represents one business model archetype
+# decomposed into the baseline capabilities required to operate it.
+#
+# Complement to data/catalogs/decompositions/ (vendor product → primitives).
+# Where decompositions answer "what does this product do?", these catalogs
+# answer "what capabilities does this type of business need?"
+#
+# Vocabulary:
+#   - Capabilities use BIZBOK capability naming (business object + action)
+#   - Process context uses APQC PCF categories (Level 1-2)
+#   - Criticality is per-archetype, not per-company — a specific company's
+#     CORE/SUPPORTING/GENERIC assignment is determined per-engagement by
+#     the diligence engine using business-model-synthesis.md
+#
+# Conceptual model:
+#   - Business model archetype = reference architecture
+#   - Required capability = Architecture Building Block (ABB)
+#   - Vendor product (from decomposition catalogs) = Solution Building Block (SBB)
+#
+# Graph model (Neo4j):
+#   (:BusinessModel)-[:REQUIRES]->(:Capability)
+#   (:VendorProduct)-[:SERVES]->(:Capability)
+#   (:Capability)-[:APQC_CONTEXT]->(:ProcessGroup)
+#
+# Relationship to other catalogs:
+#   - example_vendors in each capability links to decomposition catalogs
+#     via shared capability/primitive vocabulary
+#   - analytics_reference points to business-model-analytics.md (metrics
+#     layer — referenced, not repeated)
+#   - system_mix_baseline points to data-system-classification.md
+#
+# ---
+# business_model:
+#   name: string                    # Archetype name (e.g., "SaaS (B2B)")
+#   category: string                # Revenue model family (from business-model-analytics.md)
+#   description: string             # What defines this model
+#
+# analytics_reference: string       # Section in business-model-analytics.md (don't duplicate)
+# system_mix_baseline:              # Predicted system mix from data-system-classification.md
+#   app: float                      # Application system %
+#   analytics: float                # Analytics system %
+#   work: float                     # Work system %
+#   record: float                   # Record system %
+#
+# required_capabilities:            # Capabilities the model demands
+#   - name: string                  # BIZBOK-style capability name (object + action)
+#     apqc_context: string          # APQC PCF reference (e.g., "3.5")
+#     apqc_name: string             # APQC process group name
+#     description: string           # What this capability does for the model
+#     criticality: string           # core | supporting | generic
+#     example_vendors: [string]     # Common vendor products serving this (links to decomposition catalogs)
+#
+# differentiators:                  # What separates winners from losers in this model
+#   - string
+#
+# source:
+#   seed: string                    # Where the initial decomposition came from
+#   validated_against: [string]     # Patterns or references used for validation

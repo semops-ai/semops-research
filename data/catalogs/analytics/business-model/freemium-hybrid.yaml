@@ -1,0 +1,129 @@
+# Freemium / Hybrid — Business Model Analytics
+#
+# Revenue pattern: Free tier + paid conversion, in-app purchases.
+# Two user populations: free and paid. Conversion funnel is the
+# core metric. Engagement drives eventual monetization.
+
+business_model:
+  name: Freemium / Hybrid
+  category: Freemium/Hybrid
+  description: >
+    Free tier attracts users; paid tier monetizes them. Two distinct
+    populations with different behaviors. The conversion funnel from
+    free to paid is the defining analytical challenge. Viral/referral
+    growth often critical for unit economics.
+  revenue_pattern: Free tier + paid conversion, in-app purchases
+
+core_metrics:
+  - name: Free-to-Paid Conversion
+    definition: Paid users as percentage of free users
+    formula: "COUNT(paid_users) / COUNT(free_users)"
+    why_it_matters: Monetization efficiency — the core metric
+    benchmarks:
+      healthy: ">5% (B2B SaaS), >2% (consumer)"
+      warning: "<1%"
+      source: "OpenView — Product-Led Growth"
+
+  - name: Time to Convert
+    definition: Days from signup to first payment
+    formula: "AVG(first_payment_date - signup_date)"
+    why_it_matters: Conversion velocity — shorter = better product-market fit
+    benchmarks:
+      healthy: "<14 days (consumer), <30 days (B2B)"
+      warning: ">90 days"
+      source: "Reforge growth models"
+
+  - name: ARPU (Blended)
+    definition: Total revenue divided by total users (free + paid)
+    formula: "total_revenue / total_users"
+    why_it_matters: Overall monetization efficiency including free users
+    benchmarks:
+      healthy: "Increasing with conversion rate improvements"
+      warning: "Declining while user count grows"
+      source: "Amplitude product analytics"
+
+  - name: Feature Adoption
+    definition: Percentage of users using premium features
+    formula: "COUNT(users_using_premium_feature) / COUNT(active_users)"
+    why_it_matters: Identifies upgrade triggers — which features drive conversion?
+    benchmarks:
+      healthy: "Clear correlation between feature usage and conversion"
+      warning: "Premium features unused (wrong value proposition)"
+      source: "Amplitude / Reforge"
+
+  - name: Paywall Hits
+    definition: Times users encounter paid feature gates
+    formula: "COUNT(paywall_impression_events)"
+    why_it_matters: Conversion opportunity volume
+    benchmarks:
+      healthy: "High hits with healthy conversion rate"
+      warning: "High hits with near-zero conversion (frustration)"
+      source: "Product-led growth playbooks"
+
+  - name: Trial Conversion
+    definition: Trial users who become paid
+    formula: "COUNT(trial_to_paid) / COUNT(trial_started)"
+    why_it_matters: Trial effectiveness
+    benchmarks:
+      healthy: ">25% (opt-in trial), >60% (opt-out trial)"
+      warning: "<10%"
+      source: "OpenView — PLG benchmarks"
+
+  - name: K-Factor
+    definition: Viral coefficient — invites sent times invite conversion rate
+    formula: "avg_invites_per_user * invite_conversion_rate"
+    why_it_matters: Organic growth — K>1 means viral growth
+    benchmarks:
+      healthy: ">0.5 (strong viral component)"
+      warning: "<0.1 (no organic loop)"
+      source: "Reforge growth models"
+
+  - name: DAU/MAU Ratio
+    definition: Daily actives divided by monthly actives
+    formula: "COUNT(DISTINCT daily_active) / COUNT(DISTINCT monthly_active)"
+    why_it_matters: Engagement stickiness — predicts conversion
+    benchmarks:
+      healthy: ">50% (daily habit)"
+      warning: "<20% (occasional use)"
+      source: "Amplitude / GameAnalytics"
+
+key_dimensions:
+  - "User Tier — Free, Trial, Paid, Churned-to-Free"
+  - "Conversion Path — Self-serve, Sales-assisted, Trial"
+  - "Feature Set — Features used before conversion"
+  - "Acquisition Source — Organic, Paid, Referral"
+  - "Usage Level — Light, Medium, Heavy"
+
+time_patterns:
+  - "Trial windows — 7-day, 14-day, 30-day trials"
+  - "Engagement decay — Day 1, Day 7, Day 30 retention"
+  - "Conversion windows — most convert within X days"
+  - "Reactivation — returning churned users"
+
+fact_table:
+  grain: "One row per user per day (state snapshot)"
+  name: user_state_fact
+  columns:
+    - user_id
+    - date
+    - user_tier
+    - days_since_signup
+    - days_in_current_tier
+    - features_used_today
+    - paywall_hits_today
+    - referrals_sent
+    - is_active
+
+standard_frameworks:
+  - name: "OpenView — Product-Led Growth"
+    focus: "PLG metrics, conversion funnels"
+  - name: "Reforge"
+    focus: "Growth models, retention frameworks"
+  - name: "Amplitude"
+    focus: "Product analytics frameworks"
+  - name: "GameAnalytics"
+    focus: "F2P gaming metrics"
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against: []

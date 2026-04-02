@@ -1,0 +1,287 @@
+# Ad-Supported Media — Business Model Decomposition
+#
+# Baseline capabilities required to operate an ad-supported media
+# business. Extends beyond analytics (covered in business-model-
+# analytics.md) to the full operational capability set.
+
+business_model:
+  name: Ad-Supported Media
+  category: Advertising/Media
+  description: >
+    Free content monetized via advertising. Revenue is a function of
+    audience size, engagement depth, and ad yield. The product is
+    attention — content attracts audience, audience attracts advertisers.
+    Two-sided: content for users, inventory for advertisers.
+
+analytics_reference: "business-model-analytics.md#advertising--media-business-model"
+system_mix_baseline:
+  app: 0.20
+  analytics: 0.70
+  work: 0.10
+  record: 0.00
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Content Creation and Management
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Create, curate, and manage the content that attracts audience.
+      Includes editorial workflow, content scheduling, multimedia
+      handling (text, video, audio), and content organization.
+      Content is the product — its quality and relevance determine
+      audience size.
+    criticality: core
+    example_vendors:
+      - WordPress
+      - YouTube Studio
+      - Custom CMS
+
+  - name: Content Distribution and Delivery
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Deliver content to audiences across platforms — web, mobile app,
+      social, email, and syndication partners. Includes CDN, adaptive
+      streaming (video), push notifications, and feed algorithms.
+      Distribution reach determines inventory volume.
+    criticality: core
+    example_vendors:
+      - Cloudflare
+      - Fastly
+      - Mux (video)
+      - Custom delivery infrastructure
+
+  - name: Audience Growth and Acquisition
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Grow the audience through SEO, social distribution, viral
+      content, creator partnerships, and paid acquisition. Manage
+      subscriber/follower growth across channels. Audience size
+      is inventory — more audience means more ad impressions to sell.
+    criticality: core
+    example_vendors:
+      - Google Search Console
+      - Chartbeat
+      - Social media platforms
+
+  - name: Ad Serving and Inventory Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Serve ads into content, manage ad placements (display, video,
+      native, audio), and allocate inventory between direct-sold and
+      programmatic channels. The revenue delivery mechanism — every
+      page view or video play is an ad impression opportunity.
+    criticality: core
+    example_vendors:
+      - Google Ad Manager
+      - Custom ad server
+      - FreeWheel (video)
+
+  - name: Programmatic Advertising and Yield Optimization
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Maximize revenue per impression through programmatic auction
+      participation (header bidding, SSPs), floor price optimization,
+      demand partner management, and real-time yield decisions.
+      Yield optimization is the margin lever — same traffic, more
+      revenue.
+    criticality: core
+    example_vendors:
+      - Prebid
+      - Google AdSense/AdX
+      - Amazon Publisher Services
+      - Index Exchange
+
+  - name: Audience Data and Targeting
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Collect, segment, and activate audience data for ad targeting.
+      Includes first-party data collection, audience segmentation,
+      contextual targeting, and privacy-compliant identity solutions.
+      Targeting precision determines CPM — better targeting commands
+      higher ad prices.
+    criticality: core
+    example_vendors:
+      - Permutive
+      - LiveRamp
+      - Custom DMP/CDP
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Recommendation and Personalization
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Surface relevant content to users through algorithmic
+      recommendations, personalized feeds, and editorial curation.
+      Increases engagement depth (pages per session, time on site),
+      which directly increases ad inventory.
+    criticality: supporting
+    example_vendors:
+      - Algolia Recommend
+      - Recombee
+      - Custom ML models
+
+  - name: Engagement and Retention Analytics
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track DAU/MAU, time on site, pages per session, return
+      frequency, and content performance. Monitor audience health
+      and identify engagement trends. The audience metrics layer —
+      see business-model-analytics.md for full definitions.
+    criticality: supporting
+    example_vendors:
+      - Google Analytics
+      - Chartbeat
+      - Parse.ly
+
+  - name: Ad Sales and Revenue Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Sell direct ad campaigns to brand advertisers. Includes media
+      kit creation, proposal generation, insertion order management,
+      campaign trafficking, and performance reporting. Direct-sold
+      campaigns command premium CPMs over programmatic.
+    criticality: supporting
+    example_vendors:
+      - Salesforce
+      - Boostr
+      - Custom ad ops tools
+
+  - name: Brand Safety and Content Moderation
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Ensure content meets advertiser brand safety requirements and
+      platform standards. Includes content moderation (UGC platforms),
+      adjacency controls, and brand safety scoring. Advertisers
+      won't pay for placement next to harmful content.
+    criticality: supporting
+    example_vendors:
+      - DoubleVerify
+      - IAS (Integral Ad Science)
+      - Custom moderation tools
+
+  - name: Subscription and Premium Upsell
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Offer ad-free or premium content tiers for direct subscription
+      revenue. Hybrid monetization (ads + subscriptions) diversifies
+      revenue and captures willingness-to-pay from high-value
+      audience segments.
+    criticality: supporting
+    example_vendors:
+      - Stripe
+      - Piano
+      - Memberful
+
+  - name: Creator and Contributor Management
+    apqc_context: "7.2"
+    apqc_name: Develop and counsel employees
+    description: >
+      Manage relationships with content creators, contributors, or
+      editorial staff. Includes content commissioning, compensation
+      (revenue share, flat fees), rights management, and creator
+      tools. For UGC platforms: creator monetization programs.
+    criticality: supporting
+    example_vendors:
+      - YouTube Partner Program (reference)
+      - Custom creator tools
+      - Patreon (reference)
+
+  - name: Email and Newsletter Operations
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Build and engage email subscriber lists through newsletters
+      and content digests. Owned audience channel that reduces
+      platform dependency and enables direct monetization through
+      sponsored content and newsletter ads.
+    criticality: supporting
+    example_vendors:
+      - Beehiiv
+      - Substack
+      - Mailchimp
+
+  # --- TABLE-STAKES: Every business needs these, not media-specific ---
+
+  - name: Privacy and Consent Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Manage cookie consent, privacy regulations (GDPR, CCPA),
+      data collection transparency, and user preference controls.
+      Ad-supported media collects extensive behavioral data —
+      regulatory compliance is non-negotiable.
+    criticality: generic
+    example_vendors:
+      - OneTrust
+      - Cookiebot
+      - Sourcepoint
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition from multiple ad revenue streams (direct,
+      programmatic, sponsored), accounts receivable management
+      (advertisers often pay net-60/90), and content cost accounting.
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - NetSuite
+      - Xero
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Authenticate users (optional for most media), manage editorial
+      and ad ops team access, and handle advertiser portal access.
+      User accounts are increasingly important for first-party data
+      strategies post-cookie.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - Firebase Auth
+      - Custom auth
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host and scale content delivery infrastructure. Media-specific:
+      handle viral traffic spikes, global CDN for low-latency content
+      delivery, and video transcoding/streaming at scale.
+    criticality: generic
+    example_vendors:
+      - AWS
+      - Cloudflare
+      - Fastly
+
+differentiators:
+  - Audience loyalty and engagement depth (DAU/MAU ratio above 50%)
+  - First-party data asset enabling premium targeting post-cookie
+  - Content moat (exclusive content, proprietary data, unique creators)
+  - Yield optimization driving eCPM above category average
+  - Multi-platform distribution capturing audience across channels
+  - Direct-sold ad revenue exceeding 40% of total (premium brand relationships)
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + IAB standards + publisher economics
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Advertising/Media metrics)
+    - data-system-classification.md (system mix baseline — Consumer Tech profile)
+    - system-primitive-decomposition.md (decomposition methodology)

@@ -1,0 +1,167 @@
+# Venue Entertainment — Domain Analytics Patterns
+#
+# Archetype: In-venue content/media delivery platform.
+# SaaS + ad network dual revenue. Content classification quality
+# is the ceiling for both streams. 400K+ assets requiring semantic
+# enrichment. Brand safety is zero-tolerance.
+
+domain:
+  name: Venue Entertainment
+  archetype: venue-entertainment
+  description: >
+    Platforms delivering curated content (video, music, digital signage)
+    to physical venues. Dual revenue: venue SaaS subscriptions +
+    advertising network against captive audience. Content classification
+    quality is the single ceiling that bottlenecks both revenue streams.
+    Brand safety compliance is zero-tolerance for enterprise accounts.
+  bizbok_industry: media_entertainment  # operational DNA is content curation/distribution
+
+analytics_patterns:
+
+  - name: content-classification-quality
+    context: Classification
+    domain_type: CORE
+    definition: >
+      Enrichment pipeline health. Tag accuracy across multiple
+      dimensions (genre, mood, energy, brand safety, vertical fit)
+      sets the ceiling for both playlist quality and ad targeting.
+    core_metrics:
+      - name: Tag accuracy rate
+        formula: "COUNT(correct_tags) / COUNT(total_tags) per dimension"
+        benchmarks:
+          healthy: ">95% (brand safety), >85% (genre/mood)"
+          warning: "<80% on any P0 dimension"
+          source: " engagement — classification gap analysis"
+      - name: Content velocity (assets tagged/day)
+        formula: "COUNT(newly_tagged_assets) per day"
+        benchmarks:
+          healthy: "Backlog decreasing at sustainable rate"
+          warning: "Ingest rate exceeding tagging capacity"
+          source: " engagement"
+      - name: Multi-source agreement rate
+        formula: "COUNT(sources_agree) / COUNT(multi_source_tags)"
+        benchmarks:
+          healthy: ">80% agreement across AI/human/3P sources"
+          warning: "<60% (conflicting enrichment signals)"
+          source: " classification gap analysis"
+    cross_domain_source: "Netflix content enrichment — ~200 data points per title, three-layer stack"
+    maturity:
+      implementable: partial
+      gap: "Requires multi-source enrichment pipeline (AI + human + Gracenote). P0 dimensions (mood, brand safety, energy) have zero coverage in existing client data."
+
+  - name: brand-compliance
+    context: Brand Configuration
+    domain_type: CORE
+    definition: >
+      Zero-tolerance contract metric. Measures whether content delivered
+      to venues complies with client-specific brand rules. Any failure
+      is a contract risk for enterprise accounts.
+    core_metrics:
+      - name: Brand rule compliance rate
+        formula: "COUNT(compliant_deliveries) / COUNT(total_deliveries)"
+        benchmarks:
+          healthy: "100% (zero-tolerance)"
+          warning: "Any violation (enterprise contract risk)"
+          source: " engagement"
+      - name: Rule coverage
+        formula: "COUNT(titles_with_brand_evaluation) / COUNT(titles_in_rotation)"
+        benchmarks:
+          healthy: "100% of titles evaluated against active client rules"
+          warning: "<100% (unevaluated content in rotation)"
+          source: " engagement"
+    cross_domain_source: "Compliance monitoring — binary pass/fail adapted for content brand safety"
+    maturity:
+      implementable: partial
+      gap: "Requires brand rule engine with per-client constraint evaluation."
+
+  - name: playlist-quality
+    context: Composition
+    domain_type: CORE
+    definition: >
+      Product quality proxy. Measures whether playlists match venue
+      context, brand requirements, and audience expectations. The
+      integration hub where all CORE investments produce value.
+    core_metrics:
+      - name: Playlist relevance score
+        formula: "weighted_avg(genre_fit, mood_fit, energy_fit, brand_compliance)"
+        benchmarks:
+          healthy: ">85% relevance across active playlists"
+          warning: "<70% (wrong content reaching venues)"
+          source: " engagement"
+      - name: Skip rate
+        formula: "COUNT(skipped_within_30s) / COUNT(plays)"
+        benchmarks:
+          healthy: "<10%"
+          warning: ">25% (content not matching venue mood)"
+          source: "Content delivery industry"
+    cross_domain_source: "Recommendation quality — Netflix/Spotify playlist satisfaction adapted for B2B venue context"
+    maturity:
+      implementable: partial
+      gap: "Requires behavioral signals from venue playback (skip rates, completion rates)."
+
+  - name: venue-engagement
+    context: Delivery
+    domain_type: SUPPORTING
+    definition: >
+      Churn signal. Low venue engagement precedes cancellation. Measures
+      active usage of the platform across the venue network.
+    core_metrics:
+      - name: Venue engagement rate
+        formula: "COUNT(active_venues_this_week) / COUNT(total_subscribed_venues)"
+        benchmarks:
+          healthy: ">90% weekly active"
+          warning: "<80% (disengaged venues at churn risk)"
+          source: " engagement"
+      - name: Playback completion rate
+        formula: "AVG(play_duration / content_duration)"
+        benchmarks:
+          healthy: ">70% average completion"
+          warning: "<50%"
+          source: "Content delivery industry"
+    cross_domain_source: "SaaS engagement / DAU-MAU — adapted for B2B venue network"
+    maturity:
+      implementable: "yes"
+      gap: "Venue playback system generates real-time event stream. 44K venues."
+
+  - name: ad-network-yield
+    context: Ad Network (cross-cutting)
+    domain_type: CORE
+    definition: >
+      Network monetization. Measures how effectively the captive venue
+      audience is monetized through advertising. Fill rate and CPM are
+      the primary indicators — both depend on classification quality.
+    core_metrics:
+      - name: Ad fill rate
+        formula: "COUNT(filled_impressions) / COUNT(available_impressions)"
+        benchmarks:
+          healthy: ">80%"
+          warning: "<50% (undersold inventory)"
+          source: " engagement"
+      - name: CPM
+        formula: "ad_revenue / (impressions / 1000)"
+        benchmarks:
+          healthy: "Stable or increasing (better targeting)"
+          warning: "Declining (audience quality perception dropping)"
+          source: " engagement"
+      - name: Audience reach
+        formula: "estimated_viewer_impressions per venue per month"
+        benchmarks:
+          healthy: "1.8B annual across 44K venues"
+          warning: "Declining venue count reducing total reach"
+          source: " engagement (1.8B annual visitors)"
+    cross_domain_source: "Digital advertising yield — IAB standards adapted for in-venue captive audience"
+    maturity:
+      implementable: partial
+      gap: "Requires ad serving system with impression tracking per venue."
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: ""
+  validated_against:
+    - " strategic DDD — 7 bounded contexts (Classification, Brand Config, Composition = CORE)"
+    - " classification gap analysis — P0 dimension coverage assessment"

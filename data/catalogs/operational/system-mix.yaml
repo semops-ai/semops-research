@@ -1,0 +1,47 @@
+# System Mix — Data System Type Distribution by Business Type
+#
+# Source: docs/research/data-system-classification.md
+# Predicts the mix of application, analytics, work, and record systems
+# based on business type classification.
+#
+# Used by reference.py _predict_system_mix via _classify_business_type.
+#
+# Replaces: SYSTEM_MIX in lookups.py
+
+system_mix:
+  software_saas:
+    application: 0.60
+    analytics: 0.25
+    work: 0.10
+    record: 0.05
+
+  traditional_enterprise:
+    application: 0.30
+    analytics: 0.20
+    work: 0.10
+    record: 0.40
+
+  professional_services:
+    application: 0.15
+    analytics: 0.05
+    work: 0.50
+    record: 0.30
+
+  consumer_tech:
+    application: 0.20
+    analytics: 0.70
+    work: 0.10
+    record: 0.00
+
+  events_project:
+    application: 0.20
+    analytics: 0.15
+    work: 0.40
+    record: 0.25
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

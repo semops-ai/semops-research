@@ -1,0 +1,250 @@
+# Event Marketplace — Business Model Decomposition
+#
+# Baseline capabilities required to operate an event/trade show
+# marketplace business. Validated against   —
+# 8/8 bounded contexts confirmed, 13/13 derivation rules pass.
+#
+# Revenue model: UFI 5 S framework (Space, Services, Sign-up,
+# Sponsorship, Subscription) — industry standard for exhibition
+# organizers.
+
+business_model:
+  name: Event Marketplace
+  category: Marketplace/Events
+  description: >
+    Two-sided marketplace connecting exhibitors (supply) with attendees
+    (demand) at physical events. Revenue primarily from supply side
+    (space sales, services, sponsorship); demand side (tickets) is
+    secondary but critical for supply-side value proposition. Each
+    edition is a discrete project with its own P&L.
+
+analytics_reference: "business-model-analytics.md#marketplace-business-model"
+system_mix_baseline:
+  app: 0.20
+  analytics: 0.15
+  work: 0.40
+  record: 0.25
+
+required_capabilities:
+
+  # --- CORE: Supply-side and product domains ---
+
+  - name: Exhibitor Lifecycle Management
+    apqc_context: "3.1"
+    apqc_name: Develop sales strategy
+    description: >
+      Manage the full exhibitor lifecycle: prospecting, application,
+      contracting, confirmation, attendance, and rebooking. The
+      rebooking cycle (typically 80% within 30 days post-show) is
+      the primary revenue predictor. Named sales relationships,
+      priority points, and package customization.
+    criticality: core
+    example_vendors:
+      - Salesforce
+      - HubSpot
+      - Custom CRM / spreadsheet
+
+  - name: Sponsorship Inventory and Sales
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Manage sponsorship product catalog, tier pricing, exclusivity
+      premiums, and delivery verification. Sponsorship = selling
+      audience attention to partners. High-margin advertising model.
+      Typical inventory: 30-50+ items across 4-6 categories.
+    criticality: core
+    example_vendors:
+      - Custom tracking (spreadsheet)
+      - SponsorMyEvent
+      - Sponseasy
+
+  - name: Exhibition Space and Floor Plan Management
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Manage space inventory (booths, rooms, pavilions), floor plan
+      versions, space assignments, and dimensions. Revenue per sqft
+      optimization. Domain-specific space types (e.g., listening rooms
+      for audio, demo suites for tech) are where format expertise
+      creates competitive advantage.
+    criticality: core
+    example_vendors:
+      - ExpoFP
+      - A2Z Events (Personify)
+      - Custom floor plan tools
+
+  - name: Event Edition Lifecycle
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Each annual edition is a discrete project: planning, venue
+      coordination, programming (sessions, speakers, demos), milestone
+      tracking, and post-show analysis. The Event context is the
+      project container that produces the product.
+    criticality: core
+    example_vendors:
+      - Cvent
+      - Bizzabo
+      - Custom project management
+
+  # --- SUPPORTING: Demand-side and operational ---
+
+  - name: Attendee Registration and Ticketing
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Manage attendee registration, ticket types, badge generation,
+      and check-in. The demand side of the marketplace — critical for
+      exhibitor value proposition but not where event organizers
+      typically differentiate. Often outsourced to ticketing vendors.
+    criticality: supporting
+    example_vendors:
+      - Unity Event Solutions
+      - Eventbrite
+      - Cvent Registration
+
+  - name: Lead Capture and Matchmaking
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Badge scanning, lead retrieval, and matchmaking appointments
+      between exhibitors and attendees. Proves exhibitor ROI. Offered
+      as a service (lead retrieval licenses sold to exhibitors), not
+      typically a core competency. Hardware and software are
+      vendor-provided.
+    criticality: supporting
+    example_vendors:
+      - CompuSystems
+      - Boomset
+      - LeadLizard
+
+  - name: Event Programming and Content
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Manage sessions, speakers, panels, demos, and educational content.
+      Programming drives attendee experience quality. Includes speaker
+      management, schedule publishing, and session tracking.
+    criticality: supporting
+    example_vendors:
+      - Sched
+      - Whova
+      - Custom scheduling
+
+  - name: Exhibitor Services and Logistics
+    apqc_context: "4.4"
+    apqc_name: Deliver products
+    description: >
+      Coordinate exhibitor operational needs: drayage (freight handling),
+      AV equipment, electrical, booth setup, shipping logistics.
+      Service orders attached to exhibitor contracts. Operational
+      backbone of show execution.
+    criticality: supporting
+    example_vendors:
+      - Freeman
+      - GES (Global Experience Specialists)
+      - Custom service order system
+
+  - name: Marketing and Audience Development
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Drive attendance through email campaigns, social media, PR,
+      media partnerships, and influencer outreach. For events, marketing
+      primarily serves the demand side — filling the venue to maintain
+      exhibitor value proposition.
+    criticality: supporting
+    example_vendors:
+      - Mailchimp
+      - Constant Contact
+      - Custom PR outreach
+
+  - name: Venue and Vendor Coordination
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Manage venue contracts, multi-space logistics, vendor relationships
+      (AV, catering, security, cleaning), and on-site operations.
+      Coordination complexity scales with venue size and multi-venue
+      configurations.
+    criticality: supporting
+    example_vendors:
+      - Custom coordination
+      - Asana / Monday (project management)
+
+  - name: Analytics and Post-Show Reporting
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track event KPIs: attendance, exhibitor satisfaction, rebooking
+      rate, revenue per sqft, sponsorship fill rate, NPS. Post-show
+      reports for exhibitors proving ROI. Edition-over-edition trending.
+    criticality: supporting
+    example_vendors:
+      - Google Analytics
+      - Custom reporting
+      - Survey tools (Qualtrics, SurveyMonkey)
+
+  # --- TABLE-STAKES: Every business needs these ---
+
+  - name: Contract and Agreement Management
+    apqc_context: "6.1"
+    apqc_name: Plan and manage sales orders
+    description: >
+      Standard contract lifecycle: exhibitor agreements, sponsorship
+      contracts, venue leases, vendor SOWs. Published language consumed
+      by Exhibitor, Sponsorship, and Finance contexts.
+    criticality: generic
+    example_vendors:
+      - DocuSign
+      - PandaDoc
+      - HelloSign
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition (edition-bound), COGS tracking, exhibitor
+      invoicing, sponsorship billing, attendee payment processing, and
+      cash flow management. Event-specific: revenue allocation mapping
+      exhibitor/sponsor/ticket payments to financial categories.
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - Xero
+      - Stripe (payments)
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Admin access controls for staff, exhibitor portal access, and
+      attendee account management. PCI compliance for payment data.
+    criticality: generic
+    example_vendors:
+      - Auth0
+      - Built-in (Cvent, Bizzabo)
+
+differentiators:
+  - Supply-side retention (exhibitor rebooking rate above 75%)
+  - Format expertise creating domain-specific experiences (e.g., listening rooms)
+  - Network effects from critical mass of exhibitors in niche category
+  - Relationship depth creating switching costs (multi-year exhibitor partnerships)
+  - Sponsorship yield optimization (CPM equivalent, fill rate)
+  - Edition-over-edition attendance growth sustaining supply-side value proposition
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-25"
+  last_refreshed: "2026-03-25"
+  refresh_source: model-knowledge
+
+source:
+  seed:   — 8 bounded contexts, validated classification, business model synthesis
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - UFI 5 S framework (exhibition industry revenue model)
+    -  signal validation (8/8 contexts confirmed, 13/13 derivation rules pass)
+    - business-model-analytics.md (Marketplace metrics)
+    - data-system-classification.md (system mix baseline)

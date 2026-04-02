@@ -1,0 +1,295 @@
+# Field Service Recurring — Business Model Decomposition
+#
+# Recurring physical service delivery at customer locations.
+# Covers: residential cleaning, lawn care, pest control, pool
+# maintenance, HVAC maintenance, window washing, pressure washing.
+
+business_model:
+  name: Field Service Recurring
+  category: Recurring/Service
+  description: >
+    Crew-based physical service delivered at customer locations on a
+    recurring schedule (weekly, biweekly, monthly). Revenue recognized
+    per completed visit. The business is operationally constrained —
+    growth is limited by scheduling density, crew capacity, and service
+    area radius. Retention and route efficiency determine profitability.
+
+analytics_reference: "business-model-analytics.md#recurring--service-business-model"
+system_mix_baseline:
+  app: 0.20      # Booking, payments, customer portal
+  analytics: 0.10 # Revenue reporting, demand patterns, route efficiency
+  work: 0.45     # Scheduling, dispatch, job execution, checklists, crew mgmt
+  record: 0.25   # Customer profiles, service history, property details, pricing
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Recurring Schedule Management
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Create, maintain, and adjust recurring service schedules for each
+      customer. Handles frequency (weekly/biweekly/monthly), preferred
+      day/time, skip requests, and holiday adjustments. The schedule is
+      the operational backbone — every crew's day starts from it. Poor
+      scheduling creates gaps (lost revenue) or overcommitment (failed SLAs).
+    criticality: core
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - ServiceTitan
+      - ZenMaid (cleaning-specific)
+      - Launch27
+
+  - name: Crew Dispatch and Route Optimization
+    apqc_context: "4.4"
+    apqc_name: Deliver product
+    description: >
+      Assign jobs to crews and sequence them to minimize drive time
+      between stops. Accounts for crew skills, job duration estimates,
+      geographic clustering, and real-time adjustments (cancellations,
+      add-ons). This is the efficiency lever — route density determines
+      whether a crew does 4 jobs or 6 jobs per day, which directly
+      drives margin.
+    criticality: core
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - ServiceTitan
+      - OptimoRoute
+      - Google Maps Platform
+
+  - name: Customer Booking and Onboarding
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Acquire new customers through online booking, phone, or referral.
+      Includes initial service scoping (home size, service type, frequency),
+      pricing quote, and first-visit scheduling. Conversion from inquiry
+      to recurring customer is the growth metric. First impression sets
+      retention trajectory.
+    criticality: core
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - ZenMaid
+      - Custom website forms
+
+  - name: Job Execution and Completion Tracking
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Track each job from arrival through completion — check-in/check-out
+      times, task checklists, photos (before/after), and customer sign-off.
+      This is the service delivery record. Enables quality assurance,
+      dispute resolution, and crew accountability.
+    criticality: core
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - ServiceTitan
+
+  - name: Service Quality Standardization
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Define and enforce service standards across crews — cleaning
+      checklists, procedure sequences, product usage, quality thresholds.
+      As the business scales past the owner doing the work, this is what
+      maintains the brand promise. Without it, service quality becomes
+      crew-dependent and unpredictable.
+    criticality: core
+    example_vendors:
+      - Trainual
+      - Process Street
+      - Custom checklists in field service app
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Customer Relationship and Retention Management
+    apqc_context: "6.1"
+    apqc_name: Plan and manage customer service contacts
+    description: >
+      Maintain customer profiles, service preferences, communication
+      history, and satisfaction tracking. Handle complaints, feedback,
+      and win-back campaigns. Retention is critical — recurring revenue
+      depends on customers staying, and acquiring a new customer costs
+      5-10x retaining one.
+    criticality: supporting
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - Mailchimp (email)
+      - Broadly (reviews)
+
+  - name: Pricing and Quoting
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Calculate service pricing based on property size, service type,
+      frequency, and add-ons. Generate quotes for prospects and adjust
+      pricing for existing customers (annual increases, service changes).
+      Pricing strategy (flat rate vs. hourly vs. square footage) varies
+      by vertical.
+    criticality: supporting
+    example_vendors:
+      - Jobber
+      - Housecall Pro
+      - Custom pricing calculators
+
+  - name: Recurring Billing and Payment Collection
+    apqc_context: "10.4"
+    apqc_name: Manage accounts receivable
+    description: >
+      Charge customers per completed visit or on a billing cycle.
+      Handle autopay enrollment, failed payments, late payment follow-up,
+      and tipping. Recurring billing reduces friction and improves cash
+      flow predictability.
+    criticality: supporting
+    example_vendors:
+      - Stripe
+      - Square
+      - Jobber Payments
+      - QuickBooks Payments
+
+  - name: Crew Management and Workforce Scheduling
+    apqc_context: "7.1"
+    apqc_name: Develop and manage human resources planning
+    description: >
+      Manage crew composition, availability, skills, and labor hours.
+      Handle time-off requests, no-shows, and temporary crew changes.
+      Labor is the largest cost center — crew utilization rate (billable
+      hours / total hours) is the key efficiency metric.
+    criticality: supporting
+    example_vendors:
+      - Homebase
+      - When I Work
+      - Jobber (built-in)
+      - Gusto (payroll)
+
+  - name: Supply and Equipment Management
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Track cleaning supplies, equipment condition, vehicle maintenance,
+      and reorder points. Ensure crews have what they need for each job.
+      For eco-friendly or specialized service providers, supply selection
+      is part of the brand promise.
+    criticality: supporting
+    example_vendors:
+      - Custom inventory tracking
+      - Sortly
+      - Vehicle fleet apps
+
+  - name: Reputation and Review Management
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Solicit, monitor, and respond to customer reviews across Google,
+      Yelp, Angi, Thumbtack, and other platforms. Reviews are the primary
+      acquisition channel for local service businesses — star rating
+      directly correlates with lead volume.
+    criticality: supporting
+    example_vendors:
+      - Broadly
+      - Podium
+      - NiceJob
+      - BirdEye
+
+  - name: Local Marketing and Lead Generation
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Generate leads through local SEO, Google Ads, referral programs,
+      door hangers, neighborhood campaigns, and lead aggregator platforms
+      (Angi, Thumbtack, Yelp). Local service businesses compete for
+      geographic visibility, not brand awareness.
+    criticality: supporting
+    example_vendors:
+      - Google Ads
+      - Angi (leads)
+      - Thumbtack
+      - Yelp Business
+
+  # --- GENERIC: Every business needs these ---
+
+  - name: Financial Accounting and Payroll
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      General ledger, tax compliance, payroll processing, and financial
+      reporting. Standard for any business. Payroll complexity increases
+      with crew count (hourly workers, overtime, mileage reimbursement).
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - Gusto
+      - Wave
+
+  - name: Insurance and Liability Management
+    apqc_context: "12.5"
+    apqc_name: Manage government and industry relationships
+    description: >
+      Maintain general liability, workers' compensation, and bonding
+      insurance. Required for credibility and often for platform listing
+      (Angi, Thumbtack require proof of insurance). Claims handling
+      when property damage or injury occurs.
+    criticality: generic
+    example_vendors:
+      - Next Insurance
+      - Thimble
+      - Traditional brokers
+
+  - name: Business Communication and Coordination
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Internal communication between office and field crews — job
+      updates, schedule changes, supply requests. Customer communication
+      for appointment confirmations, on-the-way notifications, and
+      follow-up.
+    criticality: generic
+    example_vendors:
+      - Slack
+      - Google Workspace
+      - Built-in messaging in field service apps
+
+differentiators:
+  - Route density and scheduling efficiency — more jobs per crew per day at lower drive time
+  - Customer retention rate — recurring revenue compounds; churn kills the business
+  - Service quality consistency across crews — what the owner delivers, every crew delivers
+  - First-visit conversion rate — turning inquiries into recurring customers
+  - Reputation velocity — rate of new positive reviews driving organic lead flow
+  - Crew retention — low turnover means experienced crews, better service, lower training cost
+
+cross_domain_patterns:
+  - capability: Crew Dispatch and Route Optimization
+    source_vertical: logistics/delivery
+    why: >
+      The dispatch problem (assign N jobs to M crews, minimize total
+      drive time, handle real-time changes) is the same vehicle routing
+      problem that delivery and ride-share companies solve. Field service
+      companies at scale need logistics-grade routing, not just a
+      calendar.
+  - capability: Service Quality Standardization
+    source_vertical: franchise
+    why: >
+      Maintaining brand-standard service across multiple crews is the
+      same problem franchises solve across locations. Checklists,
+      training systems, and quality audits come from franchise operations
+      methodology, not from professional services.
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-30"
+  last_refreshed: "2026-03-30"
+  refresh_source: model-knowledge
+
+source:
+  seed: "EDGE Cleaning Service WA classification + residential cleaning industry patterns"
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - franchise.yaml (adjacent archetype — quality standardization patterns)
+    - data-system-classification.md (system mix baseline)

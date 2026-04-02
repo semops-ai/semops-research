@@ -1,0 +1,37 @@
+industry:
+  key: financial_services
+  name: Financial Services
+  bizbok_section: "§8.1"
+  bizbok_pages: "607-609"
+  source: bizbok-v14
+
+entities:
+  - name: FinancialAccount
+    category: core
+    bizbok_source: "§8.1 primary"
+  - name: FinancialTransaction
+    category: core
+    bizbok_source: "§8.1 primary"
+  - name: FinancialInstrument
+    category: core
+    bizbok_source: "§8.1 primary"
+  - name: InvestmentPortfolio
+    category: core
+    bizbok_source: "§8.1 primary"
+  - name: Collateral
+    category: core
+    bizbok_source: "§8.1 primary"
+  - name: Currency
+    category: financial
+    bizbok_source: "§8.1 secondary"
+  - name: Payment
+    category: financial
+    bizbok_source: "§8.1 secondary"
+  - name: FinancialForecast
+    category: financial
+    bizbok_source: "§8.1 secondary"
+  - name: FinancialPosition
+    category: financial
+    bizbok_source: "§8.1 secondary"
+  - name: ComplianceRecord
+    category: regulatory

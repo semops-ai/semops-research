@@ -1,0 +1,259 @@
+# Klaviyo — Primitive Decomposition
+#
+# Decomposes Klaviyo into neutral functional primitives.
+# Klaviyo is the dominant email/SMS marketing platform for D2C ecommerce —
+# lifecycle automation, campaign management, and customer segmentation
+# tightly integrated with Shopify. Scoped to core platform; CDP and
+# reviews features included as they're now integrated.
+
+vendor:
+  name: Marketing Automation Platform
+  company: Klaviyo
+  category: Marketing Automation / Email / SMS
+
+lock_in_signals:
+  - Proprietary flow builder — automation logic not exportable
+  - Customer profile schema and computed properties locked to platform
+  - Predictive analytics models (LTV, churn risk, next order date) are black-box
+  - Template language (Django-style) with Klaviyo-specific variables
+  - Integration catalog assumes Klaviyo's event schema — not portable
+  - Historical engagement data (opens, clicks, conversions) locked to platform
+  - Segment definitions use Klaviyo's query language — not transferable
+  - SMS compliance management (opt-in, quiet hours) tied to Klaviyo's infrastructure
+  - A/B testing results and statistical models not exportable
+  - CDP features (unified profile) lock more data into Klaviyo's gravity well
+
+open_alternative:
+  name: Listmonk / Mautic + PostgreSQL + Twilio + custom CDP
+  why: >
+    Open-source email (Listmonk/Mautic) handles campaigns and basic automation.
+    Twilio for SMS. Customer profiles in PostgreSQL with custom segmentation
+    queries. Trade-off: massive gap in flow builder sophistication, predictive
+    analytics, and Shopify-native integration depth.
+
+primitives:
+  # --- Customer Data ---
+  - name: Customer Profile Management
+    branded_name: Profiles
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Unified customer profile aggregating identity, purchase history,
+      browsing behavior, email/SMS engagement, and custom properties.
+      The single customer view for marketing — ingests events from
+      ecommerce, support, and other sources.
+    protocols:
+      - HTTP/REST (API)
+      - JSON
+
+  - name: Customer Event Tracking
+    branded_name: Metrics / Events
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Ingest and store behavioral events: Placed Order, Viewed Product,
+      Added to Cart, Opened Email, Clicked SMS, Started Checkout, etc.
+      Events are the foundation for segmentation, flow triggers, and
+      analytics. Custom events supported via API.
+    protocols:
+      - HTTP/REST (Track API)
+      - JavaScript (on-site tracking)
+      - Webhooks (from integrations)
+
+  - name: Customer Segmentation
+    branded_name: Segments / Lists
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Define dynamic segments based on profile properties, event history,
+      and predictive scores. Segments update in real-time as new events
+      arrive. Lists are static collections. Segments drive campaign
+      targeting and flow entry conditions.
+    protocols:
+      - HTTP/REST (API)
+
+  - name: Predictive Customer Analytics
+    branded_name: Predictive Analytics (LTV, Churn Risk, Next Order Date)
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Machine learning models predicting per-customer: expected lifetime
+      value, churn probability, predicted next order date, average days
+      between orders. Computed from purchase history. Used for
+      segmentation (e.g., "high LTV at-risk") and flow triggers.
+    protocols:
+      - HTTP/REST (profile properties)
+
+  # --- Email Marketing ---
+  - name: Email Campaign Composition
+    branded_name: Campaigns (Email)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Create and send one-time email broadcasts to a segment or list.
+      Drag-and-drop editor or HTML. Supports A/B testing (subject line,
+      content, send time). The push marketing primitive.
+    protocols:
+      - SMTP (delivery)
+      - HTTP/REST (API)
+      - HTML/CSS
+
+  - name: Email Template Management
+    branded_name: Templates / Blocks
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Reusable email templates with brand styling, dynamic content
+      blocks, and merge tags. Universal content blocks shared across
+      templates. Template language supports conditionals, loops, and
+      product feeds.
+    protocols:
+      - HTML/CSS
+      - Django template syntax (Klaviyo-specific)
+
+  - name: Email Deliverability Management
+    branded_name: Deliverability (SPF, DKIM, dedicated IPs)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Manage email deliverability: domain authentication (SPF, DKIM,
+      DMARC), IP warming, bounce handling, spam complaint management.
+      Dedicated sending IPs for Plus. The infrastructure layer that
+      determines whether emails reach the inbox.
+    protocols:
+      - SPF
+      - DKIM
+      - DMARC
+      - SMTP
+
+  # --- SMS Marketing ---
+  - name: SMS Campaign Composition
+    branded_name: Campaigns (SMS/MMS)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Create and send SMS/MMS messages to opted-in subscribers.
+      Supports merge tags, shortened URLs, MMS images. Subject to
+      carrier regulations and quiet hours enforcement.
+    protocols:
+      - SMS/MMS
+      - HTTP/REST (API)
+
+  - name: SMS Consent Management
+    branded_name: SMS Consent / Double Opt-In
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Manage SMS subscriber consent: opt-in collection (forms, checkout,
+      keywords), double opt-in confirmation, opt-out processing (STOP),
+      quiet hours enforcement. TCPA/CTIA compliance layer.
+    protocols:
+      - SMS (STOP/START keywords)
+      - HTTP/REST
+
+  # --- Automation ---
+  - name: Lifecycle Flow Automation
+    branded_name: Flows
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Event-triggered automation sequences: welcome series, abandoned
+      cart, post-purchase, browse abandonment, winback, sunset.
+      Visual flow builder with triggers, conditions (splits, filters),
+      time delays, and actions (email, SMS, webhook, profile update).
+      The core automation primitive — where most D2C email revenue lives.
+    protocols:
+      - Webhooks (triggers)
+      - HTTP/REST (actions)
+
+  - name: Conditional Flow Logic
+    branded_name: Flow Filters / Conditional Splits / Trigger Splits
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Branch flow paths based on profile properties, segment membership,
+      event data, or predictive scores. Conditional splits (yes/no),
+      trigger splits (which event), and flow filters (who enters).
+      Enables personalized automation paths.
+    protocols:
+      - Klaviyo query language (proprietary)
+
+  # --- Forms & Signup ---
+  - name: Subscriber Capture Forms
+    branded_name: Sign-Up Forms / Pop-ups
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      On-site forms for email/SMS subscriber capture: pop-ups, flyouts,
+      embedded forms, full-page. Targeting rules (URL, scroll depth,
+      exit intent, device). A/B testing. The list growth primitive.
+    protocols:
+      - JavaScript (embed)
+      - HTTP/REST
+
+  # --- Reporting ---
+  - name: Campaign Performance Reporting
+    branded_name: Analytics / Campaign Reports
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track email/SMS performance: open rate, click rate, conversion
+      rate, revenue attributed, unsubscribe rate, bounce rate.
+      Per-campaign and aggregate dashboards. Benchmarking against
+      industry averages.
+    protocols:
+      - HTTP (dashboard)
+      - CSV (export)
+
+  - name: Revenue Attribution
+    branded_name: Attributed Revenue / Conversion Tracking
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Attribute revenue to email/SMS touches using configurable
+      attribution windows (default: 5-day email click, 1-day email
+      open, 1-day SMS click). Per-flow and per-campaign revenue.
+      The metric that justifies email/SMS investment.
+    protocols:
+      - HTTP/REST
+      - JavaScript (tracking pixel)
+
+  # --- Integrations ---
+  - name: Ecommerce Platform Sync
+    branded_name: Shopify Integration / BigCommerce / etc.
+    apqc_context: "8.1"
+    apqc_name: Manage the business of information technology
+    description: >
+      Bidirectional sync with ecommerce platform: products, orders,
+      customers, carts, catalogs. Provides the event stream that
+      powers flows and segmentation. Shopify integration is deepest
+      (native checkout integration, on-site events).
+    protocols:
+      - HTTP/REST (platform APIs)
+      - Webhooks
+
+  - name: Product Catalog Sync
+    branded_name: Catalog / Product Feed
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Sync product catalog for use in emails: dynamic product blocks,
+      personalized recommendations, back-in-stock alerts, price drop
+      notifications. Products rendered in templates via catalog lookup.
+    protocols:
+      - HTTP/REST
+      - JSON (product feed)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge
+
+source:
+  seed: Klaviyo documentation, D2C ecommerce marketing patterns, email/SMS industry practices
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - ecommerce-d2c.yaml (business model — Marketing + Customer Retention capabilities)
+    - Listmonk / Mautic as open-source primitive validation

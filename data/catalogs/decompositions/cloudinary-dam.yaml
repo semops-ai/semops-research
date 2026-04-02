@@ -1,0 +1,268 @@
+# Cloudinary — Primitive Decomposition
+#
+# Decomposes Cloudinary into neutral functional primitives. Cloudinary
+# is an API-first media management platform — developer-focused, with
+# real-time transformation and CDN delivery as core primitives. Very
+# different from traditional DAM (Bynder) which is marketing-focused.
+#
+# Scope: Programmable Media + DAM (Cloudinary Assets). Video Player
+# and Live Streaming included as they're core product.
+
+vendor:
+  name: Programmable Media + Assets (DAM)
+  company: Cloudinary
+  category: DAM (API-first media)
+
+lock_in_signals:
+  - Transformation URL syntax is proprietary (e.g., /w_300,h_200,c_fill/)
+  - CDN URLs are vendor-controlled (res.cloudinary.com) — all links break on exit
+  - Upload presets and auto-upload rules are platform-specific config
+  - AI add-on integrations (Rekognition, Google AI) wired through Cloudinary
+  - Video player is proprietary (Cloudinary Video Player)
+  - Named transformations stored in vendor platform
+  - Webhook notification format is vendor-specific
+  - Upload widget and media library widget are Cloudinary-specific components
+
+open_alternative:
+  name: MinIO/S3 + imgproxy + CDN (Fastly/CloudFront)
+  why: >
+    Standard object storage, open-source image processing (imgproxy,
+    Thumbor, sharp), any CDN for delivery. Transformation URL syntax
+    replaced by standard API calls.
+
+primitives:
+  - name: Media Upload and Ingestion
+    branded_name: Upload API / Upload Widget / Auto-Upload
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Ingest media assets via API, widget, or auto-fetch from external URLs.
+      Supports programmatic uploads, client-side unsigned presets, batch
+      operations, and automatic ingestion from remote sources.
+    protocols:
+      - HTTP/REST
+      - multipart/form-data
+
+  - name: Media Storage
+    branded_name: (cloud storage)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Cloud-based binary storage for images, video, audio, documents,
+      and 3D models. Version management with backup and restore.
+      Folder-based organization.
+    protocols:
+      - HTTP/REST
+
+  - name: Image Transformation
+    branded_name: Transformation URL API (images)
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      On-the-fly image manipulation via URL parameters: resize, crop,
+      effects, overlays, background removal, face detection, content-aware
+      cropping, format conversion. Transformations are URL-encoded
+      and executed at delivery time.
+    protocols:
+      - HTTP (URL-based)
+
+  - name: Video Transformation
+    branded_name: Transformation URL API (video)
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      On-the-fly video manipulation: resize, crop, trim, concatenate,
+      overlay, transcode, audio processing. Adaptive bitrate streaming
+      (HLS/MPEG-DASH) generation.
+    protocols:
+      - HTTP (URL-based)
+      - HLS
+      - MPEG-DASH
+
+  - name: Media Optimization
+    branded_name: q_auto / f_auto (automatic quality and format)
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Automatic format selection (WebP, AVIF, JPEG XL) and quality
+      adjustment per browser/device. Responsive image generation.
+      Minimizes file size while preserving visual quality.
+    protocols:
+      - HTTP (content negotiation)
+
+  - name: CDN Media Delivery
+    branded_name: CDN Delivery
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Global CDN for media delivery with edge caching. Signed URLs
+      and token-based access control. Cache invalidation API.
+      Multiple delivery profiles.
+    protocols:
+      - HTTP/HTTPS
+      - CDN
+
+  - name: Media Search and Discovery
+    branded_name: Search API / Visual Search
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Expression-based search over asset metadata, tags, and visual
+      content. Visual similarity search. Cacheable search URLs for
+      integration into applications.
+    protocols:
+      - HTTP/REST
+
+  - name: Metadata and Tagging
+    branded_name: Tags / Contextual Metadata / Structured Metadata
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Tag assets with free-form tags, contextual key-value pairs,
+      and structured metadata schemas with conditional rules and
+      validation. Supports auto-tagging via AI add-ons.
+    protocols:
+      - HTTP/REST
+
+  - name: AI Auto-Tagging and Analysis
+    branded_name: AI Add-ons (Rekognition, Google AI, OCR, etc.)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      20+ integrated AI services for automatic tagging, moderation,
+      facial detection, OCR, duplicate detection, quality analysis,
+      and accessibility assessment. Pluggable AI provider model.
+    protocols:
+      - HTTP/REST
+
+  - name: Generative AI Media Editing
+    branded_name: GenAI / Studio
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      AI-powered media creation and editing: background removal and
+      fill, object removal and replacement, product recoloring,
+      image quality enhancement. Visual workspace for non-technical
+      users.
+    protocols:
+      - HTTP/REST
+
+  - name: Creative Review and Approval
+    branded_name: Creative Workflows (DAM)
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Customizable review and approval workflows for assets.
+      Multi-stage approval pipeline. Collaboration tools for
+      creative teams.
+    protocols:
+      - HTTP/REST
+
+  - name: Asset Portal Distribution
+    branded_name: Portals (DAM)
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Branded portals for controlled asset sharing with internal
+      teams and external partners. Access-controlled asset
+      collections.
+    protocols:
+      - HTTP/REST
+
+  - name: Video Player
+    branded_name: Cloudinary Video Player
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Embeddable video player with playlists, recommendations,
+      accessibility features, shoppable video, and interactive
+      elements. Analytics and engagement tracking built-in.
+    protocols:
+      - HTTP/HTTPS
+      - HLS
+      - MPEG-DASH
+
+  - name: Live Streaming
+    branded_name: Live Streaming API
+    apqc_context: "8.6"
+    apqc_name: Deploy information technology solutions
+    description: >
+      Real-time video broadcast management. Stream ingestion,
+      transcoding, and delivery. Simulated live streaming from
+      pre-recorded content.
+    protocols:
+      - RTMP
+      - HLS
+      - HTTP/REST
+
+  - name: Event Webhook Delivery
+    branded_name: Webhook Notifications
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Event-driven notifications on asset lifecycle events (upload
+      complete, transformation done, moderation result). Enables
+      reactive integration pipelines.
+    protocols:
+      - webhooks
+      - HTTP/REST
+
+  - name: Media Access Control
+    branded_name: Signed URLs / Token-Based Access / Public-Private
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Control media access via signed URLs (time-limited), token-based
+      authentication, and public/private asset settings. Prevent
+      unauthorized access to media resources.
+    protocols:
+      - HTTP (signed URLs)
+      - JWT
+
+  - name: Embeddable UI Widgets
+    branded_name: Upload Widget / Media Library Widget / Media Editor / Product Gallery
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Drop-in UI components for common media operations: upload
+      interface, media browser, image editor, product gallery.
+      Embed Cloudinary functionality in any web application.
+    protocols:
+      - JavaScript
+      - HTTP/REST
+
+  - name: Third-Party Integration
+    branded_name: Integrations (300+ partners)
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Pre-built integrations with CMS platforms, e-commerce (Shopify),
+      design tools (Figma), cloud providers (AWS), and frameworks.
+      300+ partner ecosystem.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+
+  - name: Programmatic Media Generation
+    branded_name: Archives / Sprites / Collages / PDF from Images
+    apqc_context: "2.2"
+    apqc_name: Develop products and services
+    description: >
+      Programmatically create derived media artifacts: ZIP archives,
+      CSS sprites, collages, PDFs from image sets, text-to-image.
+      Batch creation via API.
+    protocols:
+      - HTTP/REST
+
+source:
+  seed:  (brand-to-neutral decomposition methodology)
+  validated_against:
+    - cloudinary.com/documentation/programmable_media_overview
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

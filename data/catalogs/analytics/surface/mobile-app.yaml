@@ -1,0 +1,99 @@
+# Mobile App — Surface Analytics Patterns
+#
+# Native mobile applications (iOS, Android). Similar to web but with
+# controlled environment, push notifications, and app store constraints.
+# Increasingly unified with web in GA4 as "digital analytics."
+
+surface:
+  name: Mobile App
+  category: mobile-app
+  description: >
+    Native mobile applications. Controlled environment with native
+    capabilities (camera, GPS, sensors). Push notifications as
+    engagement channel. App-specific metrics and attribution challenges.
+    Converging with web analytics in modern platforms (GA4 unifies both).
+  system_types:
+    - Application  # in-app features, transactions
+    - Analytics    # user behavior, engagement
+
+unique_characteristics:
+  - "Controlled environment (native code, no browser constraints)"
+  - "Push notifications as engagement channel"
+  - "App-specific lifecycle (install → onboard → engage → retain)"
+  - "Attribution challenges (app store, deep linking, cross-device)"
+  - "Native capabilities (camera, GPS, sensors) enable unique data collection"
+
+surface_metrics:
+  - name: DAU / MAU
+    definition: Daily and monthly active users
+    formula: "COUNT(DISTINCT daily_users) / COUNT(DISTINCT monthly_users)"
+    benchmarks:
+      healthy: ">20% DAU/MAU (utility app), >50% (social/messaging)"
+      warning: "<10%"
+      source: "Amplitude / GameAnalytics"
+
+  - name: Retention (Day 1, Day 7, Day 30)
+    definition: Users returning at key intervals after install
+    formula: "COUNT(active_on_day_N) / COUNT(installed_on_day_0)"
+    benchmarks:
+      healthy: ">40% D1, >20% D7, >10% D30"
+      warning: "<25% D1"
+      source: "Adjust / AppsFlyer benchmarks"
+
+  - name: Session Frequency
+    definition: Average sessions per user per day/week
+    formula: "COUNT(sessions) / COUNT(DISTINCT users) per period"
+    benchmarks:
+      healthy: ">1 session/day (habit-forming apps)"
+      warning: "<1 session/week"
+      source: "Amplitude benchmarks"
+
+  - name: Install-to-Activation Rate
+    definition: Users completing key action after install
+    formula: "COUNT(activated) / COUNT(installed)"
+    benchmarks:
+      healthy: ">30%"
+      warning: "<15%"
+      source: "Product-led growth benchmarks"
+
+  - name: App Store Rating
+    definition: Average rating in app stores
+    formula: "AVG(store_ratings)"
+    benchmarks:
+      healthy: ">4.5 stars"
+      warning: "<4.0 stars (impacts organic discovery)"
+      source: "App Store / Google Play"
+
+key_dimensions:
+  - "Platform — iOS, Android"
+  - "App Version — version-specific behavior tracking"
+  - "Device Model — screen size, performance tier"
+  - "Install Source — organic, paid, referral, deep link"
+  - "User Segment — new vs. returning, tier"
+
+instrumentation:
+  - "Mobile SDK (Firebase, Amplitude, Mixpanel)"
+  - "Attribution (Adjust, AppsFlyer, Branch)"
+  - "Crash reporting (Crashlytics, Sentry)"
+  - "Push notification platforms (OneSignal, Braze)"
+
+business_models_where_dominant:
+  - "Mobile-first products (rideshare, delivery, messaging)"
+  - "Gaming (F2P mobile games)"
+  - "Fintech (mobile banking, payments)"
+
+tools:
+  - "Firebase Analytics"
+  - "Amplitude, Mixpanel"
+  - "Adjust, AppsFlyer (attribution)"
+  - "Crashlytics, Sentry (stability)"
+
+convergence_test:
+  multi_function_convergence: true
+  unified_instrumentation: true
+  dedicated_tooling_and_teams: true  # but converging with web
+  verdict: "Converging with web — GA4 unifies as 'digital analytics'. Still distinct for native-specific concerns (attribution, store optimization)."
+
+source:
+  seed: "docs/research/surface-system-analytics.md"
+  validated_against: []

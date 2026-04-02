@@ -1,0 +1,140 @@
+# Subscription / SaaS — Business Model Analytics
+#
+# Revenue pattern: Recurring payments (monthly/annual), predictable cash flow.
+# Revenue is earned over time, not at point of sale. Customer retention
+# directly impacts revenue — churn is lost recurring revenue, expansion
+# can exceed new acquisition.
+
+business_model:
+  name: Subscription / SaaS
+  category: Subscription/SaaS
+  description: >
+    Recurring software or service subscriptions. Revenue recognized over
+    time. Retention and expansion are the primary growth levers — a cohort
+    that retains at >100% NRR grows without new customer acquisition.
+  revenue_pattern: Recurring monthly/annual payments, predictable cash flow
+
+core_metrics:
+  - name: MRR / ARR
+    definition: Monthly or Annual Recurring Revenue
+    formula: "SUM(active_subscriptions.monthly_amount)"
+    why_it_matters: Primary revenue measure for subscription businesses
+    benchmarks:
+      healthy: "Consistent month-over-month growth"
+      warning: "Flat or declining MRR"
+      source: "Bessemer Cloud Index, ChartMogul"
+
+  - name: Net Revenue Retention (NRR)
+    definition: Revenue retained + expanded from existing customers
+    formula: "(starting_mrr + expansion - contraction - churn) / starting_mrr"
+    why_it_matters: ">100% means growth without new customers"
+    benchmarks:
+      healthy: ">120% (best-in-class), >100% (healthy)"
+      warning: "<100% (shrinking base)"
+      source: "Bessemer Cloud Index"
+
+  - name: Gross Revenue Retention (GRR)
+    definition: Revenue retained excluding expansion
+    formula: "(starting_mrr - contraction - churn) / starting_mrr"
+    why_it_matters: Pure retention signal without expansion masking churn
+    benchmarks:
+      healthy: ">90%"
+      warning: "<85%"
+      source: "OpenView SaaS Benchmarks"
+
+  - name: Churn Rate
+    definition: Percentage of customers or revenue lost per period
+    formula: "COUNT(churned) / COUNT(active_at_period_start)"
+    why_it_matters: Inverse of retention — the leak in the bucket
+    benchmarks:
+      healthy: "<5% annual (enterprise), <7% monthly (SMB)"
+      warning: ">10% annual"
+      source: "ProfitWell retention benchmarks"
+
+  - name: CAC
+    definition: Customer Acquisition Cost
+    formula: "total_sales_marketing_spend / new_customers_acquired"
+    why_it_matters: Cost to add each new customer
+    benchmarks:
+      healthy: "Varies by ACV — lower is better relative to LTV"
+      warning: "CAC payback >18 months"
+      source: "David Skok — SaaS Metrics 2.0"
+
+  - name: LTV
+    definition: Customer Lifetime Value
+    formula: "avg_revenue_per_customer * avg_customer_lifespan"
+    why_it_matters: Total revenue expected from a customer relationship
+    benchmarks:
+      healthy: "LTV:CAC > 3:1"
+      warning: "LTV:CAC < 1:1"
+      source: "David Skok — SaaS Metrics 2.0"
+
+  - name: LTV:CAC Ratio
+    definition: Lifetime Value divided by Acquisition Cost
+    formula: "ltv / cac"
+    why_it_matters: Unit economics health — is each customer profitable?
+    benchmarks:
+      healthy: ">3:1"
+      warning: "<1:1 (losing money per customer)"
+      source: "David Skok — SaaS Metrics 2.0"
+
+  - name: CAC Payback
+    definition: Months to recover acquisition cost from subscription revenue
+    formula: "cac / (avg_mrr_per_customer * gross_margin)"
+    why_it_matters: Time to profitability per customer
+    benchmarks:
+      healthy: "<12 months"
+      warning: ">18 months"
+      source: "Bessemer Cloud Index"
+
+  - name: Expansion MRR
+    definition: Additional revenue from existing customers
+    formula: "SUM(upsell_mrr + crosssell_mrr + seat_expansion_mrr)"
+    why_it_matters: Growth from existing base — cheaper than new acquisition
+    benchmarks:
+      healthy: ">30% of new MRR from expansion"
+      warning: "Zero expansion (no upsell motion)"
+      source: "OpenView SaaS Benchmarks"
+
+key_dimensions:
+  - "Cohort — sign-up month/quarter (critical for retention analysis)"
+  - "Plan/Tier — Free, Starter, Pro, Enterprise"
+  - "Contract Type — Monthly, Annual, Multi-year"
+  - "Customer Segment — SMB, Mid-market, Enterprise"
+  - "Expansion Type — Upsell, cross-sell, seat expansion"
+
+time_patterns:
+  - "Cohort retention curves — % retained at Month 1, 3, 6, 12, 24"
+  - "Renewal cycles — annual contract anniversaries"
+  - "Monthly close — MRR recognized monthly"
+  - "Trailing metrics — LTV calculated over 12-24 month windows"
+
+fact_table:
+  grain: "One row per customer per month (MRR movements)"
+  name: mrr_movements_fact
+  columns:
+    - customer_id
+    - month
+    - starting_mrr
+    - new_mrr
+    - expansion_mrr
+    - contraction_mrr
+    - churned_mrr
+    - ending_mrr
+
+standard_frameworks:
+  - name: "David Skok — SaaS Metrics 2.0"
+    focus: "CAC, LTV, churn definitions"
+  - name: "Bessemer Cloud Index"
+    focus: "Efficiency metrics, cloud benchmarks"
+  - name: "OpenView SaaS Benchmarks"
+    focus: "PLG metrics, SaaS benchmarks"
+  - name: "ChartMogul"
+    focus: "MRR movements, churn definitions"
+  - name: "ProfitWell (Paddle)"
+    focus: "Retention benchmarks, pricing"
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against:
+    - " engagement (subscription stream — venue SaaS)"

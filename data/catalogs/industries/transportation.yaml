@@ -1,0 +1,54 @@
+industry:
+  key: transportation
+  name: Transportation
+  bizbok_section: "§8.7"
+  bizbok_pages: "716-719"
+  source: bizbok-v14
+
+entities:
+  - name: Route
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Trip
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Conveyor
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Shipment
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Network
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Infrastructure
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: GeographicSpace
+    category: core
+    bizbok_source: "§8.7 primary"
+  - name: Schedule
+    category: operational
+    bizbok_source: "§8.7 secondary"
+  - name: Incident
+    category: operational
+    bizbok_source: "§8.7 secondary"
+  - name: Border
+    category: operational
+    bizbok_source: "§8.7 secondary"
+  - name: NetworkArc
+    category: infrastructure
+    bizbok_source: "§8.7 secondary"
+  - name: TripSegment
+    category: core
+    bizbok_source: "§8.7 secondary"
+  - name: ScheduleElement
+    category: operational
+    bizbok_source: "§8.7 secondary"
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

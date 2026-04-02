@@ -1,0 +1,110 @@
+# Web / Digital — Surface Analytics Patterns
+#
+# The most prominent surface-system analytics category. Multiple
+# business functions converge (Product, Marketing, Customer, Commerce).
+# Unified instrumentation. Real-time application/analytics blur
+# (experiments, personalization, recommendations).
+
+surface:
+  name: Web / Digital
+  category: web-digital
+  description: >
+    Browser, mobile web, and progressive web apps. The widest surface
+    coverage across business domains. Session-based analysis with
+    real-time application/analytics integration. For digital-first
+    companies, web analytics IS most business analytics.
+  system_types:
+    - Application  # real-time features (personalization, experiments)
+    - Analytics    # behavioral tracking (sessions, funnels, attribution)
+
+unique_characteristics:
+  - "Widest surface coverage across business domains"
+  - "Session-based analysis (entry → behavior → exit)"
+  - "Real-time application/analytics integration (A/B tests, personalization)"
+  - "Surface-specific metrics (bounce rate, pageviews, session duration)"
+  - "Runtime analytics blur — application features ARE analytics-driven at runtime"
+  - "No second chance on instrumentation — experiments must plan dimensions upfront"
+
+surface_metrics:
+  - name: Bounce Rate
+    definition: Single-page sessions as percentage of total sessions
+    formula: "COUNT(single_page_sessions) / COUNT(total_sessions)"
+    benchmarks:
+      healthy: "<40% (content), <60% (landing pages)"
+      warning: ">70%"
+      source: "Google Analytics benchmarks"
+
+  - name: Pages Per Session
+    definition: Average pages viewed per session
+    formula: "SUM(pageviews) / COUNT(sessions)"
+    benchmarks:
+      healthy: ">3 (content sites), >2 (SaaS)"
+      warning: "<1.5"
+      source: "Google Analytics benchmarks"
+
+  - name: Session Duration
+    definition: Average time spent per session
+    formula: "AVG(session_end - session_start)"
+    benchmarks:
+      healthy: ">2 min (content), >5 min (SaaS)"
+      warning: "<30 sec"
+      source: "Google Analytics benchmarks"
+
+  - name: Conversion Rate
+    definition: Goal completions per session
+    formula: "COUNT(goal_completions) / COUNT(sessions)"
+    benchmarks:
+      healthy: "2-5% (e-commerce), 5-15% (SaaS trial)"
+      warning: "<1%"
+      source: "Google Analytics / industry benchmarks"
+
+  - name: Page Load Time
+    definition: Time to interactive for page content
+    formula: "AVG(time_to_interactive)"
+    benchmarks:
+      healthy: "<3 seconds"
+      warning: ">5 seconds (impacts conversion)"
+      source: "Google Core Web Vitals"
+
+key_dimensions:
+  - "Page / Screen — URL, template, content type"
+  - "Traffic Source — organic, paid, referral, direct, social"
+  - "Device / Browser — mobile, desktop, tablet; Chrome, Safari"
+  - "User Segment — new vs. returning, authenticated vs. anonymous"
+  - "Campaign — UTM parameters, ad group, keyword"
+  - "Geography — country, region, city"
+
+instrumentation:
+  - "Client-side JavaScript (Google Analytics, Segment, Heap)"
+  - "Tag management (GTM, Tealium)"
+  - "Server-side API (for validation, critical events)"
+  - "Session replay (FullStory, LogRocket)"
+
+business_models_where_dominant:
+  - "SaaS — product IS the web surface"
+  - "E-commerce — commerce happens on web"
+  - "Media/Content — consumption happens on web"
+  - "Freemium — conversion funnel lives on web"
+
+tools:
+  - "Google Analytics (GA4)"
+  - "Adobe Analytics"
+  - "Heap, Mixpanel, Amplitude (product analytics overlay)"
+  - "FullStory, LogRocket (session replay)"
+  - "Optimizely, LaunchDarkly (experimentation)"
+
+convergence_test:
+  multi_function_convergence: true
+  unified_instrumentation: true
+  dedicated_tooling_and_teams: true
+  verdict: "Distinct category — the canonical example of surface-system analytics"
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: "docs/research/surface-system-analytics.md"
+  validated_against: []

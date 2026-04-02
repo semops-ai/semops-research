@@ -1,0 +1,40 @@
+# DCAM Framework — EDM Council Data Management Capability Assessment Model
+#
+# Source: docs/research/dcam-framework.md
+# Components and maturity expectations by revenue scale.
+#
+# Used by reference.py _predict_capabilities — selects DCAM maturity
+# level based on revenue range.
+#
+# Replaces: DCAM_COMPONENTS, DCAM_SCALE_EXPECTATIONS in lookups.py
+
+components:
+  - name: Data Strategy
+    focus: Alignment of data management with business objectives
+  - name: Business Data Knowledge
+    focus: Understanding business context of data
+  - name: Data Governance
+    focus: Decision-making, accountability, policy
+  - name: Data Architecture
+    focus: Blueprint for data organization and integration
+  - name: Data Quality
+    focus: Fitness-for-use measurement and improvement
+  - name: Data Operations
+    focus: Lifecycle management from creation to retirement
+  - name: Technology Architecture
+    focus: Infrastructure supporting data management
+  - name: Analytics & Data Enablement
+    focus: Enabling data-driven decisions and AI/ML
+
+scale_expectations:
+  "<$10M": "Level 1-2: Conceptual/Developmental"
+  "$10M-$50M": "Level 2-3: Developmental/Defined"
+  "$50M-$200M": "Level 3-4: Defined/Achieved"
+  "$200M+": "Level 4-5: Achieved/Enhanced"
+
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge

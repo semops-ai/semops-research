@@ -1,0 +1,275 @@
+# SaaS (B2B) — Business Model Decomposition
+#
+# Baseline capabilities required to operate a B2B SaaS business.
+# Extends beyond analytics (covered in business-model-analytics.md)
+# to the full operational capability set.
+
+business_model:
+  name: SaaS (B2B)
+  category: Subscription/SaaS
+  description: >
+    Subscription software sold to businesses. Revenue is recurring
+    (monthly/annual), earned over time rather than at point of sale.
+    Customer retention directly impacts revenue — churn is lost recurring
+    revenue, expansion can exceed new acquisition.
+
+analytics_reference: "business-model-analytics.md#subscription--saas-business-model"
+system_mix_baseline:
+  app: 0.60
+  analytics: 0.25
+  work: 0.10
+  record: 0.05
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Subscription Billing Management
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Manage recurring billing cycles, plan tiers, seat-based or
+      usage-based pricing, upgrades/downgrades, and proration.
+      The revenue engine — everything else feeds into or out of this.
+    criticality: core
+    example_vendors:
+      - Stripe Billing
+      - Chargebee
+      - Recurly
+      - Zuora
+
+  - name: Product Delivery and Release Management
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Build, test, and deploy software continuously. Includes CI/CD
+      pipelines, feature flagging, environment management, and release
+      orchestration. The mechanism by which value reaches customers.
+    criticality: core
+    example_vendors:
+      - GitHub Actions
+      - GitLab CI
+      - LaunchDarkly
+      - Vercel
+
+  - name: Customer Onboarding Orchestration
+    apqc_context: "3.3"
+    apqc_name: Develop sales strategy
+    description: >
+      Guide new customers from signup to active usage. Includes
+      provisioning, guided setup, data migration support, and
+      time-to-value acceleration. Directly impacts activation and
+      early retention.
+    criticality: core
+    example_vendors:
+      - Pendo
+      - Appcues
+      - UserGuiding
+
+  - name: Usage Tracking and Metering
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Instrument product to capture user actions, feature adoption,
+      and consumption patterns. Feeds analytics, billing (usage-based),
+      health scoring, and product decisions. The observability layer
+      for customer behavior.
+    criticality: core
+    example_vendors:
+      - Segment
+      - Amplitude
+      - Mixpanel
+      - Heap
+
+  - name: Customer Retention Management
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Monitor customer health, predict churn risk, trigger intervention
+      workflows, and manage renewal cycles. In SaaS, retention IS the
+      business — losing customers means losing recurring revenue.
+    criticality: core
+    example_vendors:
+      - Gainsight
+      - Vitally
+      - ChurnZero
+      - Totango
+
+  - name: Sales Pipeline Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Track prospects through qualification, demo, trial, negotiation,
+      and close stages. Manage sales team activity, forecasting, and
+      quota attainment. The new customer acquisition engine.
+    criticality: core
+    example_vendors:
+      - Salesforce Sales Cloud
+      - HubSpot Sales Hub
+      - Pipedrive
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Authenticate users, manage roles and permissions, support SSO
+      and multi-tenancy. B2B buyers require enterprise-grade identity
+      (SAML, SCIM, SOC 2). Table-stakes for enterprise deals but
+      complex to build.
+    criticality: supporting
+    example_vendors:
+      - Auth0
+      - Okta
+      - WorkOS
+      - Clerk
+
+  - name: Demand Generation and Lead Capture
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Attract prospects via content, paid channels, and events.
+      Capture leads through forms, trials, and freemium conversion.
+      Manage marketing attribution and campaign performance.
+    criticality: supporting
+    example_vendors:
+      - HubSpot Marketing Hub
+      - Marketo
+      - Mailchimp
+
+  - name: Customer Support and Issue Resolution
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Handle inbound support requests via ticket, chat, email, and
+      self-service. Manage SLAs, escalation paths, and knowledge base.
+      Retention depends on support quality in B2B.
+    criticality: supporting
+    example_vendors:
+      - Zendesk
+      - Intercom
+      - Freshdesk
+
+  - name: Revenue Analytics and Reporting
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track MRR/ARR movements, cohort retention, NRR, LTV:CAC,
+      and expansion revenue. The SaaS metrics layer — see
+      business-model-analytics.md for full metric definitions.
+    criticality: supporting
+    example_vendors:
+      - ChartMogul
+      - Baremetrics
+      - ProfitWell
+
+  - name: Contract and Quote Management
+    apqc_context: "3.5"
+    apqc_name: Develop and manage sales plans
+    description: >
+      Generate quotes, manage contract terms, handle enterprise
+      pricing negotiations, and track agreement lifecycle.
+      Becomes critical as deal size increases.
+    criticality: supporting
+    example_vendors:
+      - DealHub
+      - PandaDoc
+      - Conga
+
+  - name: Third-Party Integration Management
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      Provide APIs, webhooks, and pre-built connectors for customer
+      systems. B2B SaaS products must integrate into the customer's
+      existing stack — integration breadth is a competitive factor.
+    criticality: supporting
+    example_vendors:
+      - Merge
+      - Workato
+      - Tray.io
+
+  - name: Documentation and Knowledge Management
+    apqc_context: "9.2"
+    apqc_name: Develop and manage knowledge management strategy
+    description: >
+      Maintain product documentation, API references, tutorials,
+      and help center content. Self-service enablement reduces
+      support load and accelerates onboarding.
+    criticality: supporting
+    example_vendors:
+      - ReadMe
+      - GitBook
+      - Notion
+
+  # --- TABLE-STAKES: Every business needs these, not SaaS-specific ---
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition (ASC 606 for SaaS), accounts
+      receivable, cash flow management, and financial reporting.
+      SaaS-specific complexity: deferred revenue from annual contracts.
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - Xero
+      - NetSuite
+
+  - name: People Management and Talent Operations
+    apqc_context: "7.1"
+    apqc_name: Develop and manage human resources planning
+    description: >
+      Recruit, onboard, manage, and retain employees. Includes
+      payroll, benefits, performance management, and org structure.
+    criticality: generic
+    example_vendors:
+      - Rippling
+      - Gusto
+      - BambooHR
+
+  - name: Security and Compliance Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Achieve and maintain compliance certifications (SOC 2, ISO 27001,
+      GDPR), manage vulnerability scanning, and enforce security policies.
+      B2B enterprise buyers require this for procurement approval.
+    criticality: generic
+    example_vendors:
+      - Vanta
+      - Drata
+      - Lacework
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host, scale, monitor, and maintain the production environment.
+      Includes cloud infrastructure, observability, incident response,
+      and capacity planning. The operational foundation.
+    criticality: generic
+    example_vendors:
+      - AWS
+      - GCP
+      - Datadog
+      - PagerDuty
+
+differentiators:
+  - Net revenue retention above 120% (expansion exceeds churn)
+  - Time-to-value during onboarding (days, not weeks)
+  - Product-led growth motion reducing CAC
+  - Integration ecosystem depth (marketplace / partner channel)
+  - Platform extensibility enabling customer customization
+  - Vertical specialization creating switching costs through domain expertise
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + CRM primitive analysis patterns
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Subscription/SaaS metrics)
+    - data-system-classification.md (system mix baseline)
+    - system-primitive-decomposition.md (decomposition methodology)

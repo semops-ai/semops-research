@@ -1,0 +1,143 @@
+# Project / Bid-Based — Business Model Analytics
+#
+# Revenue pattern: Contract-based, milestone recognition, variable scope.
+# Revenue recognized over project duration (% completion). Pipeline
+# and win rates critical for forecasting. Resource utilization drives
+# profitability. Each "sale" is unique.
+
+business_model:
+  name: Project / Bid-Based
+  category: Project/Bid-Based
+  description: >
+    Contract-based revenue recognized over project duration. Each sale
+    is unique — proposals, bids, or statements of work. Pipeline
+    management, resource utilization, and project margin are the core
+    analytical challenges.
+  revenue_pattern: Contract-based, milestone recognition, variable scope
+
+core_metrics:
+  - name: Pipeline Value
+    definition: Total potential revenue in active proposals
+    formula: "SUM(proposal_value WHERE status IN ('submitted', 'shortlisted'))"
+    why_it_matters: Future revenue indicator — the leading metric
+    benchmarks:
+      healthy: "3-5x target revenue in pipeline"
+      warning: "<2x (insufficient coverage)"
+      source: "SPI Research — Professional Services Benchmarks"
+
+  - name: Win Rate
+    definition: Contracts won divided by proposals submitted
+    formula: "COUNT(won) / COUNT(submitted)"
+    why_it_matters: Sales effectiveness and pricing accuracy
+    benchmarks:
+      healthy: ">25% (competitive bid), >50% (relationship-based)"
+      warning: "<15%"
+      source: "Deltek benchmarks"
+
+  - name: Backlog
+    definition: Contracted but unrecognized revenue
+    formula: "SUM(contract_value - recognized_revenue)"
+    why_it_matters: Future revenue certainty — already sold, not yet delivered
+    benchmarks:
+      healthy: ">6 months of revenue in backlog"
+      warning: "<3 months"
+      source: "SPI Research"
+
+  - name: Utilization Rate
+    definition: Billable hours divided by available hours
+    formula: "billable_hours / available_hours"
+    why_it_matters: Resource efficiency — the margin lever
+    benchmarks:
+      healthy: ">75% (consulting), >65% (engineering)"
+      warning: "<60%"
+      source: "SPI Research — Professional Services Benchmarks"
+
+  - name: Realization Rate
+    definition: Billed revenue divided by standard-rate value of hours worked
+    formula: "billed_amount / (hours_worked * standard_rate)"
+    why_it_matters: Billing efficiency — are you capturing value for work done?
+    benchmarks:
+      healthy: ">90%"
+      warning: "<80% (significant write-offs)"
+      source: "AICPA / Deltek"
+
+  - name: Project Margin
+    definition: Revenue minus direct costs as percentage of revenue
+    formula: "(project_revenue - direct_costs) / project_revenue"
+    why_it_matters: Per-project profitability
+    benchmarks:
+      healthy: ">30% (consulting), >15% (construction)"
+      warning: "<10%"
+      source: "SPI Research"
+
+  - name: On-Time Delivery
+    definition: Projects delivered by contracted deadline
+    formula: "COUNT(delivered_on_time) / COUNT(completed_projects)"
+    why_it_matters: Operational excellence and client satisfaction
+    benchmarks:
+      healthy: ">85%"
+      warning: "<70%"
+      source: "PMI benchmarks"
+
+  - name: Cost Overrun Rate
+    definition: Actual cost divided by budgeted cost
+    formula: "actual_cost / budgeted_cost"
+    why_it_matters: Estimation accuracy — overruns kill margin
+    benchmarks:
+      healthy: "<110% (within 10% of budget)"
+      warning: ">130%"
+      source: "PMI — Earned Value Management"
+
+  - name: Edition/Project Margin
+    definition: Total revenue minus total cost for a discrete project or edition
+    formula: "(total_revenue - total_cost) / total_revenue"
+    why_it_matters: P&L per discrete deliverable
+    benchmarks:
+      healthy: ">20%"
+      warning: "<5% (approaching break-even)"
+      source: "SPI Research"
+
+key_dimensions:
+  - "Project Type — New build, renovation, maintenance, edition"
+  - "Client Segment — Government, Commercial, Residential"
+  - "Service Line — Engineering, Consulting, Construction, Events"
+  - "Resource Type — Senior, Junior, Subcontractor"
+  - "Phase — Bid, Design, Build, Close-out"
+
+time_patterns:
+  - "Project lifecycle — months to years per project"
+  - "Milestone-based — payment tied to deliverables"
+  - "Seasonal bidding — government fiscal years, construction seasons, annual editions"
+  - "Resource planning — capacity forecasting"
+
+fact_table:
+  grain: "One row per project per month"
+  name: project_revenue_fact
+  columns:
+    - project_id
+    - month
+    - contract_value
+    - recognized_revenue_mtd
+    - recognized_revenue_ytd
+    - costs_incurred
+    - percent_complete
+    - estimated_margin
+    - hours_worked
+    - hours_billed
+
+standard_frameworks:
+  - name: "ASC 606"
+    focus: "Revenue recognition"
+  - name: "Earned Value Management (EVM)"
+    focus: "Project cost/schedule performance"
+  - name: "SPI Research"
+    focus: "Professional services benchmarks"
+  - name: "PMI"
+    focus: "Project management metrics"
+  - name: "Deltek"
+    focus: "Project-based business benchmarks"
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against:
+    - " engagement (project weight 0.15 — edition P&L as project)"

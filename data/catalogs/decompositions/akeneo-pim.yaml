@@ -1,0 +1,252 @@
+# Akeneo — Primitive Decomposition
+#
+# Decomposes Akeneo PIM (Product Information Management) into neutral
+# functional primitives. Akeneo is the leading open-source PIM — manages
+# product master data, enrichment workflows, and multi-channel syndication.
+# Scoped to Community Edition + Growth/Enterprise features noted.
+
+vendor:
+  name: Product Information Management
+  company: Akeneo
+  category: PIM
+
+lock_in_signals:
+  - Proprietary product model schema — exportable but not standards-based
+  - Enrichment workflow rules locked to Akeneo's execution engine
+  - Quality scoring algorithm is opaque / vendor-specific
+  - Connector marketplace (Enterprise) — vendor-mediated integrations
+  - Asset Manager (Enterprise) tightly coupled to product model
+  - Tailored Exports (Enterprise) — transformation rules not portable
+  - Family/family variant hierarchy is Akeneo-specific modeling concept
+  - Measurement units and conversions tied to platform catalog
+  - Permissions model (Enterprise) — category/locale/channel ACLs not standard
+
+open_alternative:
+  name: Custom PIM on PostgreSQL + JSON Schema + workflow engine
+  why: >
+    Product data modeled as typed JSON documents with JSON Schema validation,
+    stored in PostgreSQL. Enrichment workflows via a standard engine (Temporal,
+    n8n). Syndication via ETL/ELT. Full data ownership, standard formats.
+    Trade-off: significant build effort vs. Akeneo's out-of-box product modeling.
+
+primitives:
+  # --- Product Modeling ---
+  - name: Product Family Definition
+    branded_name: Families / Family Variants
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Define product type templates (families) that specify which attributes
+      are required vs. optional. Family variants add axes of variation
+      (e.g., size, color) that create product hierarchy. The schema layer —
+      all products of a type share the same attribute structure.
+    protocols:
+      - HTTP/REST (API)
+      - JSON
+
+  - name: Product Attribute Schema
+    branded_name: Attributes / Attribute Groups
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Define typed product attributes: text, number, measurement, boolean,
+      date, media, price, reference entity link, table. Attributes are
+      grouped for editorial UX. Supports scopable attributes (per-channel,
+      per-locale). The fundamental data model primitive.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Product Record Management
+    branded_name: Products / Product Models
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Create, store, and manage individual product records conforming to
+      a family schema. Product models represent the parent level with
+      common attributes; variants inherit and add axis-specific values.
+      The core CRUD unit of the PIM.
+    protocols:
+      - HTTP/REST
+      - JSON
+      - CSV/XLSX (bulk import)
+
+  - name: Product Classification
+    branded_name: Categories / Category Trees
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Organize products into hierarchical category trees. Multiple trees
+      supported (e.g., one for web navigation, one for internal taxonomy).
+      Products can belong to multiple categories across trees. Drives
+      storefront navigation and reporting.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  # --- Data Quality ---
+  - name: Product Data Completeness Scoring
+    branded_name: Completeness / Quality Score (Growth+)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Calculate completeness percentage per product based on filled
+      required attributes for a given channel and locale. Quality Score
+      (Growth+) adds enrichment quality beyond just presence/absence.
+      Drives prioritization of enrichment work.
+    protocols:
+      - HTTP/REST (API)
+
+  - name: Data Validation Rules
+    branded_name: Validation Rules
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Enforce data quality constraints: regex patterns, min/max values,
+      uniqueness, required-if conditions. Prevents bad data from entering
+      the PIM. Applied at attribute and family level.
+    protocols:
+      - HTTP/REST
+
+  # --- Enrichment Workflow ---
+  - name: Product Enrichment Workflow
+    branded_name: Rules Engine / Proposals (Enterprise)
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Automate product data enrichment: set attribute values based on
+      conditions (e.g., auto-categorize by brand, auto-set measurement
+      conversions). Enterprise adds proposal workflows with approval
+      chains for contributed data.
+    protocols:
+      - HTTP/REST
+
+  - name: Bulk Data Operations
+    branded_name: Mass Actions / Quick Export / Imports
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Perform operations on sets of products: mass edit attributes,
+      mass categorize, mass change status. Import via CSV/XLSX with
+      mapping. Quick export for working sets. Essential for initial
+      data migration and ongoing maintenance.
+    protocols:
+      - CSV
+      - XLSX
+      - HTTP/REST
+
+  # --- Multi-Channel Syndication ---
+  - name: Channel-Specific Attribute Scoping
+    branded_name: Channels
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Define sales channels (e.g., Shopify, Amazon, REI wholesale) with
+      channel-specific attribute requirements. Same product can have
+      different descriptions, images, and attribute values per channel.
+      The core of multi-channel product data management.
+    protocols:
+      - HTTP/REST
+
+  - name: Locale-Specific Content
+    branded_name: Locales
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Store locale-specific values for localizable attributes:
+      descriptions, names, marketing copy in multiple languages.
+      Combined with channels for channel×locale matrix.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Product Data Export and Syndication
+    branded_name: Exports / Tailored Exports (Enterprise) / Connectors
+    apqc_context: "3.5"
+    apqc_name: Develop and manage channel strategy
+    description: >
+      Export product data in channel-specific formats. Tailored Exports
+      (Enterprise) add transformation rules for complex mappings.
+      Connectors (Shopify, Magento, etc.) provide pre-built syndication.
+      This is the outbound pipeline — PIM to sales channels.
+    protocols:
+      - CSV
+      - XLSX
+      - HTTP/REST (API)
+      - JSON
+
+  # --- Asset Management ---
+  - name: Product Asset Management
+    branded_name: Asset Manager (Enterprise) / Media attributes (CE)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Store and link digital assets (images, PDFs, videos) to products.
+      Community Edition: media attributes with file upload. Enterprise:
+      full asset manager with transformations, tagging, and asset families.
+      Bridges the gap between DAM and PIM.
+    protocols:
+      - HTTP/REST
+      - Binary upload
+
+  # --- Reference Data ---
+  - name: Reference Entity Management
+    branded_name: Reference Entities (Enterprise)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Manage non-product reference data linked to products: brands,
+      materials, designers, certifications, colors. Structured entities
+      with their own attributes and records. Products reference these
+      via link attributes.
+    protocols:
+      - HTTP/REST
+      - JSON
+
+  - name: Measurement Unit Management
+    branded_name: Measurements
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Define and convert measurement families (weight, length, volume,
+      temperature). Products store values in a base unit; conversions
+      are automatic. Critical for technical specs (oz↔g, L↔cu in).
+    protocols:
+      - HTTP/REST
+
+  # --- Governance ---
+  - name: Product Data Access Control
+    branded_name: Permissions (Enterprise)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Control who can view/edit which products, attributes, categories,
+      channels, and locales. Role-based with category-tree and
+      attribute-group scoping. Enterprise only — CE has basic roles.
+    protocols:
+      - HTTP/REST
+
+  - name: Product Data Change Tracking
+    branded_name: History / Versioning
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Track all changes to product records: who changed what, when.
+      Full attribute-level version history. Supports audit trail and
+      rollback. The provenance layer for product data governance.
+    protocols:
+      - HTTP/REST
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-22"
+  last_refreshed: "2026-03-22"
+  refresh_source: model-knowledge
+
+source:
+  seed: Akeneo PIM documentation, CE/Growth/Enterprise feature matrix, PIM ecosystem patterns
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - ecommerce-d2c.yaml (business model — Product Catalog context)
+    - Salsify / inRiver as cross-vendor primitive validation

@@ -1,0 +1,141 @@
+# Analytics Pattern Catalog Schema
+#
+# Three catalog classes, each in its own subdirectory:
+#
+#   business-model/   — Keyed by revenue model (SaaS, marketplace, project-based…)
+#                       Measures financial health. Same metrics regardless of vertical.
+#
+#   domain/           — Keyed by archetype (field-service, event-management…)
+#                       Measures operational excellence. Derived from bounded contexts
+#                       and cross-domain patterns, not business model.
+#
+#   surface/          — Keyed by surface type (web, mobile, IoT, POS…)
+#                       Measures what's instrumentable given the tech stack.
+#                       Orthogonal to both business model and domain.
+#
+# Catalog behavior (same as business-model decomposition catalogs):
+#   1. Match exists → use directly (static lookup)
+#   2. No match → schema + nearest-neighbor examples → LLM reasoning → save back
+#
+# Relationship to other catalogs:
+#   - business-model decomposition catalogs (data/catalogs/business-models/)
+#     define required CAPABILITIES; these catalogs define required METRICS
+#   - A company's full analytics profile = business-model metrics
+#     + domain metrics + surface metrics (three orthogonal axes)
+#
+# Pipeline consumers:
+#   - /predict        → business-model catalog (keyed by classification's revenue model)
+#   - /derive-analytics → domain + surface catalogs (keyed by archetype + tech stack)
+#   - /synthesize     → cross-references all three for investment thesis metrics
+#
+# ---
+# BUSINESS-MODEL CATALOG ENTRY (business-model/*.yaml)
+# ---
+# business_model:
+#   name: string                    # Revenue model name (e.g., "Subscription / SaaS")
+#   category: string                # Category from business-model-analytics.md
+#   description: string             # What defines this revenue pattern
+#   revenue_pattern: string         # How revenue is generated and recognized
+#
+# core_metrics:                     # Metrics that define financial health for this model
+#   - name: string                  # Metric name (e.g., "MRR / ARR")
+#     definition: string            # What it measures
+#     formula: string               # How to calculate (SQL-ish or prose)
+#     why_it_matters: string        # Why this metric is important for this model
+#     benchmarks:                   # Optional — empirical reference points
+#       healthy: string             # What "good" looks like (e.g., ">100%", "3:1+")
+#       warning: string             # What signals concern
+#       source: string              # Where the benchmark comes from
+#
+# key_dimensions:                   # Analytical dimensions specific to this model
+#   - string                        # e.g., "Cohort — sign-up month/quarter"
+#
+# time_patterns:                    # How time affects analysis
+#   - string                        # e.g., "Cohort retention curves at Month 1, 3, 6, 12"
+#
+# fact_table:                       # Canonical fact table shape
+#   grain: string                   # What one row represents
+#   name: string                    # Table name (e.g., "mrr_movements_fact")
+#   columns:                        # Key columns
+#     - string
+#
+# standard_frameworks:              # Authoritative sources for this model's metrics
+#   - name: string
+#     focus: string
+#
+# source:
+#   seed: string                    # Where the initial catalog entry came from
+#   validated_against: [string]     # Engagements or references used for validation
+#
+# ---
+# DOMAIN CATALOG ENTRY (domain/*.yaml)
+# ---
+# domain:
+#   name: string                    # Archetype name (e.g., "Field Service (Recurring)")
+#   archetype: string               # Kebab-case key (e.g., "field-service-recurring")
+#   description: string             # What characterizes this operational domain
+#   bizbok_industry: string         # BIZBOK industry mapping (operational DNA)
+#
+# analytics_patterns:               # Patterns derived from bounded contexts
+#   - name: string                  # Pattern name (e.g., "route-efficiency")
+#     context: string               # Bounded context this measures (e.g., "Scheduling")
+#     domain_type: string           # CORE | SUPPORTING
+#     definition: string            # What this pattern measures
+#     core_metrics:
+#       - name: string
+#         formula: string
+#         benchmarks:
+#           healthy: string
+#           warning: string
+#           source: string
+#     cross_domain_source: string   # What cross-domain pattern this derives from
+#     maturity:                     # How ready this is to implement
+#       implementable: string       # yes | partial | no
+#       gap: string                 # What's missing
+#
+# source:
+#   seed: string
+#   validated_against: [string]
+#
+# ---
+# SURFACE CATALOG ENTRY (surface/*.yaml)
+# ---
+# surface:
+#   name: string                    # Surface type (e.g., "Web / Digital")
+#   category: string                # Kebab-case key (e.g., "web-digital")
+#   description: string             # What defines this surface
+#   system_types: [string]          # Data system types involved (Application, Analytics…)
+#
+# unique_characteristics:           # What makes analytics on this surface distinct
+#   - string
+#
+# surface_metrics:                  # Metrics unique to this surface
+#   - name: string
+#     definition: string
+#     formula: string
+#     benchmarks:
+#       healthy: string
+#       warning: string
+#       source: string
+#
+# key_dimensions:
+#   - string
+#
+# instrumentation:                  # How data is captured on this surface
+#   - string                        # e.g., "Client-side JavaScript (GA, Segment)"
+#
+# business_models_where_dominant:   # Which business models rely heavily on this surface
+#   - string
+#
+# tools:                            # Typical tooling for this surface
+#   - string
+#
+# convergence_test:                 # Does this surface warrant its own analytics category?
+#   multi_function_convergence: boolean   # Multiple business functions converge here?
+#   unified_instrumentation: boolean      # Single instrumentation stack covers it?
+#   dedicated_tooling_and_teams: boolean  # Specialized roles/tools have emerged?
+#   verdict: string                       # Distinct category | Absorbed into X
+#
+# source:
+#   seed: string
+#   validated_against: [string]

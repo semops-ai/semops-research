@@ -1,0 +1,182 @@
+# Airtable — Primitive Decomposition
+#
+# Decomposes Airtable into neutral functional primitives. Airtable is
+# a low-code database platform — spreadsheet UI with relational database
+# capabilities, automations, and app-building interfaces.
+
+vendor:
+  name: Airtable
+  company: Airtable
+  category: Low-Code Database Platform
+
+lock_in_signals:
+  - Proprietary field types and formula language — not standard SQL
+  - Views (Kanban, Gantt, Gallery) are platform-specific configurations
+  - Automations use proprietary trigger-action model (not portable)
+  - Interface Designer apps are platform-locked
+  - API rate limits constrain programmatic usage (5 requests/second)
+  - Linked records use Airtable-specific record IDs
+  - Scripting uses Airtable-specific JavaScript SDK
+  - No self-hosted option — SaaS only with data in Airtable's infrastructure
+
+open_alternative:
+  name: NocoDB / Baserow + PostgreSQL
+  why: >
+    Open-source Airtable alternatives that use standard PostgreSQL/MySQL
+    as the database. Full SQL access, self-hosted, no API rate limits,
+    data ownership.
+
+primitives:
+  - name: Table Schema Definition
+    branded_name: Tables / Fields (30+ field types)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Define structured tables with 30+ field types: text, number,
+      date, checkbox, attachment, single/multi-select, linked record,
+      formula, rollup, lookup, barcode, button, AI field. Schema
+      defined via UI or API.
+    protocols:
+      - HTTP/REST (Airtable API)
+      - JSON
+
+  - name: Record Management
+    branded_name: Records (rows)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Create, read, update, and delete records in tables. Expandable
+      record cards with all field values. Batch operations via API.
+      Comments and activity history per record.
+    protocols:
+      - HTTP/REST (Airtable API)
+      - JSON
+
+  - name: Data Relationship Linking
+    branded_name: Linked Records / Lookups / Rollups
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Link records across tables with relational fields. Lookup
+      fields pull data from linked records. Rollup fields aggregate
+      linked data (count, sum, average, etc.).
+    protocols:
+      - HTTP/REST (Airtable API)
+
+  - name: Multi-View Data Visualization
+    branded_name: Views (Grid, Kanban, Calendar, Gallery, Gantt, Timeline, Form)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Multiple visual representations of the same table data.
+      Each view has independent filters, sorts, groupings, and
+      field visibility. Shared and personal views.
+    protocols:
+      - HTTP/REST (Airtable API)
+
+  - name: Formula Computation
+    branded_name: Formulas
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Calculated fields using Airtable formula language. String
+      manipulation, date math, conditionals, logical operations.
+      Computed at read time, not stored.
+    protocols:
+      - (proprietary formula language)
+
+  - name: Workflow Automation
+    branded_name: Automations (50+ pre-built + scripting)
+    apqc_context: "13.1"
+    apqc_name: Manage business processes
+    description: >
+      Trigger-action automations: when record matches conditions,
+      on schedule, on form submit. Actions include send email,
+      create/update record, call webhook, run script. JavaScript
+      scripting for custom logic.
+    protocols:
+      - webhooks
+      - HTTP/REST
+      - JavaScript
+
+  - name: Application Interface Builder
+    branded_name: Interface Designer
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      No-code app builder on top of database tables. Drag-and-drop
+      dashboards, forms, record detail views, and charts. Publish
+      interfaces for end-users who don't need database access.
+    protocols:
+      - HTTP/REST
+
+  - name: Form Data Collection
+    branded_name: Forms (standalone + interface forms)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Standalone or embedded forms that create records on submit.
+      Custom branding, conditional field logic, file uploads.
+      Can trigger automations on submission.
+    protocols:
+      - HTTP/REST
+
+  - name: AI Data Assistance
+    branded_name: Omni AI
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      AI-powered field type that generates, categorizes, or
+      summarizes data. Natural language Q&A over table data.
+      AI assistants for workflow building.
+    protocols:
+      - HTTP/REST
+
+  - name: Data Import and Export
+    branded_name: CSV Import / API / Sync
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Import data from CSV, spreadsheets, or other Airtable bases.
+      Export to CSV. Real-time sync with external data sources.
+      API for programmatic bulk operations.
+    protocols:
+      - CSV
+      - HTTP/REST
+      - JSON
+
+  - name: Role-Based Access Control
+    branded_name: Permissions (base, table, view, field level)
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Granular permissions at base, table, view, and field level.
+      Creator, editor, commenter, and read-only roles. Personal
+      and locked views for data governance.
+    protocols:
+      - RBAC
+
+  - name: Third-Party Integration
+    branded_name: Integrations (100+ native) / API
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      100+ native integrations. REST API for CRUD operations,
+      search, and metadata. Webhook-based automations for
+      external system connectivity.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - webhooks
+
+source:
+  seed:  (seed decomposition catalogs) + 
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

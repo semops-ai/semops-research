@@ -1,0 +1,170 @@
+# Gmail — Primitive Decomposition
+#
+# Decomposes Gmail (within Google Workspace) into neutral functional
+# primitives. Scoped to Gmail email product, not full Google Workspace
+# (Drive, Calendar, Meet would be separate).
+
+vendor:
+  name: Gmail
+  company: Google
+  category: Email
+
+lock_in_signals:
+  - Google account identity — email address is your identity across Google services
+  - Proprietary labels system — not standard IMAP folders (labels are multi-assign)
+  - Smart features (Smart Compose, Smart Reply, Nudges) trained on Google's data
+  - Confidential mode is Google-proprietary (not S/MIME or PGP)
+  - Search syntax is Google-specific (not standard IMAP SEARCH)
+  - Gmail API is proprietary (supplements but differs from IMAP/SMTP)
+  - Deep integration with Workspace (Drive, Calendar, Meet) creates ecosystem lock-in
+  - Gemini AI features tied to Google ecosystem
+
+open_alternative:
+  name: Self-hosted email (Postfix/Dovecot) + Thunderbird/K-9
+  why: >
+    Standard IMAP/SMTP, full data control, any client works. Or
+    Fastmail/ProtonMail for hosted with better standards compliance.
+
+primitives:
+  - name: Email Composition and Sending
+    branded_name: Compose / Smart Compose / Smart Reply
+    apqc_context: "12.5"
+    apqc_name: Manage public relations program
+    description: >
+      Create and send email messages with rich text, attachments,
+      and inline images. AI-assisted composition (Smart Compose)
+      and quick replies (Smart Reply).
+    protocols:
+      - SMTP
+      - MIME
+
+  - name: Email Reception and Storage
+    branded_name: Inbox
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Receive, store, and retrieve email messages. Cloud-based
+      storage with search. Conversation threading groups related
+      messages.
+    protocols:
+      - IMAP
+      - POP3
+      - SMTP
+
+  - name: Email Organization
+    branded_name: Labels / Categories / Tabs (Primary, Social, Promotions)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Organize emails with multi-assign labels (not exclusive
+      folders). Automatic categorization into tabs. Star and
+      importance markers. Archive for inbox-zero workflow.
+    protocols:
+      - IMAP (partial — folders map to labels)
+
+  - name: Email Filtering and Rules
+    branded_name: Filters
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Automated rules that match incoming email by criteria (sender,
+      subject, content) and apply actions (label, archive, forward,
+      delete, mark read).
+    protocols:
+      - Sieve (standard, but Gmail uses proprietary format)
+
+  - name: Email Search
+    branded_name: Search (Google-powered)
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Full-text search across all email with advanced operators
+      (from:, to:, subject:, has:attachment, date ranges). Google
+      search quality applied to email.
+    protocols:
+      - IMAP SEARCH (partial)
+      - HTTP/REST (Gmail API)
+
+  - name: Spam and Phishing Protection
+    branded_name: Spam Filter / Phishing Warnings
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Automatic spam detection and filtering. Phishing link
+      warnings. Suspicious attachment blocking. Machine learning-
+      based classification.
+    protocols:
+      - SPF
+      - DKIM
+      - DMARC
+
+  - name: Email Confidentiality
+    branded_name: Confidential Mode
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Send messages with expiration dates, revocable access, and
+      SMS verification. Prevent forwarding, copying, printing,
+      and downloading.
+    protocols:
+      - (proprietary — not S/MIME or PGP)
+
+  - name: Contact Management
+    branded_name: Google Contacts (integrated)
+    apqc_context: "3.1"
+    apqc_name: Understand markets, customers, and capabilities
+    description: >
+      Store and manage email contacts with auto-complete. Contact
+      groups, merge duplicates, import/export. Synced across
+      Workspace.
+    protocols:
+      - CardDAV
+      - vCard
+      - CSV
+
+  - name: Calendar Integration
+    branded_name: Google Calendar (sidebar + auto-events)
+    apqc_context: "13.2"
+    apqc_name: Manage portfolio, program, and project
+    description: >
+      Auto-detect events from email (flights, reservations, meetings).
+      Schedule meetings directly from inbox. Calendar sidebar for
+      availability check.
+    protocols:
+      - iCalendar
+      - CalDAV
+
+  - name: AI Email Assistance
+    branded_name: Gemini in Gmail
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      AI-powered email summarization, draft generation from prompts
+      ("Help me write"), tone adjustment, and thread summarization.
+    protocols:
+      - HTTP/REST (Gmail API)
+
+  - name: Third-Party Integration
+    branded_name: Gmail API / Google Workspace Marketplace
+    apqc_context: "8.5"
+    apqc_name: Develop and maintain information technology solutions
+    description: >
+      REST API for programmatic email operations. OAuth-based
+      third-party app access. Workspace Marketplace for add-ons.
+    protocols:
+      - OAuth 2.0
+      - HTTP/REST
+      - IMAP
+      - SMTP
+
+source:
+  seed:  (seed decomposition catalogs) + 
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-15"
+  last_refreshed: "2026-03-15"
+  refresh_source: model-knowledge

@@ -1,0 +1,24 @@
+industry:
+  key: marketplace
+  name: Marketplace
+  bizbok_section: null
+  bizbok_pages: null
+  source: domain-extension
+
+entities:
+  - name: Listing
+    category: core
+  - name: Transaction
+    category: core
+  - name: Seller
+    category: core
+  - name: Buyer
+    category: core
+  - name: Review
+    category: engagement
+  - name: Payout
+    category: financial
+  - name: Commission
+    category: financial
+  - name: Dispute
+    category: operational

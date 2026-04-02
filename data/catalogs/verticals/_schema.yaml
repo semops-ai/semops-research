@@ -1,0 +1,80 @@
+# Vertical Catalog Schema
+#
+# Each file in this directory represents a cross-cutting vertical — the
+# industry domain a company *serves*, which defines its product language,
+# content types, customer segments, and brand signals independent of its
+# business model.
+#
+# A vertical is NOT the same as a BIZBOK industry classification. The vertical
+# is the domain that makes a company's CORE offerings specific:
+#   - 's vertical is "home audio" — it defines exhibitor base, attendee
+#     profile, and content strategy, even though operations are generic event/marketplace
+#   - Ridgeline's vertical is "outdoor" — it defines product catalog, community,
+#     and brand, even though operations are generic D2C e-commerce
+#
+# The vertical determines the analysis lens:
+#   - Competitive analysis: same vertical, any business model (who you compete with)
+#   - Comparative analysis: same business model, different vertical (who you operate like)
+#
+# Relationship to other catalogs:
+#   - Business model catalogs define WHAT capabilities a company needs;
+#     vertical catalogs define HOW those capabilities manifest in domain language
+#   - Messaging analysis produces vertical vocabulary as a reflexion output;
+#     vertical catalogs accumulate validated vocabulary across engagements
+#   - Brand archetype catalogs combine business model + vertical into voice norms
+#   - Category catalogs and decompositions are vertical-agnostic (generic ABBs)
+#
+# Provenance:
+#   Vertical catalogs are seeded from messaging analyses. When an engagement
+#   in a new vertical produces domain vocabulary, the agent logs it in the
+#   reflexion block. Vocabulary is promoted to a shared vertical catalog when:
+#     - 2+ engagements in the same vertical produce overlapping terms, OR
+#     - A single engagement produces clearly generalizable vocabulary
+#       (e.g., industry-standard terminology, not company-specific jargon)
+#   First entry in a new vertical is always a seed from a single engagement.
+#
+# How verticals affect the outside-in pipeline:
+#   Stage 1 (Classify): Vertical identified from company profile / website
+#   Stage 1b (Messaging): Vertical catalog provides expected vocabulary —
+#     agent knows what terms to look for, can detect novel terms faster
+#   Stage 2 (Synthesize): Vertical drives CORE domain typing — capabilities
+#     that differentiate from other companies with the same business model
+#   Stage 3 (DDD): Vertical vocabulary populates bounded context UL —
+#     product language, content types, customer segments are vertical-specific
+#
+# Graph model (Neo4j):
+#   (:Vertical)-[:MODIFIES]->(:BusinessModel)
+#   (:Vertical)-[:DEFINES]->(:VerticalTerm)
+#   (:Company)-[:IN_VERTICAL]->(:Vertical)
+#   (:VerticalTerm)-[:USED_IN]->(:BoundedContext)
+#   (:MessagingAnalysis)-[:EXTRACTS]->(:VerticalTerm)
+#
+# ---
+# vertical:
+#   name: string                          # Vertical identifier (kebab-case, e.g., "outdoor")
+#   display_name: string                  # Human-readable name
+#   industries: [string]                  # Related industry classifications
+#   description: string                   # What defines this vertical
+#
+# vocabulary:
+#   product_types:                        # Domain-specific product terminology
+#     - term: string                      # Insider term (e.g., "shell", "puffy")
+#       meaning: string                   # What it means in this vertical
+#       attributes: [string]              # Associated measurable attributes
+#
+#   content_types:                        # Vertical-specific content formats
+#     - name: string                      # Content type identifier
+#       description: string               # What this content type is
+#
+#   customer_types:                       # How customers are segmented in this vertical
+#     - name: string                      # Segment identifier
+#       description: string               # What defines this segment
+#
+#   brand_signals:                        # Vertical-specific credibility markers
+#     - category: string                  # Signal category (e.g., "sustainability", "community")
+#       markers: [string]                 # Specific markers in this category
+#
+# provenance:
+#   seed_engagement: string               # Company/engagement that first produced this catalog
+#   validated_engagements: [string]       # Additional engagements that confirmed/extended terms
+#   last_updated: YYYY-MM-DD             # When catalog was last modified

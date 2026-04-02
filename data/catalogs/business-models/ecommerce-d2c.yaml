@@ -1,0 +1,284 @@
+# E-Commerce (D2C) — Business Model Decomposition
+#
+# Baseline capabilities required to operate a direct-to-consumer
+# e-commerce business. Extends beyond analytics (covered in
+# business-model-analytics.md) to the full operational capability set.
+
+business_model:
+  name: E-Commerce (D2C)
+  category: Transaction/Commerce
+  description: >
+    Direct-to-consumer product sales, owning the full customer
+    relationship from brand through fulfillment. Revenue recognized
+    at point of sale. Margin is the game — brand premium, operational
+    efficiency, and repeat purchase rate determine viability.
+
+analytics_reference: "business-model-analytics.md#transaction--commerce-business-model"
+system_mix_baseline:
+  app: 0.40
+  analytics: 0.20
+  work: 0.10
+  record: 0.30
+
+required_capabilities:
+
+  # --- CORE: What makes this business model work ---
+
+  - name: Storefront and Product Catalog
+    apqc_context: "2.1"
+    apqc_name: Manage product and service portfolio
+    description: >
+      Present products to customers through a branded online store.
+      Includes product pages, variant management (size, color),
+      imagery, pricing display, and collection/category organization.
+      The digital shelf — where conversion happens.
+    criticality: core
+    example_vendors:
+      - Shopify
+      - BigCommerce
+      - Medusa
+      - WooCommerce
+
+  - name: Shopping Cart and Checkout
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Convert browsing into purchases through cart management, checkout
+      flow, payment processing, and order confirmation. Checkout
+      friction is the primary conversion killer — every step lost costs
+      revenue.
+    criticality: core
+    example_vendors:
+      - Shopify Checkout
+      - Stripe Checkout
+      - Bold Commerce
+
+  - name: Order Management and Fulfillment
+    apqc_context: "4.3"
+    apqc_name: Produce/manufacture/deliver product
+    description: >
+      Process orders from payment through delivery — inventory
+      allocation, pick/pack/ship, carrier selection, tracking, and
+      delivery confirmation. The operational backbone. Fulfillment
+      speed and reliability drive repeat purchase.
+    criticality: core
+    example_vendors:
+      - ShipBob
+      - Shippo
+      - ShipStation
+      - Flexport
+
+  - name: Inventory and Supply Chain Management
+    apqc_context: "4.2"
+    apqc_name: Plan for and align supply chain resources
+    description: >
+      Track stock levels, manage reorder points, coordinate with
+      suppliers, and prevent stockouts or overstock. Includes
+      demand forecasting and warehouse management. Cash tied up
+      in inventory is the D2C business's largest risk.
+    criticality: core
+    example_vendors:
+      - NetSuite
+      - Cin7
+      - Inventory Planner
+      - Skubana
+
+  - name: Customer Acquisition and Marketing
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Drive traffic and sales through paid channels (Meta, Google),
+      organic (SEO, content), email, influencer, and social. Manage
+      ad spend, ROAS, and attribution. CAC is the existential metric —
+      D2C brands live or die by acquisition economics.
+    criticality: core
+    example_vendors:
+      - Meta Ads
+      - Google Ads
+      - Klaviyo
+      - Triple Whale
+
+  - name: Brand Experience and Content
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Build and maintain brand identity through visual design, content
+      creation, storytelling, and community. D2C brands compete on
+      brand premium — the ability to charge above commodity pricing
+      depends on brand strength.
+    criticality: core
+    example_vendors:
+      - Canva
+      - Figma
+      - Custom creative agency
+
+  # --- SUPPORTING: Enables the core but not the differentiator ---
+
+  - name: Customer Retention and Loyalty
+    apqc_context: "5.1"
+    apqc_name: Develop customer care/customer management strategy
+    description: >
+      Drive repeat purchases through loyalty programs, subscription
+      options, personalized recommendations, and post-purchase
+      nurturing. Repeat customers are profitable — first orders
+      often lose money after CAC.
+    criticality: supporting
+    example_vendors:
+      - Yotpo
+      - Smile.io
+      - Klaviyo
+
+  - name: Returns and Exchange Management
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Handle product returns, exchanges, refunds, and store credit.
+      Return rate directly impacts margin. A frictionless return
+      process increases purchase confidence and LTV.
+    criticality: supporting
+    example_vendors:
+      - Loop Returns
+      - Returnly
+      - Happy Returns
+
+  - name: Customer Support
+    apqc_context: "5.2"
+    apqc_name: Plan and manage customer service operations
+    description: >
+      Handle pre-sale questions, order issues, product inquiries,
+      and complaints across email, chat, and social. D2C owns the
+      full customer relationship — there's no retailer buffer.
+    criticality: supporting
+    example_vendors:
+      - Gorgias
+      - Zendesk
+      - Freshdesk
+
+  - name: Product Reviews and Social Proof
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Collect, moderate, and display customer reviews, photos, and
+      user-generated content. Social proof is the primary trust
+      mechanism for D2C — no physical store to touch the product.
+    criticality: supporting
+    example_vendors:
+      - Yotpo
+      - Judge.me
+      - Bazaarvoice
+
+  - name: Email and SMS Marketing
+    apqc_context: "3.4"
+    apqc_name: Develop and manage marketing plans
+    description: >
+      Drive revenue through lifecycle email flows (welcome, abandoned
+      cart, post-purchase, win-back) and SMS campaigns. Owned channels
+      with high ROI compared to paid acquisition.
+    criticality: supporting
+    example_vendors:
+      - Klaviyo
+      - Attentive
+      - Postscript
+
+  - name: Analytics and Attribution
+    apqc_context: "13.6"
+    apqc_name: Measure and benchmark
+    description: >
+      Track conversion rate, AOV, LTV, CAC, ROAS, and margin by
+      channel. Attribution across paid and organic touchpoints.
+      The commerce metrics layer — see business-model-analytics.md
+      for full definitions.
+    criticality: supporting
+    example_vendors:
+      - Triple Whale
+      - Northbeam
+      - Google Analytics
+
+  - name: Subscription and Replenishment
+    apqc_context: "10.3"
+    apqc_name: Invoice customers
+    description: >
+      Offer recurring delivery of consumable products. Includes
+      subscription management, skip/pause, and replenishment
+      predictions. Converts one-time buyers into recurring revenue.
+    criticality: supporting
+    example_vendors:
+      - Recharge
+      - Bold Subscriptions
+      - Ordergroove
+
+  # --- TABLE-STAKES: Every business needs these, not D2C-specific ---
+
+  - name: Financial Planning and Accounting
+    apqc_context: "10.1"
+    apqc_name: Perform planning and management accounting
+    description: >
+      Revenue recognition, COGS tracking, margin analysis, accounts
+      payable (suppliers), and cash flow management. D2C-specific:
+      inventory valuation and promotional discount accounting.
+    criticality: generic
+    example_vendors:
+      - QuickBooks
+      - Xero
+      - NetSuite
+
+  - name: Tax and Compliance
+    apqc_context: "10.4"
+    apqc_name: Manage taxes
+    description: >
+      Sales tax collection and remittance across jurisdictions,
+      product compliance (safety, labeling), and import/export
+      regulations for international shipping.
+    criticality: generic
+    example_vendors:
+      - Avalara
+      - TaxJar
+      - Stripe Tax
+
+  - name: Identity and Access Management
+    apqc_context: "8.3"
+    apqc_name: Develop and implement security, privacy, and data protection controls
+    description: >
+      Customer account management, guest checkout, and admin access
+      controls. PCI compliance for payment data handling.
+    criticality: generic
+    example_vendors:
+      - Shopify (built-in)
+      - Auth0
+      - Firebase Auth
+
+  - name: Infrastructure and Platform Operations
+    apqc_context: "8.4"
+    apqc_name: Manage enterprise information
+    description: >
+      Host and scale the storefront. D2C-specific: handle flash sale
+      traffic spikes, CDN for global performance, and uptime during
+      peak shopping periods (Black Friday, holidays).
+    criticality: generic
+    example_vendors:
+      - Shopify (managed)
+      - AWS
+      - Cloudflare
+
+differentiators:
+  - Brand premium enabling pricing power above commodity
+  - Customer acquisition cost below first-order margin
+  - Repeat purchase rate above 40% within 12 months
+  - Owned channel revenue (email/SMS) exceeding 30% of total
+  - Supply chain efficiency enabling 2-day delivery at margin
+  - Community and content creating organic acquisition flywheel
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-03-25"
+  last_refreshed: "2026-03-25"
+  refresh_source: model-knowledge
+
+source:
+  seed: business-model-analytics.md + data-system-classification.md + D2C/Shopify ecosystem patterns
+  validated_against:
+    - BIZBOK Common Reference Model (capability naming)
+    - APQC PCF v7.4 (process context)
+    - business-model-analytics.md (Transaction/Commerce metrics)
+    - data-system-classification.md (system mix baseline)
+    - system-primitive-decomposition.md (decomposition methodology)

@@ -1,0 +1,149 @@
+# Marketplace / Platform — Business Model Analytics
+#
+# Revenue pattern: Transaction fees, commissions on GMV.
+# Two-sided market: buyers AND sellers/suppliers. Network effects
+# mean value increases with participants. Liquidity and take rate
+# balancing are the core analytical challenges.
+
+business_model:
+  name: Marketplace / Platform
+  category: Marketplace/Platform
+  description: >
+    Two-sided markets connecting buyers and sellers. Revenue from
+    transaction fees or commissions on GMV. Network effects create
+    value — the platform's worth increases with each participant.
+    The core tension is take rate vs. growth.
+  revenue_pattern: Transaction fees, commissions on GMV
+
+core_metrics:
+  - name: GMV
+    definition: Gross Merchandise or Booking Value — total platform transaction value
+    formula: "SUM(transaction_value)"
+    why_it_matters: Top-line measure of platform activity
+    benchmarks:
+      healthy: "Consistent growth with improving take rate"
+      warning: "GMV growing but revenue flat (take rate compression)"
+      source: "a16z Marketplace Metrics"
+
+  - name: Take Rate
+    definition: Platform revenue as percentage of GMV
+    formula: "total_revenue / gmv"
+    why_it_matters: Platform monetization efficiency
+    benchmarks:
+      healthy: "5-20% depending on category (higher for managed marketplaces)"
+      warning: "Declining take rate without corresponding GMV growth"
+      source: "Bill Gurley — Above the Crowd"
+
+  - name: Net Revenue
+    definition: Actual platform revenue after take rate
+    formula: "gmv * take_rate"
+    why_it_matters: True top-line revenue
+    benchmarks:
+      healthy: "Growing faster than GMV (improving take rate)"
+      warning: "Flat while GMV grows"
+      source: "a16z Marketplace Metrics"
+
+  - name: Buyer/Seller Ratio
+    definition: Active buyers divided by active sellers
+    formula: "COUNT(active_buyers) / COUNT(active_sellers)"
+    why_it_matters: Market balance — too few of either side kills liquidity
+    benchmarks:
+      healthy: "Stable ratio appropriate to category"
+      warning: "Rapid shift in either direction"
+      source: "NFX Network Effects Manual"
+
+  - name: Liquidity
+    definition: Percentage of listings that result in a transaction
+    formula: "COUNT(transacted_listings) / COUNT(total_listings)"
+    why_it_matters: Supply-demand match — the marketplace health pulse
+    benchmarks:
+      healthy: ">30% for goods, >15% for services"
+      warning: "<10% (supply glut or demand shortage)"
+      source: "a16z Marketplace Metrics"
+
+  - name: Time to Transaction
+    definition: Duration from listing to completed transaction
+    formula: "AVG(transaction_date - listing_date)"
+    why_it_matters: Market efficiency — faster = better experience
+    benchmarks:
+      healthy: "Decreasing over time"
+      warning: "Increasing (market friction growing)"
+      source: "Version One Ventures — Marketplace KPIs"
+
+  - name: Repeat Rate
+    definition: Percentage of users with multiple transactions
+    formula: "COUNT(users_with_2plus_transactions) / COUNT(all_transacting_users)"
+    why_it_matters: Platform stickiness — are users coming back?
+    benchmarks:
+      healthy: ">50% within 12 months"
+      warning: "<20% (one-and-done usage)"
+      source: "Lenny Rachitsky — Marketplace Playbooks"
+
+  - name: Supply Growth
+    definition: New sellers or listings added per period
+    formula: "COUNT(new_sellers_this_period)"
+    why_it_matters: Platform attractiveness to supply side
+    benchmarks:
+      healthy: "Organic growth exceeding paid acquisition"
+      warning: "Declining without market saturation"
+      source: "NFX Network Effects Manual"
+
+  - name: Disintermediation Rate
+    definition: Transactions taken off-platform after initial match
+    formula: "estimated_off_platform_transactions / total_matches"
+    why_it_matters: Leakage risk — value captured vs. value created
+    benchmarks:
+      healthy: "<10%"
+      warning: ">25% (weak platform lock-in)"
+      source: "a16z Marketplace Metrics"
+
+key_dimensions:
+  - "Side — Buyer, Seller, Both"
+  - "Category — Product/service type"
+  - "Geography — Market-specific supply/demand"
+  - "Seller Tier — Power sellers, new sellers"
+  - "Transaction Type — First-time, repeat"
+
+time_patterns:
+  - "Cohort retention — both buyer and seller cohorts independently"
+  - "Seasonality — category-specific demand patterns"
+  - "Network growth curves — S-curve adoption patterns"
+  - "Market maturity — early vs. mature markets behave differently"
+
+fact_table:
+  grain: "One row per transaction"
+  name: transactions_fact
+  columns:
+    - transaction_id
+    - timestamp
+    - buyer_id
+    - seller_id
+    - category_id
+    - gmv
+    - platform_fee
+    - net_to_seller
+    - is_first_transaction_buyer
+    - is_first_transaction_seller
+
+standard_frameworks:
+  - name: "a16z Marketplace Metrics"
+    focus: "GMV, take rate, marketplace health"
+  - name: "Bill Gurley — Above the Crowd"
+    focus: "GMV vs. revenue, rake analysis"
+  - name: "NFX Network Effects Manual"
+    focus: "Network effects, marketplace liquidity"
+  - name: "Lenny Rachitsky"
+    focus: "Marketplace playbooks, repeat rates"
+  - name: "Version One Ventures"
+    focus: "Marketplace KPIs"
+
+catalog_meta:
+  version: "1.0.0"
+  created: "2026-04-02"
+  last_refreshed: "2026-04-02"
+  refresh_source: model-knowledge
+
+source:
+  seed: "docs/research/business-model-analytics.md"
+  validated_against:
+    - " engagement (marketplace weight 0.6 — exhibitor/attendee two-sided market)"
